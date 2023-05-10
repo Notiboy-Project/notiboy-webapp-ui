@@ -1,38 +1,47 @@
-import * as React from "react"
+import * as React from 'react';
 import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+  reconnectProviders,
+  initializeProviders,
+  WalletProvider,
+  PROVIDER_ID
+} from '@txnlab/use-wallet';
+import { ChakraProvider, Box, theme } from '@chakra-ui/react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoutes from './components/ProtectedRoutes';
+import PageLoading from './components/Layout/PageLoading';
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+const ConnectWallet = React.lazy(() => import('./pages/ConnectWallet'));
+const NotificationPage = React.lazy(() => import('./pages/Notifications'));
+
+const walletProvider = initializeProviders([PROVIDER_ID.MYALGO]);
+
+export const App = () => {
+  React.useEffect(() => {
+    // Reconnect the session when the user returns to the dApp
+    reconnectProviders(walletProvider);
+  }, []);
+
+  return (
+    <WalletProvider value={walletProvider}>
+      <ChakraProvider theme={theme}>
+        <Box textAlign="center" fontSize="xl">
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/connect-wallet"
+                element={
+                  <React.Suspense fallback={<PageLoading />}>
+                    <ConnectWallet />
+                  </React.Suspense>
+                }
+              />
+              <Route path="/" element={<ProtectedRoutes />}>
+                <Route path="/notifications" element={<NotificationPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </Box>
+      </ChakraProvider>
+    </WalletProvider>
+  );
+};
