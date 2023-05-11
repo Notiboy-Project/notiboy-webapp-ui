@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { routes } from '../../constants';
+import { routes } from '../../config';
 import { useWallet } from '@txnlab/use-wallet';
 import PageLoading from '../Layout/PageLoading';
 import ProtectedLayout from '../Layout/ProtectedLayout';

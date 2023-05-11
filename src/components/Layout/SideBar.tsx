@@ -1,7 +1,11 @@
-import { Box, Button, Image, Text } from '@chakra-ui/react';
-import ImageLogo from '../../assets/images/notiboy_nam.png';
-import { routes } from '../../constants';
+import { Box, Image, Text } from '@chakra-ui/react';
+import { routes } from '../../config';
 import { NavLink } from 'react-router-dom';
+import CurveAbsoluteLayout from './CurveAbsoluteLayout';
+import GooglePlayImg from '../../assets/images/Google-Play-Store-Button.png';
+import AppleStoreImg from '../../assets/images/apple_store.png';
+import ImageLogo from '../../assets/images/notiboy_nam.png';
+
 
 const NAV_MENUS: { title: string; name: string; url: string }[] = [
   { title: 'Notifications', name: 'notifications', url: routes.notifications },
@@ -12,12 +16,13 @@ const NAV_MENUS: { title: string; name: string; url: string }[] = [
 ];
 
 export default function SidebarLayout(props: any) {
+
   return (
     <Box>
       <Image src={ImageLogo} alt="logo" height={55} margin={'15px auto'} />
       <Box mt={10} display={'grid'} placeItems={'center'}>
         {NAV_MENUS.map((menu) => (
-          <Box p={1} mb={4} w={'100%'}>
+          <Box p={1} mb={4} w={'100%'} key={menu.name}>
             <NavLink to={menu.url}>
               {({ isActive, isPending }) => (
                 <Box
@@ -27,15 +32,9 @@ export default function SidebarLayout(props: any) {
                   position={'relative'}
                 >
                   {isActive && (
-                    <Box
-                      position={'absolute'}
-                      height={95}
-                      width={75}
-                      backgroundColor={'gray.700'}
-                      right={-10}
-                      top={-2}
-                      borderRadius={[50, -50, 50, 50]}
-                    />
+                    <Box position={'absolute'} top={-4} right={-8}>
+                      <CurveAbsoluteLayout />
+                    </Box>
                   )}
                   <Text fontWeight={600}>{menu.title}</Text>
                 </Box>
@@ -45,8 +44,22 @@ export default function SidebarLayout(props: any) {
         ))}
       </Box>
       <Box display={'grid'} placeItems={'center'} alignContent={'end'} gap={5}>
-        <Button colorScheme="facebook">Google play</Button>
-        <Button colorScheme="facebook">Apple store</Button>
+        <Image
+          src={GooglePlayImg}
+          h={45}
+          w={40}
+          objectFit={'contain'}
+          borderRadius={10}
+          cursor={'pointer'}
+        />
+        <Image
+          src={AppleStoreImg}
+          h={42}
+          w={40}
+          objectFit={'contain'}
+          borderRadius={10}
+          cursor={'pointer'}
+        />
       </Box>
     </Box>
   );

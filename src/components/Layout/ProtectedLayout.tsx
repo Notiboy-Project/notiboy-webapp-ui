@@ -1,10 +1,11 @@
 import { Box } from '@chakra-ui/react';
 import SidebarLayout from './SideBar';
+import PrivateHeader from '../PrivateHeader';
 
 export default function ProtectedLayout(props: any) {
   return (
     <Box p={10} display={'flex'}>
-      <Box width={'20%'}>
+      <Box width={'20%'} visibility={{ sm: 'hidden', xl: 'visible' }}>
         <SidebarLayout />
       </Box>
       <Box
@@ -16,6 +17,7 @@ export default function ProtectedLayout(props: any) {
         borderRadius={28}
         p={2}
       >
+        <PrivateHeader />
         {props.children}
       </Box>
     </Box>
