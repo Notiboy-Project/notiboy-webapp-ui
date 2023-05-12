@@ -11,10 +11,14 @@ import {
 import { useWallet } from '@txnlab/use-wallet';
 import { BiCopy, BiLogOut } from 'react-icons/bi';
 import { FaCaretDown } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { routes } from '../../config';
 
 export default function WalletDropdown() {
-  const { activeAccount } = useWallet();
+  const { activeAccount, providers } = useWallet();
   const toast = useToast();
+  const navigate = useNavigate();
+  console.log('providers', providers);
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(activeAccount?.address || '');
@@ -27,13 +31,21 @@ export default function WalletDropdown() {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const connectedWallet = providers?.find((wallet) => wallet.isConnected);
+
     toast({
       description: 'Logging out...',
       status: 'info',
-      duration: 3000,
-      isClosable: true
+      duration: 1500,
+      isClosable: true,
+      position: 'top'
     });
+
+    if (connectedWallet) {
+      await connectedWallet.disconnect();
+      navigate(routes.connectWallet);
+    }   
   };
 
   return (

@@ -41,6 +41,7 @@ export default function NetworkWalletLists(props: NetworkWalletListsProps) {
         <Box display={'grid'} placeItems={'center'} gap={3} mt={2}>
           {providers?.map((provider) => (
             <Button
+              key={provider.metadata.id}
               size={'lg'}
               color={'#fff'}
               backgroundColor={getBg(provider.metadata.name)}

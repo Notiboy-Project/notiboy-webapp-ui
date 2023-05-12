@@ -3,23 +3,73 @@ import { Box, Image, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import ImageLogo from '../../assets/images/notiboy_nam.png';
-import { useWallet } from '@txnlab/use-wallet';
+import algosdk from 'algosdk';
+import {
+  useWallet,
+  DEFAULT_NODE_BASEURL,
+  DEFAULT_NODE_TOKEN,
+  DEFAULT_NODE_PORT
+} from '@txnlab/use-wallet';
 import { routes } from '../../config';
 import NetworkLists from './NetworkList';
 import { AlgorandIcon } from '../../assets/svgs';
 import { NetworkType } from './wallet.types';
 import NetworkWalletLists from '../../components/Wallets/NetworkWalletList';
+import {
+  convertJSTOBase64,
+} from '../../services/algorand.service';
+import { loginToApp } from '../../services/api.service';
+
+const algodClient = new algosdk.Algodv2(
+  DEFAULT_NODE_TOKEN,
+  DEFAULT_NODE_BASEURL,
+  DEFAULT_NODE_PORT
+);
 
 export default function WalletConnect(props: any) {
-  const { activeAccount } = useWallet();
+  const { activeAccount, signTransactions } = useWallet();
   const [selectedNetwork, setSelectedNetwork] =
     React.useState<NetworkType | null>(null);
 
   const navigate = useNavigate();
 
+  const signedTransaction = async (address: string) => {
+    //navigate(routes.notifications);
+    try {
+      const params = await algodClient.getTransactionParams().do();
+      //Create transaction to be signed
+      const transaction =
+        await algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+          from: address,
+          to: address,
+          amount: 0,
+          suggestedParams: params
+        });
+      console.log('transaction', transaction);
+
+      const encodedTransaction = algosdk.encodeUnsignedTransaction(transaction);
+
+      const [signedTransactions] = await signTransactions([encodedTransaction]);
+
+      console.log('signedTransactions ==>', signedTransactions);
+      const base64Str = convertJSTOBase64(signedTransactions);
+
+      const response = await loginToApp(base64Str, 'algorand', address);
+      console.log('response base64 login ==>', response);
+      // TODO: storetoken into localstorag
+    
+
+      navigate(routes.notifications)
+    
+    } catch (err) {
+      console.log('error', err);
+      navigate(routes.notifications)
+    }
+  };
+
   React.useEffect(() => {
     if (activeAccount && activeAccount.address) {
-      navigate(routes.notifications);
+      signedTransaction(activeAccount.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAccount]);
@@ -56,29 +106,29 @@ export default function WalletConnect(props: any) {
           mt={5}
           backgroundColor={'gray.700'}
           p={15}
-          borderRadius={10}          
+          borderRadius={10}
           display={'grid'}
           width={'100%'}
           alignContent={'center'}
           placeItems={'center'}
         >
-            {selectedNetwork ? (
-              <NetworkWalletLists
-                networkType={selectedNetwork}
-                onBackClick={() => setSelectedNetwork(null)}
-              />
-            ) : (
-              <NetworkLists
-                networks={[
-                  {
-                    name: NetworkType.ALGORAND,
-                    title: 'Algorand',
-                    Icon: <AlgorandIcon />
-                  }
-                ]}
-                onSelectNetwork={handleSelectNetwork}
-              />
-            )}
+          {selectedNetwork ? (
+            <NetworkWalletLists
+              networkType={selectedNetwork}
+              onBackClick={() => setSelectedNetwork(null)}
+            />
+          ) : (
+            <NetworkLists
+              networks={[
+                {
+                  name: NetworkType.ALGORAND,
+                  title: 'Algorand',
+                  Icon: <AlgorandIcon />
+                }
+              ]}
+              onSelectNetwork={handleSelectNetwork}
+            />
+          )}
         </Box>
       </Box>
     </Box>
