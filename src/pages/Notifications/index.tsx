@@ -10,12 +10,34 @@ import useSWR from 'swr';
 import { BiSearch } from 'react-icons/bi';
 import { fetchNotifications } from '../../services/fetcher.service';
 import { NoNotificationIcon } from '../../assets/svgs';
+import NotificationCard from './NotificationCard';
 
 export default function NotificationPage(props: any) {
   const {
     error,
     isLoading,
-    data = []
+    data = [
+      {
+        message: 'a message text',
+        link: 'https://xyz.com',
+        appid: '51235',
+        time: '2021-01-01T00:00:00.000Z',
+        hash: 'MTIzNDU2Nzg5MA==',
+        uuid: '550e8400-e29b-11d4-a716-446655440000',
+        kind: 'public',
+        seen: true
+      },
+      {
+        message: 'another message text',
+        link: 'https://xyz.com',
+        appid: '51236',
+        time: '2021-02-01T00:00:00.000Z',
+        hash: 'MTIzNDUs2Nzg5MA==',
+        uuid: '550e8401-e29b-11d4-a716-446655440000',
+        kind: 'private',
+        seen: false
+      }
+    ]
   } = useSWR(
     {
       url: `api/notifications`,
@@ -38,7 +60,7 @@ export default function NotificationPage(props: any) {
       >
         <InputGroup
           borderRadius={'3xl'}
-          w={{ sm: '100%', md: '50%' }}
+          w={{ sm: '100%', md: '70%', xl: '50%' }}
           textAlign={'center'}
         >
           <InputLeftElement
@@ -64,13 +86,26 @@ export default function NotificationPage(props: any) {
           />
         </InputGroup>
       </Box>
-      <Box>
+      <Box mt={5}>
         {data?.length === 0 && (
-          <Box display={'grid'} alignItems={'center'} justifyContent={'center'} mt={100}>
+          <Box
+            display={'grid'}
+            alignItems={'center'}
+            justifyContent={'center'}
+            mt={100}
+          >
             <Icon h={300} w={300} as={NoNotificationIcon} />
-            <Text mt={5} fontSize={28} fontWeight={600}>No Notification Yet!</Text>
+            <Text mt={5} fontSize={28} fontWeight={600}>
+              No Notification Yet!
+            </Text>
           </Box>
         )}
+        {data.map((notification: any) => (
+          <NotificationCard
+            notification={notification}
+            key={notification.uuid}
+          />
+        ))}
       </Box>
     </Box>
   );

@@ -54,6 +54,9 @@ export default function WalletConnect(props: any) {
       console.log('signedTransactions ==>', signedTransactions);
       const base64Str = convertJSTOBase64(signedTransactions);
 
+      console.log('base64 String ==>', signedTransactions);
+
+
       const response = await loginToApp(base64Str, 'algorand', address);
       console.log('response base64 login ==>', response);
       // TODO: storetoken into localstorag

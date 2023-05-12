@@ -26,8 +26,7 @@ export const doTransactions = async (address: string) => {
 
 // Convert JS object to base64 string
 export const convertJSTOBase64 = (obj: any) => {
-  const str = JSON.stringify(obj);
-  const base64 = Buffer.from(str).toString("base64");
+  const base64 = Buffer.from(obj).toString("base64");
   return base64;
 };
 
