@@ -13,6 +13,7 @@ import { BiCopy, BiLogOut } from 'react-icons/bi';
 import { FaCaretDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../config';
+import { removeTokenFromStorage } from '../../services/storage.service';
 
 export default function WalletDropdown() {
   const { activeAccount, providers } = useWallet();
@@ -35,17 +36,17 @@ export default function WalletDropdown() {
     const connectedWallet = providers?.find((wallet) => wallet.isConnected);
 
     toast({
-      description: 'Logging out...',
+      description: 'Logged out !',
       status: 'info',
       duration: 1500,
       isClosable: true,
       position: 'top'
     });
-
+    removeTokenFromStorage();
     if (connectedWallet) {
       await connectedWallet.disconnect();
       navigate(routes.connectWallet);
-    }   
+    }
   };
 
   return (

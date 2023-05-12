@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Box, Image, Text, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import ImageLogo from '../../assets/images/notiboy_nam.png';
@@ -19,6 +19,7 @@ import {
   convertJSTOBase64,
 } from '../../services/algorand.service';
 import { loginToApp } from '../../services/api.service';
+import { storeTokenToStorage } from '../../services/storage.service';
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -32,6 +33,7 @@ export default function WalletConnect(props: any) {
     React.useState<NetworkType | null>(null);
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   const signedTransaction = async (address: string) => {
     //navigate(routes.notifications);
@@ -60,9 +62,19 @@ export default function WalletConnect(props: any) {
       const response = await loginToApp(base64Str, 'algorand', address);
       console.log('response base64 login ==>', response);
       // TODO: storetoken into localstorag
-    
+      const { data } = response.data;
+      if(data?.token) {
+        storeTokenToStorage(data.token)
+        navigate(routes.notifications)
+      } else {
+        toast({
+          description: 'Failed to connect to Wallet ! please try again.',
+          status: 'error',
+          duration: 3000,
+          position: 'top'
+        })
+      }
 
-      navigate(routes.notifications)
     
     } catch (err) {
       console.log('error', err);
