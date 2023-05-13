@@ -73,9 +73,7 @@ export default function WalletConnect(props: any) {
           duration: 3000,
           position: 'top'
         })
-      }
-
-    
+      }  
     } catch (err) {
       console.log('error', err);
       navigate(routes.notifications)

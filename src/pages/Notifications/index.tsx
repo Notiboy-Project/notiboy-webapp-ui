@@ -1,16 +1,13 @@
 import {
   Box,
   Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Text
 } from '@chakra-ui/react';
 import useSWR from 'swr';
-import { BiSearch } from 'react-icons/bi';
+import SearchInput from '../../components/SearchInput';
+import NotificationCard from './NotificationCard';
 import { fetchNotifications } from '../../services/fetcher.service';
 import { NoNotificationIcon } from '../../assets/svgs';
-import NotificationCard from './NotificationCard';
 
 export default function NotificationPage(props: any) {
   const {
@@ -26,16 +23,6 @@ export default function NotificationPage(props: any) {
         uuid: '550e8400-e29b-11d4-a716-446655440000',
         kind: 'public',
         seen: true
-      },
-      {
-        message: 'another message text',
-        link: 'https://xyz.com',
-        appid: '51236',
-        time: '2021-02-01T00:00:00.000Z',
-        hash: 'MTIzNDUs2Nzg5MA==',
-        uuid: '550e8401-e29b-11d4-a716-446655440000',
-        kind: 'private',
-        seen: false
       }
     ]
   } = useSWR(
@@ -58,33 +45,7 @@ export default function NotificationPage(props: any) {
         alignContent={'center'}
         height={'100%'}
       >
-        <InputGroup
-          borderRadius={'3xl'}
-          w={{ sm: '100%', md: '70%', xl: '50%' }}
-          textAlign={'center'}
-        >
-          <InputLeftElement
-            pointerEvents="none"
-            color="blue.300"
-            fontSize="1.6em"
-            ml={2}
-            top={'6px'}
-            left={'6px'}
-            children={
-              <Icon h={5} w={5} ml={2}>
-                <BiSearch />
-              </Icon>
-            }
-            margin={'auto 0'}
-          />
-          <Input
-            size={'lg'}
-            padding={'28px 60px'}
-            borderRadius={'3xl'}
-            bgColor={'gray.800'}
-            placeholder="Search anything here..."
-          />
-        </InputGroup>
+        <SearchInput onChange={() => {}} value="" />
       </Box>
       <Box mt={5}>
         {data?.length === 0 && (

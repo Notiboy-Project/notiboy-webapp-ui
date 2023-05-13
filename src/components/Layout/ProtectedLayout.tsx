@@ -4,17 +4,20 @@ import PrivateHeader from '../PrivateHeader';
 
 export default function ProtectedLayout(props: any) {
   return (
-    <Box p={10} display={'flex'}>
-      <Box width={'20%'} visibility={{ sm: 'hidden', xl: 'visible' }}>
+    <Box p={{ sm: 0, md: 10 }} display={'flex'}>
+      <Box
+        display={{ base: 'none', sm: 'none', lg: 'block' }}
+        width={{ lg: '20%' }}
+      >
         <SidebarLayout />
       </Box>
       <Box
-        width={['90%', '90%', '90%', '90%']}
+        width={{ base: '100%', sm: '100%', md: '100%', xl: '80%' }}
         id="main-content"
         backgroundColor={'gray.700'}
-        height={'calc(100vh - 80px)'}
+        height={{ base: '100%', sm: '100%', md: 'calc(100vh - 80px)' }}
         overflow={'auto'}
-        borderRadius={28}
+        borderRadius={{ base: 0, md: 15, lg: 28 }}
         p={2}
       >
         <PrivateHeader />
