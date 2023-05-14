@@ -19,7 +19,7 @@ export default function NTabs(props: NTabsProps) {
       backgroundColor={'gray.800'}
       width={'100%'}
       borderRadius={'full'}
-      p={2}
+      p={1}
     >
       <Tabs
         variant="soft-rounded"

@@ -10,20 +10,32 @@ import {
 import NTabs from '../../components/NTabs';
 import { MessageType } from './send.types';
 import { LinkIcon } from '../../assets/svgs';
+import SelectChannel from '../../components/SelectChannel';
 
 export default function SendPage() {
+
+  const handleSendNotification = () => {
+    console.log('Send Notification');
+    // TODO: send notification by calling APIs
+  }
+
   return (
     <Box p={5}>
-      <Box width={'fit-content'}>
-        <NTabs
-          activeTab={MessageType.PUBLIC}
-          tabs={[
-            { name: MessageType.PUBLIC, title: 'Public Message' },
-            { name: MessageType.PERSONAL, title: 'Personal Message' },
-            { name: MessageType.BULK_PUBLIC, title: 'Bulk Personal Message' }
-          ]}
-          onTabSelected={(tab) => console.log('sElected tab:', tab)}
-        />
+      <Box display={'flex'} alignItems={'center'}>
+        <Box width={'fit-content'}>
+          <NTabs
+            activeTab={MessageType.PUBLIC}
+            tabs={[
+              { name: MessageType.PUBLIC, title: 'Public Message' },
+              { name: MessageType.PERSONAL, title: 'Personal Message' },
+              { name: MessageType.BULK_PUBLIC, title: 'Bulk Personal Message' }
+            ]}
+            onTabSelected={(tab) => console.log('sElected tab:', tab)}
+          />
+        </Box>
+        <Box ml={5}>
+          <SelectChannel />
+        </Box>
       </Box>
       <Box mt={5}>
         <Input
@@ -63,8 +75,9 @@ export default function SendPage() {
       <Box mt={5}>
         <Button
           p={'25px 60px'}
-          borderRadius={'2xl'}
+          borderRadius={'full'}
           backgroundColor={'blue.600'}
+          onClick={handleSendNotification}
           size={'lg'}
         >
           Send

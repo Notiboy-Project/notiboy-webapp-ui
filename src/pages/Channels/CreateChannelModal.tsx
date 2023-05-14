@@ -12,6 +12,8 @@ import {
   Textarea
 } from '@chakra-ui/react';
 import ImageUploadControl from '../../components/ImageUpload';
+import { useState } from 'react'
+import { createChannel } from '../../services/fetcher.service';
 
 interface CreateChannelModalProps {
   isOpen: boolean;
@@ -20,6 +22,33 @@ interface CreateChannelModalProps {
 
 export default function CreateChannelModal(props: CreateChannelModalProps) {
   const { isOpen, onClose } = props;
+  const [submitting, setSubmitting] = useState(false)
+  const [payload, setPayload] = useState({
+    name: '',
+    description: '',
+    logo: ''
+  })
+
+  const handleChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.currentTarget
+    setPayload({
+      ...payload,
+      [name]: value
+    })
+  }
+
+  const handleCreateChannel = async () => {
+    // TODO: call API to create a channel  
+    try {
+      setSubmitting(true)
+      const resp = createChannel('algorand', payload)
+      console.log("resp ==>", resp)
+      setSubmitting(false)
+    } catch (err) {
+      console.log("Error creating channel", err)
+      setSubmitting(false)
+    }
+  }
 
   return (
     <Modal
@@ -31,7 +60,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
       <ModalOverlay />
       <ModalContent borderRadius={'3xl'} p={2}>
         <ModalCloseButton
-          background={'blue'}
+          background={'blue.600'}
           right={5}
           top={5}
           borderRadius={'full'}
@@ -49,6 +78,9 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
               size="lg"
               placeholder="Enter channel name"
               mt={5}
+              onChange={handleChange}
+              value={payload.name}
+              name='name'
               borderRadius={'2xl'}
               background={'gray.800'}
               fontWeight={500}
@@ -58,6 +90,9 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
               rows={5}
               mt={5}
               p={4}
+              name='description'
+              onChange={handleChange}
+              value={payload.description}
               borderRadius={'2xl'}
               background={'gray.800'}
               fontWeight={600}
@@ -68,7 +103,8 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
           <Button
             backgroundColor="blue.600"
             mr={3}
-            onClick={onClose}
+            isLoading={submitting}
+            onClick={handleCreateChannel}
             borderRadius={'3xl'}
             size={'lg'}
           >

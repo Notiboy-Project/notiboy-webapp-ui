@@ -61,15 +61,15 @@ export default function WalletDropdown() {
         {activeAccount?.address.slice(0, 4)}...
         {activeAccount?.address?.slice(-3)}
       </MenuButton>
-      <MenuList>
-        <MenuItem minH="48px" onClick={handleCopyAddress}>
+      <MenuList borderRadius={'3xl'} p={3}>
+        <MenuItem minH="48px" onClick={handleCopyAddress} p={2} borderRadius={'2xl'}>
           <Text as={'small'} textOverflow={'ellipsis'}>
             {activeAccount?.address}
           </Text>
           <Icon ml={2} as={BiCopy} h={6} w={6} />
         </MenuItem>
-        <MenuItem minH="40px" onClick={handleLogout}>
-          <Text>Logout</Text>
+        <MenuItem minH="40px" onClick={handleLogout} p={2} borderRadius={'2xl'}>
+          <Text as='small'>Logout</Text>
           <Icon ml={2} as={BiLogOut} h={6} w={6} />
         </MenuItem>
       </MenuList>

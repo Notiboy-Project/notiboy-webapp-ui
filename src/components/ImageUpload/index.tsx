@@ -16,7 +16,7 @@ export default function ImageUploadControl(props: any) {
   return (
     <Box
       w={'100%'}
-      border="2px blue dashed"
+      border="2px lightblue dashed"
       p={5}
       borderRadius={'2xl'}
       textAlign={'center'}

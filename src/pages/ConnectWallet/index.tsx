@@ -63,7 +63,7 @@ export default function WalletConnect(props: any) {
       console.log('response base64 login ==>', response);
       // TODO: storetoken into localstorag
       const { data } = response.data;
-      if(data?.token) {
+      if (data?.token) {
         storeTokenToStorage(data.token)
         navigate(routes.notifications)
       } else {
@@ -73,7 +73,7 @@ export default function WalletConnect(props: any) {
           duration: 3000,
           position: 'top'
         })
-      }  
+      }
     } catch (err) {
       console.log('error', err);
       navigate(routes.notifications)
