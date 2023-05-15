@@ -23,10 +23,14 @@ interface CreateChannelModalProps {
 export default function CreateChannelModal(props: CreateChannelModalProps) {
   const { isOpen, onClose } = props;
   const [submitting, setSubmitting] = useState(false)
-  const [payload, setPayload] = useState({
+  const [payload, setPayload] = useState<{
+    name: string,
+    description: string,
+    logo: Uint8Array | null
+  }>({
     name: '',
     description: '',
-    logo: ''
+    logo: null
   })
 
   const handleChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -34,6 +38,15 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     setPayload({
       ...payload,
       [name]: value
+    })
+  }
+
+  console.log('payload =>', payload)
+
+  const setImageDate = (imgBytes: Uint8Array | null) => {
+    setPayload({
+      ...payload,
+      logo: imgBytes
     })
   }
 
@@ -72,7 +85,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
               Create Channel
             </Text>
             <Box mt={2} w={'100%'}>
-              <ImageUploadControl />
+              <ImageUploadControl onImageChange={setImageDate} />
             </Box>
             <Input
               size="lg"

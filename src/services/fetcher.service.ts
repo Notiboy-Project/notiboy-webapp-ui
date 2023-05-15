@@ -23,7 +23,7 @@ export const fetchChannelLists = async (args: string) => {
 interface createChannelParams {
   name: string;
   description: string;
-  logo: any | null
+  logo?: Uint8Array | null
 }
 
 export const createChannel = async (chain: string, payload: createChannelParams) => {
