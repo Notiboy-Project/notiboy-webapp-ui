@@ -9,7 +9,8 @@ import {
   ModalFooter,
   ModalOverlay,
   Text,
-  Textarea
+  Textarea,
+  useToast
 } from '@chakra-ui/react';
 import ImageUploadControl from '../../components/ImageUpload';
 import { useState } from 'react'
@@ -18,20 +19,22 @@ import { createChannel } from '../../services/fetcher.service';
 interface CreateChannelModalProps {
   isOpen: boolean;
   onClose: () => void;
+  mutate: () => void
 }
 
 export default function CreateChannelModal(props: CreateChannelModalProps) {
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, mutate = () => { } } = props;
   const [submitting, setSubmitting] = useState(false)
   const [payload, setPayload] = useState<{
     name: string,
     description: string,
-    logo: Uint8Array | null
+    logo: string | null
   }>({
     name: '',
     description: '',
     logo: null
   })
+  const toast = useToast()
 
   const handleChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.currentTarget
@@ -41,22 +44,40 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     })
   }
 
-  console.log('payload =>', payload)
-
-  const setImageDate = (imgBytes: Uint8Array | null) => {
+  const handleImageChange = (imgBytes: string | null) => {
     setPayload({
       ...payload,
       logo: imgBytes
     })
   }
 
+  const handleClose = () => {
+    setPayload({
+      name: '',
+      description: '',
+      logo: null
+    })
+    onClose()
+    setSubmitting(false)
+  }
+
   const handleCreateChannel = async () => {
     // TODO: call API to create a channel  
     try {
       setSubmitting(true)
-      const resp = createChannel('algorand', payload)
-      console.log("resp ==>", resp)
-      setSubmitting(false)
+      const resp = await createChannel('algorand', payload)
+      const { status_code } = resp
+      if (status_code === 200) {
+        toast({
+          description: 'Channel created !',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          position: 'top'
+        })
+        mutate()
+        handleClose()
+      }
     } catch (err) {
       console.log("Error creating channel", err)
       setSubmitting(false)
@@ -67,7 +88,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     <Modal
       blockScrollOnMount={false}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       size={'xl'}
     >
       <ModalOverlay />
@@ -85,7 +106,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
               Create Channel
             </Text>
             <Box mt={2} w={'100%'}>
-              <ImageUploadControl onImageChange={setImageDate} />
+              <ImageUploadControl onImageChange={handleImageChange} />
             </Box>
             <Input
               size="lg"

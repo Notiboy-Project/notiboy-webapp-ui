@@ -13,18 +13,21 @@ export default function NotificationPage(props: any) {
   const {
     error,
     isLoading,
-    data = [
-      {
-        message: 'a message text',
-        link: 'https://xyz.com',
-        appid: '51235',
-        time: '2021-01-01T00:00:00.000Z',
-        hash: 'MTIzNDU2Nzg5MA==',
-        uuid: '550e8400-e29b-11d4-a716-446655440000',
-        kind: 'public',
-        seen: true
-      }
-    ]
+    data = {
+      status_code: 200,
+      data: [
+        {
+          message: 'a message text',
+          link: 'https://xyz.com',
+          appid: '51235',
+          time: '2021-01-01T00:00:00.000Z',
+          hash: 'MTIzNDU2Nzg5MA==',
+          uuid: '550e8400-e29b-11d4-a716-446655440000',
+          kind: 'public',
+          seen: true
+        }
+      ]
+    }
   } = useSWR(
     {
       url: `api/notifications`,
@@ -45,10 +48,10 @@ export default function NotificationPage(props: any) {
         alignContent={'center'}
         height={'100%'}
       >
-        <SearchInput onChange={() => {}} value="" />
+        <SearchInput onChange={() => { }} value="" />
       </Box>
       <Box mt={5}>
-        {data?.length === 0 && (
+        {data?.data?.length === 0 && (
           <Box
             display={'grid'}
             alignItems={'center'}
@@ -61,7 +64,7 @@ export default function NotificationPage(props: any) {
             </Text>
           </Box>
         )}
-        {data.map((notification: any) => (
+        {data?.data?.map((notification: any) => (
           <NotificationCard
             notification={notification}
             key={notification.uuid}

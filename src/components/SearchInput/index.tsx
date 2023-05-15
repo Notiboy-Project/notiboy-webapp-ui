@@ -14,8 +14,8 @@ export default function SearchInput(props: SearchInputProps) {
         color="blue.300"
         fontSize="1.6em"
         ml={2}
-        top={'6px'}
-        left={'6px'}
+        top={'4px'}
+        left={'5px'}
         children={
           <Icon h={6} w={6} ml={2}>
             <BiSearch />
@@ -25,7 +25,7 @@ export default function SearchInput(props: SearchInputProps) {
       />
       <Input
         size={'lg'}
-        padding={'28px 60px'}
+        padding={'25px 60px'}
         borderRadius={'3xl'}
         bgColor={'gray.800'}
         placeholder="Search anything here..."

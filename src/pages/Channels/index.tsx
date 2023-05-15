@@ -1,19 +1,36 @@
 import useSWR from 'swr'
-import { Box, Button, Icon, useDisclosure } from '@chakra-ui/react';
-import { BsPlus } from 'react-icons/bs';
 import SearchInput from '../../components/SearchInput';
-import ChannelLists from './ChannelLists';
+import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
+import { Box, Button, Icon, Text, useDisclosure } from '@chakra-ui/react';
+import { BsPlus } from 'react-icons/bs';
 import { fetchChannelLists } from '../../services/fetcher.service';
+import PageLoading from '../../components/Layout/PageLoading';
 
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { error, isLoading, data } = useSWR('api/channels/algorand', fetchChannelLists)
+  const { error, isLoading, data, mutate } =
+    useSWR('api/channels/algorand', fetchChannelLists)
 
-  console.log(' channels data ==>', data)
+  console.log(' channels data ==>', data?.data)
   console.log(' channels error ==>', error)
   console.log(' channels isLoading ==>', isLoading)
+
+  if (isLoading)
+    return (
+      <PageLoading />
+    )
+
+  if (!isLoading && error) {
+    console.log('Error loading channels', error)
+    return (
+      <Box mt={20}>
+        <Text>Something went wrong! please try again later!</Text>
+      </Box>
+    )
+
+  }
 
   return (
     <Box p={5}>
@@ -33,16 +50,13 @@ export default function ChannelsPage() {
         </Button>
       </Box>
       <Box mt={4}>
-        <ChannelLists
-          data={[{
-            name: 'Artifical intelligent channels',
-            description: "Hello this is description",
-            app_id: 'sdfsdfdf-sdfd',
-            owner: '4sdf54f54sf2f2z2f',
-            verified: true
-          }]} />
+        {
+          data?.data?.map((channel) => (
+            <ChannelCard channel={channel} />
+          ))
+        }
       </Box>
-      <CreateChannelModal isOpen={isOpen} onClose={onClose} />
+      <CreateChannelModal mutate={mutate} isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }

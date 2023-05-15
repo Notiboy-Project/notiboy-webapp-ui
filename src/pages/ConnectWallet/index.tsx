@@ -81,6 +81,7 @@ export default function WalletConnect(props: any) {
   };
 
   React.useEffect(() => {
+
     if (activeAccount && activeAccount.address) {
       signedTransaction(activeAccount.address);
     }

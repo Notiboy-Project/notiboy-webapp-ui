@@ -17,6 +17,7 @@ const ChannelsPage = React.lazy(() => import('./pages/Channels'));
 const SendPage = React.lazy(() => import('./pages/Send'));
 const StatisticsPage = React.lazy(() => import('./pages/Statistics'));
 const SupportPage = React.lazy(() => import('./pages/Support'));
+const SettingsPage = React.lazy(() => import('./pages/Settings'));
 
 const walletProvider = initializeProviders([
   PROVIDER_ID.MYALGO,
@@ -39,7 +40,7 @@ export const App = () => {
             <Routes>
               <Route
                 path="/"
-                element={<Navigate to={routes.connectWallet} />}
+                element={<Navigate to={routes.notifications} />}
               />
               <Route
                 path={routes.connectWallet}
@@ -87,6 +88,14 @@ export const App = () => {
                   element={
                     <React.Suspense fallback={<PageLoading />}>
                       <SupportPage />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path={routes.settings}
+                  element={
+                    <React.Suspense fallback={<PageLoading />}>
+                      <SettingsPage />
                     </React.Suspense>
                   }
                 />

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { envs } from '../config';
-import { getTokenFromStorage, getWalletAddressFromStorage } from './storage.service';
+import { envs, routes } from '../config';
+import { getTokenFromStorage, getWalletAddressFromStorage, removeTokenFromStorage } from './storage.service';
 
 const baseURL = envs.baseUrl + '/' + envs.apiVersion;
 
@@ -28,6 +28,19 @@ api.interceptors.request.use(
     return Promise.reject(err);
   }
 );
+
+api.interceptors.response.use((response) => {
+  console.log('Response', response);
+  return response;
+}, (err) => {
+  console.log('err.response', err.response);
+  const { data } = err?.response
+  if (data?.status_code === 401) {
+    removeTokenFromStorage();
+    window.location.href = routes.connectWallet;
+  }
+  console.log('Error calling API', err);
+})
 
 export const apiURL = {
   // USERS URL

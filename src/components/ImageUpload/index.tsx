@@ -1,9 +1,10 @@
 import { Avatar, Box, CloseButton, Icon, Input, Text } from '@chakra-ui/react';
 import { GallaryAddIcon } from '../../assets/svgs';
 import React, { useRef, useState } from 'react';
+import { convertJSTOBase64 } from '../../services/algorand.service';
 
 interface ImageUploadControlProps {
-  onImageChange: (data: Uint8Array | null) => void;
+  onImageChange: (data: string | null) => void;
 }
 
 export default function ImageUploadControl(props: ImageUploadControlProps) {
@@ -22,7 +23,8 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
 
     if (files && files?.length > 0) {
       const bytesArr = await getAsByteArray(files?.[0])
-      onImageChange(bytesArr)
+      const base64Str = convertJSTOBase64(bytesArr)
+      onImageChange(base64Str)
       const blob = new Blob([bytesArr], { type: "image/jpeg" });
       const urlCreator = window.URL || window.webkitURL;
       const imageUrl = urlCreator.createObjectURL(blob);
@@ -87,7 +89,7 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
         <Icon as={GallaryAddIcon} h={45} w={45} />
       }
 
-      <Text mt={2}>Upload your channel Logo</Text>
+      <Text mt={2}>Upload your channel Logo (Max. size 50kb)</Text>
       <Input
         onChange={handleFileSelect}
         ref={fileRef}
