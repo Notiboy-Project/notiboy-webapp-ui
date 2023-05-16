@@ -144,7 +144,10 @@ function ChannelCard(props: ChannelListsProps) {
     <CardLayout p={5} mt={4}>
       <Box display={'flex'} alignItems={'center'}>
         <Avatar name="avatar" src={imgSrc} height={'40px'} width={'40px'} />
-        <Text ml={3}>{channel.name}</Text>
+        <Text ml={3}>
+          {channel.name}
+        </Text>
+        <Text ml={2} as='small'>({channel.app_id})</Text>
         {channel.verified && (
           <Icon as={VerifyIcon} ml={3} />
         )}
