@@ -21,6 +21,7 @@ import {
 import { loginToApp } from '../../services/api.service';
 import { storeTokenToStorage } from '../../services/storage.service';
 import { fetchUserInfo } from '../../services/users.service';
+import { UserContext } from '../../Context/userContext';
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -30,6 +31,7 @@ const algodClient = new algosdk.Algodv2(
 
 export default function WalletConnect(props: any) {
   const { activeAccount, signTransactions } = useWallet();
+  const { saveUsersData } = React.useContext(UserContext)
   const [selectedNetwork, setSelectedNetwork] =
     React.useState<NetworkType | null>(null);
 
@@ -63,10 +65,11 @@ export default function WalletConnect(props: any) {
       const { data } = response.data;
       if (data?.token) {
         storeTokenToStorage(data.token)
-        navigate(routes.notifications)
         // TODO: get logged in users information
         const resp = await fetchUserInfo(selectedNetwork || '', address);
-        console.log("userInfo response", resp)
+        console.log("userInfo response= =>", resp.data)
+        saveUsersData(resp.data)
+        navigate(routes.notifications)
       } else {
         toast({
           description: 'Failed to connect to Wallet ! please try again.',

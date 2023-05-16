@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import {
   Box,
   Button,
@@ -13,10 +13,14 @@ import { MessageType } from './send.types';
 import { LinkIcon } from '../../assets/svgs';
 import SelectChannel from '../../components/SelectChannel';
 import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
+import { UserContext } from '../../Context/userContext';
 
 export default function SendPage() {
 
   const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC)
+  const { user } = useContext(UserContext)
+
+  console.log("User ==>>", user)
 
   const handleSendNotification = () => {
     console.log('Send Notification');

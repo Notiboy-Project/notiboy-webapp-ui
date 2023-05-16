@@ -30,6 +30,7 @@ function ChannelCard(props: ChannelListsProps) {
       if (status_code === 200) {
         // TODO: create blob file and download it.
       }
+      setUserDownloading(false)
       console.log("resp ==>", resp)
     } catch (err) {
       console.log("Error fetching users ==>", err)

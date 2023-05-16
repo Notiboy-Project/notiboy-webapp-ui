@@ -2,7 +2,8 @@
 
 export const storageKey = {
   ACCESS_TOKEN_KEY: 'access_token',
-  WALLET_ADDRESS_KEY: 'txnlab-use-wallet'
+  WALLET_ADDRESS_KEY: 'txnlab-use-wallet',
+  USER_DATA_KEY: 'current-user'
 }
 
 export const routes = Object.freeze({

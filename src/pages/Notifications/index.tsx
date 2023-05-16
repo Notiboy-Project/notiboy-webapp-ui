@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Box,
   Icon,
@@ -8,8 +9,13 @@ import SearchInput from '../../components/SearchInput';
 import NotificationCard from './NotificationCard';
 import { fetchNotifications } from '../../services/notification.service';
 import { NoNotificationIcon } from '../../assets/svgs';
+import { UserContext } from '../../Context/userContext';
 
 export default function NotificationPage(props: any) {
+
+  const { user } = React.useContext(UserContext)
+  console.log("user ==>", user);
+
   const {
     error,
     isLoading,

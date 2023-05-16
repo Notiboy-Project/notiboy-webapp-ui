@@ -7,6 +7,6 @@ export interface Network {
 }
 
 export enum NetworkType {
-  ALGORAND = 'alorand',
+  ALGORAND = 'algorand',
   ETHEREUM = 'ethereum'
 }

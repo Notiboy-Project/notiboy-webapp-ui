@@ -51,6 +51,13 @@ export default function ChannelsPage() {
       </Box>
       <Box mt={4}>
         {
+          data?.data?.length === 0 && (
+            <Box mt={20} height={'100%'}>
+              <Text fontSize={'2xl'}>No channels found !</Text>
+            </Box>
+          )
+        }
+        {
           data?.data?.map((channel) => (
             <ChannelCard updateChannelList={mutate} channel={channel} />
           ))
