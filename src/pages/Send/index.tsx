@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -11,8 +12,11 @@ import NTabs from '../../components/NTabs';
 import { MessageType } from './send.types';
 import { LinkIcon } from '../../assets/svgs';
 import SelectChannel from '../../components/SelectChannel';
+import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 
 export default function SendPage() {
+
+  const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC)
 
   const handleSendNotification = () => {
     console.log('Send Notification');
@@ -28,9 +32,9 @@ export default function SendPage() {
             tabs={[
               { name: MessageType.PUBLIC, title: 'Public Message' },
               { name: MessageType.PERSONAL, title: 'Personal Message' },
-              { name: MessageType.BULK_PUBLIC, title: 'Bulk Personal Message' }
+              { name: MessageType.BULK_PERSONAL, title: 'Bulk Personal Message' }
             ]}
-            onTabSelected={(tab) => console.log('sElected tab:', tab)}
+            onTabSelected={setTab}
           />
         </Box>
         <Box ml={5}>
@@ -38,15 +42,25 @@ export default function SendPage() {
         </Box>
       </Box>
       <Box mt={5}>
-        <Input
-          placeholder="Input address"
-          backgroundColor={'gray.800'}
-          size={'lg'}
-          borderRadius={'xl'}
-          p={'25px'}
-          fontWeight={500}
-          mt={4}
-        />
+        {tab === MessageType.PERSONAL && (
+          <Input
+            placeholder="Input address"
+            backgroundColor={'gray.800'}
+            name='inputAddress'
+            size={'lg'}
+            borderRadius={'xl'}
+            p={'25px'}
+            fontWeight={500}
+            mt={4}
+          />
+        )}
+
+        {tab === MessageType.BULK_PERSONAL && (
+          <>
+            <CsvUploadInput onDataRecieved={console.log} />
+          </>
+        )}
+
         <Textarea
           borderRadius={'xl'}
           placeholder="Input a message..."
@@ -74,11 +88,10 @@ export default function SendPage() {
       </Box>
       <Box mt={5}>
         <Button
-          p={'25px 60px'}
+          p={'20px 60px'}
           borderRadius={'full'}
           backgroundColor={'blue.600'}
           onClick={handleSendNotification}
-          size={'lg'}
         >
           Send
         </Button>

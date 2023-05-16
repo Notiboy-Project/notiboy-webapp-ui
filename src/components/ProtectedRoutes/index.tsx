@@ -11,10 +11,10 @@ const PrivateRoute: React.FC<any> = (): React.ReactElement => {
   // instead of localstorage
   const { activeAccount, status } = useWallet();
 
-  const accessToken = getTokenFromStorage()
+  const accessToken = getTokenFromStorage();
 
-  console.log('activeAccount', activeAccount);
-  console.log('status==>>', status);
+  // console.log('activeAccount', activeAccount);
+  // console.log('status==>>', status);
 
   if (status === 'initializing') {
     return (

@@ -6,12 +6,31 @@ import {
   MenuList,
   Text,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaCaretDown } from 'react-icons/fa';
+import api, { apiURL } from '../../services/api.service';
 
 export default function SelectChannel(props: any) {
 
   const [selectedChannel, setSelectedChannel] = useState('Select Channel')
+  const [loading, setLoading] = useState(false)
+
+  const fetchCahnnels = async () => {
+    setLoading(true)
+    try {
+      const resp = await api.get(apiURL.channelListsURL('algorand'))
+      console.log("resp.data ==>", resp.data);
+      setLoading(false)
+    } catch (err) {
+      setLoading(false)
+    }
+
+  }
+
+  useEffect(() => {
+    fetchCahnnels()
+  }, [])
+
 
   return (
     <Menu>
@@ -22,6 +41,7 @@ export default function SelectChannel(props: any) {
         borderRadius={'3xl'}
         size={'lg'}
         p={5}
+        isLoading={loading}
       >
         {selectedChannel}
       </MenuButton>

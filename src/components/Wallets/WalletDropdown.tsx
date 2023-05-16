@@ -19,7 +19,6 @@ export default function WalletDropdown() {
   const { activeAccount, providers } = useWallet();
   const toast = useToast();
   const navigate = useNavigate();
-  console.log('providers', providers);
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(activeAccount?.address || '');

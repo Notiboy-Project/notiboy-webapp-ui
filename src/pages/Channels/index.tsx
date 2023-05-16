@@ -4,7 +4,7 @@ import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
 import { Box, Button, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import { BsPlus } from 'react-icons/bs';
-import { fetchChannelLists } from '../../services/fetcher.service';
+import { fetchChannelLists } from '../../services/channels.service';
 import PageLoading from '../../components/Layout/PageLoading';
 
 export default function ChannelsPage() {
@@ -52,7 +52,7 @@ export default function ChannelsPage() {
       <Box mt={4}>
         {
           data?.data?.map((channel) => (
-            <ChannelCard channel={channel} />
+            <ChannelCard updateChannelList={mutate} channel={channel} />
           ))
         }
       </Box>

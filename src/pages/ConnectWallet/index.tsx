@@ -20,6 +20,7 @@ import {
 } from '../../services/algorand.service';
 import { loginToApp } from '../../services/api.service';
 import { storeTokenToStorage } from '../../services/storage.service';
+import { fetchUserInfo } from '../../services/users.service';
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -50,22 +51,22 @@ export default function WalletConnect(props: any) {
       console.log('transaction', transaction);
 
       const encodedTransaction = algosdk.encodeUnsignedTransaction(transaction);
-
+      // console.log('encodedTransaction ==>', encodedTransaction);
       const [signedTransactions] = await signTransactions([encodedTransaction]);
-
-      console.log('signedTransactions ==>', signedTransactions);
+      // console.log('signedTransactions ==>', signedTransactions);
       const base64Str = convertJSTOBase64(signedTransactions);
-
-      console.log('base64 String ==>', signedTransactions);
-
-
+      // console.log('base64 String ==>', base64Str);
       const response = await loginToApp(base64Str, 'algorand', address);
-      console.log('response base64 login ==>', response);
-      // TODO: storetoken into localstorag
+      // console.log('response base64 login ==>', response);
+
+      // storetoken into localstorag
       const { data } = response.data;
       if (data?.token) {
         storeTokenToStorage(data.token)
         navigate(routes.notifications)
+        // TODO: get logged in users information
+        const resp = await fetchUserInfo(selectedNetwork || '', address);
+        console.log("userInfo response", resp)
       } else {
         toast({
           description: 'Failed to connect to Wallet ! please try again.',
@@ -77,6 +78,12 @@ export default function WalletConnect(props: any) {
     } catch (err) {
       console.log('error', err);
       navigate(routes.notifications)
+      toast({
+        description: 'Failed to connect to Wallet ! please try again.',
+        status: 'error',
+        duration: 3000,
+        position: 'top'
+      })
     }
   };
 

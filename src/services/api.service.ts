@@ -50,8 +50,8 @@ export const apiURL = {
   userOnBoardingUrl: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}`, // POST
   userOffBoardingUrl: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}`, // DELETE
 
-  getUserInfoUrl: (chain: string, channel: string, user: string) =>
-    `${baseURL}/chains/${chain}/channels/${channel}/users/${user}`, // GET
+  getUserInfoUrl: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}`, // GET
 
   logoutUserUrl: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}/logout`, // DELETE
 

@@ -6,7 +6,7 @@ import {
 import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import NotificationCard from './NotificationCard';
-import { fetchNotifications } from '../../services/fetcher.service';
+import { fetchNotifications } from '../../services/notification.service';
 import { NoNotificationIcon } from '../../assets/svgs';
 
 export default function NotificationPage(props: any) {
@@ -15,18 +15,7 @@ export default function NotificationPage(props: any) {
     isLoading,
     data = {
       status_code: 200,
-      data: [
-        {
-          message: 'a message text',
-          link: 'https://xyz.com',
-          appid: '51235',
-          time: '2021-01-01T00:00:00.000Z',
-          hash: 'MTIzNDU2Nzg5MA==',
-          uuid: '550e8400-e29b-11d4-a716-446655440000',
-          kind: 'public',
-          seen: true
-        }
-      ]
+      data: []
     }
   } = useSWR(
     {

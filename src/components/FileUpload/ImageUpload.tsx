@@ -1,4 +1,4 @@
-import { Avatar, Box, CloseButton, Icon, Input, Text } from '@chakra-ui/react';
+import { Avatar, Box, CloseButton, Icon, Input, Text, useToast } from '@chakra-ui/react';
 import { GallaryAddIcon } from '../../assets/svgs';
 import React, { useRef, useState } from 'react';
 import { convertJSTOBase64 } from '../../services/algorand.service';
@@ -10,6 +10,8 @@ interface ImageUploadControlProps {
 export default function ImageUploadControl(props: ImageUploadControlProps) {
   const { onImageChange } = props
   const [imgSrc, setImgSrc] = useState('')
+  const [file, setFile] = useState<string | null>(null)
+  const toast = useToast()
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -19,10 +21,23 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
 
   const handleFileSelect = async (event: React.FormEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget
-    console.log('files', files?.[0])
-
+    console.log('file ==>', files?.[0])
+    setFile(event.currentTarget.value)
     if (files && files?.length > 0) {
-      const bytesArr = await getAsByteArray(files?.[0])
+
+      const _file = files?.[0]
+      if (_file.size > 50000) {
+        toast({
+          description: 'Maximum size to upload image is 50kb!',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+          status: 'error'
+        })
+        setFile(null)
+        return
+      }
+      const bytesArr = await getAsByteArray(_file)
       const base64Str = convertJSTOBase64(bytesArr)
       onImageChange(base64Str)
       const blob = new Blob([bytesArr], { type: "image/jpeg" });
@@ -56,6 +71,7 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
   const handleRemoveImg = (event: React.FormEvent<HTMLButtonElement>) => {
     event?.stopPropagation()
     setImgSrc('')
+    setFile(null)
     onImageChange(null)
   }
 
@@ -94,6 +110,7 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
         onChange={handleFileSelect}
         ref={fileRef}
         type="file"
+        value-={file}
         display={'none'}
       />
     </Box>

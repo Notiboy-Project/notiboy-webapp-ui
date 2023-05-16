@@ -12,9 +12,9 @@ import {
   Textarea,
   useToast
 } from '@chakra-ui/react';
-import ImageUploadControl from '../../components/ImageUpload';
+import ImageUploadControl from '../../components/FileUpload/ImageUpload';
 import { useState } from 'react'
-import { createChannel } from '../../services/fetcher.service';
+import { createChannel } from '../../services/channels.service';
 
 interface CreateChannelModalProps {
   isOpen: boolean;

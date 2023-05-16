@@ -1,9 +1,10 @@
 import { Box, Tab, TabList, Tabs } from '@chakra-ui/react';
+import { MessageType } from '../../pages/Send/send.types';
 
 interface NTabsProps {
   activeTab: string;
-  tabs: { name: string; title: string }[];
-  onTabSelected: (tab: string) => void;
+  tabs: { name: MessageType; title: string }[];
+  onTabSelected: (tab: MessageType) => void;
 }
 
 export default function NTabs(props: NTabsProps) {
