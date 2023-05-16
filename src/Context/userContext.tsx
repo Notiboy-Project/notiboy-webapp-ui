@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { NetworkType } from '../pages/ConnectWallet/wallet.types';
 import { storageKey } from '../config';
+import { fetchUserInfo } from '../services/users.service';
 
 export type UserDto = {
   address: string,
@@ -19,6 +20,7 @@ export type UserContextTypes = {
   user: UserDto | null
   status: ContextStatus,
   saveUsersData: (user: UserDto) => void
+  refetchUserInfo: () => void
 }
 
 export enum ContextStatus {
@@ -29,7 +31,8 @@ export enum ContextStatus {
 export const UserContext = React.createContext<UserContextTypes>({
   user: null,
   status: ContextStatus.INITIALIZING,
-  saveUsersData: () => { }
+  saveUsersData: () => { },
+  refetchUserInfo: () => { }
 });
 
 const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -42,6 +45,21 @@ const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setStatus(ContextStatus.DONE)
   }
 
+  const refetchUserInfo = async () => {
+    // TODO: Call api and save user information.
+
+    if (!user)
+      return null
+
+    try {
+      const resp = await fetchUserInfo(user?.chain || '', user?.address || '')
+      console.log("response.data", resp)
+      saveUsersData(resp.data)
+    } catch (err) {
+      console.log("Error while refetching user info", err)
+    }
+  }
+
   React.useEffect(() => {
     const userString = localStorage.getItem(storageKey.USER_DATA_KEY) || 'null';
     const data = JSON.parse(userString);
@@ -52,7 +70,7 @@ const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [])
 
   return (
-    <UserContext.Provider value={{ user, saveUsersData, status }}>
+    <UserContext.Provider value={{ user, saveUsersData, status, refetchUserInfo }}>
       {children}
     </UserContext.Provider>
   )

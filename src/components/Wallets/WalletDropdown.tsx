@@ -13,7 +13,7 @@ import { BiCopy, BiLogOut } from 'react-icons/bi';
 import { FaCaretDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../config';
-import { removeTokenFromStorage } from '../../services/storage.service';
+import { removeCurrentUser, removeTokenFromStorage } from '../../services/storage.service';
 
 export default function WalletDropdown() {
   const { activeAccount, providers } = useWallet();
@@ -44,6 +44,7 @@ export default function WalletDropdown() {
     removeTokenFromStorage();
     if (connectedWallet) {
       await connectedWallet.disconnect();
+      removeCurrentUser()
       navigate(routes.connectWallet);
     }
   };

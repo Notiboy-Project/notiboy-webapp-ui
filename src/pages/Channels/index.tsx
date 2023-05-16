@@ -10,12 +10,9 @@ import PageLoading from '../../components/Layout/PageLoading';
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+
   const { error, isLoading, data, mutate } =
     useSWR('api/channels/algorand', fetchChannelLists)
-
-  console.log(' channels data ==>', data?.data)
-  console.log(' channels error ==>', error)
-  console.log(' channels isLoading ==>', isLoading)
 
   if (isLoading)
     return (
@@ -29,7 +26,6 @@ export default function ChannelsPage() {
         <Text>Something went wrong! please try again later!</Text>
       </Box>
     )
-
   }
 
   return (
@@ -59,7 +55,7 @@ export default function ChannelsPage() {
         }
         {
           data?.data?.map((channel) => (
-            <ChannelCard updateChannelList={mutate} channel={channel} />
+            <ChannelCard key={channel.app_id} updateChannelList={mutate} channel={channel} />
           ))
         }
       </Box>

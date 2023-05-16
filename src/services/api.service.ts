@@ -30,7 +30,7 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use((response) => {
-  console.log('Response', response);
+  // console.log('Response', response);
   return response;
 }, (err) => {
   console.log('err.response', err.response);
@@ -82,7 +82,7 @@ export const apiURL = {
     `${baseURL}/chains/${chain}/channels/${appId}/users/${address}/optin`, // POST
 
   channelOptOutUrl: (chain: string, appId: string, address: string) =>
-    `${baseURL}//chains/${chain}/channels/${appId}/users/${address}/optout`, // DELETE
+    `${baseURL}/chains/${chain}/channels/${appId}/users/${address}/optout`, // DELETE
 
   // VERIFICATION MEDIUM
 

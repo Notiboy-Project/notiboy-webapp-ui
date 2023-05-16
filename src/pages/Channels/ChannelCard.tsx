@@ -5,7 +5,8 @@ import { VerifyIcon } from '../../assets/svgs';
 import { ChannelsDto } from '../../services/services.types';
 import { MdDelete } from 'react-icons/md';
 import { ImUsers } from 'react-icons/im';
-import { deleteChannel, fetchChannelUsersLists } from '../../services/channels.service';
+import { deleteChannel, fetchChannelUsersLists, optIntoChannel, optOutChannel } from '../../services/channels.service';
+import { UserContext } from '../../Context/userContext';
 
 interface ChannelListsProps {
   channel: ChannelsDto
@@ -16,10 +17,23 @@ function ChannelCard(props: ChannelListsProps) {
 
   const [isDeleting, setDeleting] = React.useState(false)
   const [isUserDownloading, setUserDownloading] = React.useState(false)
+  const [optInoutLoading, setOptInoutLoading] = React.useState(false)
   const { channel, updateChannelList } = props
+  const { user, refetchUserInfo } = React.useContext(UserContext)
+
+  const { channels = [], optins = [], chain = '', address = '' } = user || {}
+
   const toast = useToast()
 
   const imgSrc = `data:image/png;base64, ${channel.logo}`
+
+  const isUserOptin = (appId: string) => {
+    return optins?.includes(appId)
+  }
+
+  const isMyChannel = () => {
+    return channels?.includes(channel.app_id)
+  }
 
   const handleDownloadUsers = async () => {
     // TODO: fetch users and create csv file to download
@@ -61,6 +75,68 @@ function ChannelCard(props: ChannelListsProps) {
       console.log("Error deleting channel", err);
       setDeleting(false)
     }
+  }
+
+  const handleOptIn = async () => {
+    // TODO: call optin apis to optin
+    try {
+      setOptInoutLoading(true)
+      const resp = await optIntoChannel(chain, channel.app_id, address)
+      if (resp.status_code === 200) {
+        toast({
+          description: 'Subscribed Successfully!',
+          duration: 3000,
+          isClosable: true,
+          status: 'success',
+          position: 'top',
+        })
+        refetchUserInfo()
+        updateChannelList();
+      } else {
+        toast({
+          description: 'Failed to subscribe to channel! Please try again',
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          position: 'top',
+        })
+      }
+      setOptInoutLoading(false);
+    } catch (err) {
+      setOptInoutLoading(false);
+      console.log("Error while Optin to channels", channel.app_id, err);
+    }
+  }
+
+  const handleOptOut = async () => {
+    // TODO: call optin apis to optin
+    try {
+      setOptInoutLoading(true)
+      const resp = await optOutChannel(chain, channel.app_id, address)
+      if (resp.status_code === 200) {
+        toast({
+          description: 'Unsubscribed Successfully!',
+          duration: 3000,
+          isClosable: true,
+          status: 'success',
+          position: 'top',
+        })
+        refetchUserInfo()
+        updateChannelList();
+      } else {
+        toast({
+          description: 'Failed to unsubscribe to channel! Please try again',
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          position: 'top',
+        })
+      }
+      setOptInoutLoading(false)
+    } catch (err) {
+      setOptInoutLoading(false)
+      console.log("Error while Optout to channels", channel.app_id, err);
+    }
 
   }
 
@@ -77,34 +153,53 @@ function ChannelCard(props: ChannelListsProps) {
         {channel.description}
       </Text>
       <Box display={'flex'} justifyContent={'space-between'}>
-        <Button backgroundColor={'blue.500'} borderRadius={'3xl'} mt={4}>
-          Opt-in
-        </Button>
-        <Button backgroundColor={'red.400'} borderRadius={'3xl'} mt={4}>
-          Opt-out
-        </Button>
-        <Box display={'flex'} justifyContent={'flex-end'}>
+
+        {isUserOptin(channel.app_id) ?
           <Button
-            onClick={handleDownloadUsers}
-            isLoading={isUserDownloading}
-            backgroundColor={'blue.500'}
-            borderRadius={'3xl'} mt={4}
-          >
-            <Icon as={ImUsers} h={18} w={18} /> &nbsp;
-            Download users
-          </Button>
-          <Button
-            onClick={handleDeleteChannel}
-            isLoading={isDeleting}
-            ml={2}
+            isLoading={optInoutLoading}
             backgroundColor={'red.400'}
             borderRadius={'3xl'}
             mt={4}
+            onClick={handleOptOut}
           >
-            <Icon as={MdDelete} h={18} w={18} />
-            Delete Channel
+            Opt-out
+          </Button> :
+          <Button
+            isLoading={optInoutLoading}
+            onClick={handleOptIn}
+            backgroundColor={'blue.500'}
+            borderRadius={'3xl'}
+            mt={4}
+          >
+            Opt-in
           </Button>
-        </Box>
+        }
+
+        {isMyChannel() && (
+          <Box display={'flex'} justifyContent={'flex-end'}>
+            <Button
+              onClick={handleDownloadUsers}
+              isLoading={isUserDownloading}
+              backgroundColor={'blue.500'}
+              borderRadius={'3xl'} mt={4}
+            >
+              <Icon as={ImUsers} h={18} w={18} /> &nbsp;
+              Download users
+            </Button>
+            <Button
+              onClick={handleDeleteChannel}
+              isLoading={isDeleting}
+              ml={2}
+              backgroundColor={'red.400'}
+              borderRadius={'3xl'}
+              mt={4}
+            >
+              <Icon as={MdDelete} h={18} w={18} />
+              Delete Channel
+            </Button>
+          </Box>
+        )}
+
       </Box>
     </CardLayout>
   );

@@ -12,10 +12,13 @@ export const removeTokenFromStorage = () => {
   localStorage.removeItem(storageKey.ACCESS_TOKEN_KEY);
 };
 
+export const removeCurrentUser = () => {
+  localStorage.removeItem(storageKey.USER_DATA_KEY);
+}
+
 export const getWalletAddressFromStorage = () => {
   const str = localStorage.getItem(storageKey.WALLET_ADDRESS_KEY) || 'null';
   const wallet = JSON.parse(str);
-  console.log('wallet', wallet);
   const { activeAccount = null } = wallet?.state || {};
   console.log('activeAccount', activeAccount);
   if (activeAccount) {
