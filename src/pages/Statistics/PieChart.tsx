@@ -16,21 +16,16 @@ export const data = {
         'rgba(255, 206, 86, 0.2)',
         'green',
         'purple',
-        'orange',
+        'orange'
       ],
-      borderColor: [
-        'white',
-        'white',
-        'white',
-        'white',
-        'white',
-        'white',
-      ],
-      borderWidth: 1,
-    },
-  ],
+      borderColor: ['white', 'white', 'white', 'white', 'white', 'white'],
+      borderWidth: 1
+    }
+  ]
 };
 
 export function PieChartStatistics() {
-  return <Pie data={data} />;
+  return (
+    <Pie data={data} height={'550px'} />
+  );
 }

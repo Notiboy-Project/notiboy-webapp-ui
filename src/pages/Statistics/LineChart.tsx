@@ -59,5 +59,5 @@ export const data = {
 };
 
 export function LineCharUsers() {
-  return <Line options={options} data={data} />;
+  return <Line options={options} data={data} updateMode='resize'/>;
 }

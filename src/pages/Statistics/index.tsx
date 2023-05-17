@@ -1,22 +1,49 @@
 import { Box, Button, Icon, Text } from '@chakra-ui/react';
 import { LineCharUsers } from './LineChart';
 import { PieChartStatistics } from './PieChart';
-import { BiArrowFromRight } from 'react-icons/bi';
+import { AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
+import { useState } from 'react';
+
+export enum ChartType {
+  LINE_CHART,
+  PIE_CHART
+}
 
 export default function StatisticsPage() {
+  const [currentChart, setCurrentChart] = useState(ChartType.LINE_CHART);
+
   return (
     <Box p={5}>
       <Text>Statistics page UI</Text>
       <Box position={'relative'}>
-        <Box width={'70%'} height={'450px'} margin={'0 auto'}>
-          <LineCharUsers />
-        </Box>
-        <Box width={'70%'} height={'450px'} margin={'25px auto'}>
-          <PieChartStatistics />
+        <Box width={{base: '95%', md: '90%', xl: '80%'}} minH={'550px'} margin={'0 auto'}>
+          {currentChart === ChartType.LINE_CHART && <LineCharUsers />}
+          {currentChart === ChartType.PIE_CHART && <PieChartStatistics />}
         </Box>
         <Box>
-          <Button position={'absolute'} top={'50%'} right={35} colorScheme='secondary'>
-            <Icon as={BiArrowFromRight} h={25} w={25} />
+          <Button
+            position={'absolute'}
+            rounded={'full'}
+            top={'45%'}
+            left={0}
+            display={currentChart === ChartType.LINE_CHART ? 'none': 'flex'}
+            onClick={() => setCurrentChart(ChartType.LINE_CHART)}
+            size={'lg'}
+            padding={'15px'}
+          >
+            <Icon as={AiOutlineLeftCircle} h={30} w={25} fill="blue.400" />
+          </Button>
+          <Button
+            position={'absolute'}
+            rounded={'full'}
+            display={currentChart === ChartType.PIE_CHART ? 'none': 'flex'}
+            top={'45%'}
+            right={0}
+            onClick={() => setCurrentChart(ChartType.PIE_CHART)}
+            size={'lg'}
+            padding={'15px'}
+          >
+            <Icon as={AiOutlineRightCircle} h={30} w={25} fill="blue.400" />
           </Button>
         </Box>
       </Box>
