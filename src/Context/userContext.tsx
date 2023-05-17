@@ -53,7 +53,6 @@ const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       const resp = await fetchUserInfo(user?.chain || '', user?.address || '')
-      console.log("response.data", resp)
       saveUsersData(resp.data)
     } catch (err) {
       console.log("Error while refetching user info", err)

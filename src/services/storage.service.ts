@@ -24,7 +24,6 @@ export const getWalletAddressFromStorage = () => {
   const str = localStorage.getItem(storageKey.WALLET_ADDRESS_KEY) || 'null';
   const wallet = JSON.parse(str);
   const { activeAccount = null } = wallet?.state || {};
-  console.log('activeAccount', activeAccount);
   if (activeAccount) {
     return activeAccount?.address || null;
   }

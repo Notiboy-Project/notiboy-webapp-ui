@@ -20,7 +20,8 @@ export default function SendPage() {
   const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC)
   const { user } = useContext(UserContext)
 
-  console.log("User ==>>", user)
+  console.log({user})
+
 
   const handleSendNotification = () => {
     console.log('Send Notification');
@@ -32,7 +33,7 @@ export default function SendPage() {
       <Box display={'flex'} alignItems={'center'}>
         <Box width={'fit-content'}>
           <NTabs
-            activeTab={MessageType.PUBLIC}
+            activeTab={tab}
             tabs={[
               { name: MessageType.PUBLIC, title: 'Public Message' },
               { name: MessageType.PERSONAL, title: 'Personal Message' },
