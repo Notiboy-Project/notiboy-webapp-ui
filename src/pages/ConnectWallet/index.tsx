@@ -109,8 +109,8 @@ export default function WalletConnect(props: any) {
       display={'flex'}
       justifyContent={'center'}
       alignItems={'center'}
-      height={['100vh', '80vh']}
-      width={['100vw']}
+      height={'100vh'}
+      width={'100vw'}
     >
       <Box
         backgroundColor={'blackAlpha.400'}

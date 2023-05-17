@@ -1,26 +1,38 @@
 import axios from 'axios';
 import { envs, routes } from '../config';
-import { getTokenFromStorage, getWalletAddressFromStorage, removeTokenFromStorage } from './storage.service';
+import {
+  clearLocalStorage,
+  getTokenFromStorage,
+  getWalletAddressFromStorage
+} from './storage.service';
 
 const baseURL = envs.baseUrl + '/' + envs.apiVersion;
 
 const api = axios.create({
-  baseURL: envs.baseUrl + '/' + envs.apiVersion,
+  baseURL: envs.baseUrl + '/' + envs.apiVersion
 });
 
-export const loginToApp = (transactionStr: string, chain: string, address: string) => {
-  return axios.post(apiURL.login(chain, address), {}, {
-    headers: {
-      'X-SIGNED-TXN': transactionStr,
-      'X-USER-ADDRESS': address
+export const loginToApp = (
+  transactionStr: string,
+  chain: string,
+  address: string
+) => {
+  return axios.post(
+    apiURL.login(chain, address),
+    {},
+    {
+      headers: {
+        'X-SIGNED-TXN': transactionStr,
+        'X-USER-ADDRESS': address
+      }
     }
-  })
-}
+  );
+};
 
 api.interceptors.request.use(
   (config) => {
     config.headers['Authorization'] = `Bearer ${getTokenFromStorage()}`;
-    config.headers['X-USER-ADDRESS'] = getWalletAddressFromStorage()
+    config.headers['X-USER-ADDRESS'] = getWalletAddressFromStorage();
     return config;
   },
   (err) => {
@@ -29,35 +41,44 @@ api.interceptors.request.use(
   }
 );
 
-api.interceptors.response.use((response) => {
-  // console.log('Response', response);
-  return response;
-}, (err) => {
-  console.log('err.response', err.response);
-  const { data } = err?.response
-  if (data?.status_code === 401) {
-    removeTokenFromStorage();
-    window.location.href = routes.connectWallet;
+api.interceptors.response.use(
+  (response) => {
+    // console.log('Response', response);
+    return response;
+  },
+  (err) => {
+    console.log('err.response', err.response);
+    const { data } = err?.response;
+    if (data?.status_code === 401) {
+      clearLocalStorage();
+      window.location.href = routes.connectWallet;
+    }
+    console.log('Error calling API', err);
   }
-  console.log('Error calling API', err);
-})
+);
 
 export const apiURL = {
   // USERS URL
 
-  login: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}/login`, // POST
-  profileUpdateUrl: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}`, // PUT
-  userOnBoardingUrl: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}`, // POST
-  userOffBoardingUrl: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}`, // DELETE
+  login: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}/login`, // POST
+  profileUpdateUrl: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}`, // PUT
+  userOnBoardingUrl: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}`, // POST
+  userOffBoardingUrl: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}`, // DELETE
 
   getUserInfoUrl: (chain: string, address: string) =>
     `${baseURL}/chains/${chain}/users/${address}`, // GET
 
-  logoutUserUrl: (chain: string, address: string) => `${baseURL}/chains/${chain}/users/${address}/logout`, // DELETE
+  logoutUserUrl: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}/logout`, // DELETE
 
   //NOTIFICATIONS URL
 
-  fetchnotificationUrl: (chain: string) => `${baseURL}/chains/${chain}/notifications`, // GET
+  fetchnotificationUrl: (chain: string) =>
+    `${baseURL}/chains/${chain}/notifications`, // GET
 
   sendNotificationUrl: (chain: string, appId: string, kind: string) =>
     `${baseURL}/chains/${chain}/channels/${appId}/notifications/${kind}`, // POST
@@ -95,17 +116,27 @@ export const apiURL = {
 
   getUsersStatsUrl: (chain: string) => `${baseURL}/chains/${chain}/stats/users`,
 
-  getChannelStatUrl: (chain: string) => `${baseURL}/chains/${chain}/stats/channels`,
+  getChannelStatUrl: (chain: string) =>
+    `${baseURL}/chains/${chain}/stats/channels`,
 
   getOptinOutStatUrl: (chain: string, channel: string) =>
     `${baseURL}/chains/${chain}/stats/channels/${channel}/optinout`,
 
-  getChnnelTractionsStatUrl: (chain: string, channel: string, address: string) =>
+  getChnnelTractionsStatUrl: (
+    chain: string,
+    channel: string,
+    address: string
+  ) =>
     `${baseURL}/chains/${chain}/stats/channels/${channel}/users/${address}/notification`,
 
-  getNotificationReachStatUrl: (chain: string, channel: string, address: string, kind: string, uuid: string) =>
-    `${baseURL}/chains/${chain}/stats/channels/${channel}/users/${address}/notification/${kind}/uuid/${uuid}?time`,
-
-}
+  getNotificationReachStatUrl: (
+    chain: string,
+    channel: string,
+    address: string,
+    kind: string,
+    uuid: string
+  ) =>
+    `${baseURL}/chains/${chain}/stats/channels/${channel}/users/${address}/notification/${kind}/uuid/${uuid}?time`
+};
 
 export default api;

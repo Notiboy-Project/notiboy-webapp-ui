@@ -16,6 +16,10 @@ export const removeCurrentUser = () => {
   localStorage.removeItem(storageKey.USER_DATA_KEY);
 }
 
+export const clearLocalStorage = () => {
+  localStorage.clear()
+}
+
 export const getWalletAddressFromStorage = () => {
   const str = localStorage.getItem(storageKey.WALLET_ADDRESS_KEY) || 'null';
   const wallet = JSON.parse(str);

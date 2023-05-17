@@ -20,7 +20,7 @@ export default function SidebarLayout(props: any) {
   return (
     <Box>
       <Image src={ImageLogo} alt="logo" height={55} margin={'15px auto'} />
-      <Box mt={10} display={'grid'} placeItems={'center'}>
+      <Box mt={10} display={'grid'} placeItems={'center'} textAlign={'center'} fontSize={'xl'}>
         {NAV_MENUS.map((menu) => (
           <Box p={1} mb={4} w={'100%'} key={menu.name}>
             <NavLink to={menu.url}>

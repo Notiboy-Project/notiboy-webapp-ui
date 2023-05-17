@@ -49,6 +49,9 @@ export default function WalletDropdown() {
     }
   };
 
+  const truncatedAddress = `${activeAccount?.address.slice(0, 4)}...
+  ${activeAccount?.address?.slice(-3)}`
+
   return (
     <Menu>
       <MenuButton
@@ -58,17 +61,16 @@ export default function WalletDropdown() {
         borderRadius={'3xl'}
         size={'lg'}
       >
-        {activeAccount?.address.slice(0, 4)}...
-        {activeAccount?.address?.slice(-3)}
+       {truncatedAddress}
       </MenuButton>
-      <MenuList borderRadius={'3xl'} p={3}>
+      <MenuList borderRadius={'3xl'} p={3} maxWidth={{ base: '315px', md: '100%', xs: '350px' }} right={15}>
         <MenuItem minH="48px" onClick={handleCopyAddress} p={2} borderRadius={'2xl'}>
-          <Text as={'small'} textOverflow={'ellipsis'}>
-            {activeAccount?.address}
+          <Text as={'small'} maxWidth={'325px'} wordBreak={"break-all"} textOverflow={'ellipsis'}>
+            {activeAccount?.address.slice(0, 25)}...
           </Text>
           <Icon ml={2} as={BiCopy} h={6} w={6} />
         </MenuItem>
-        <MenuItem minH="40px" onClick={handleLogout} p={2} borderRadius={'2xl'}>
+        <MenuItem minH="40px" onClick={handleLogout} p={2} borderRadius={'2xl'} textAlign={'center'}>
           <Text as='small'>Logout</Text>
           <Icon ml={2} as={BiLogOut} h={6} w={6} />
         </MenuItem>

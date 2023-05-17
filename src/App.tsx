@@ -5,7 +5,7 @@ import {
   WalletProvider,
   PROVIDER_ID
 } from '@txnlab/use-wallet';
-import { ChakraProvider, Box, theme } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import PageLoading from './components/Layout/PageLoading';
@@ -27,6 +27,12 @@ const walletProvider = initializeProviders([
   PROVIDER_ID.WALLETCONNECT
 ]);
 
+const theme = extendTheme({  
+  config:{
+    initialColorMode: 'dark'
+  }
+})
+
 export const App = () => {
   React.useEffect(() => {
     // Reconnect the session when the user returns to the dApp
@@ -37,7 +43,7 @@ export const App = () => {
     <WalletProvider value={walletProvider}>
       <UserContextProvider>
         <ChakraProvider theme={theme}>
-          <Box textAlign="center" fontSize="xl">
+          {/* <Box> */}
             <BrowserRouter>
               <Routes>
                 <Route
@@ -104,7 +110,7 @@ export const App = () => {
                 </Route>
               </Routes>
             </BrowserRouter>
-          </Box>
+          {/* </Box> */}
         </ChakraProvider>
       </UserContextProvider>
     </WalletProvider>
