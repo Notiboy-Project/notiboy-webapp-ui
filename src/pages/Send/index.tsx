@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext } from 'react';
 import {
   Box,
   Button,
@@ -16,33 +16,34 @@ import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 import { UserContext } from '../../Context/userContext';
 
 export default function SendPage() {
+  const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC);
+  const { user } = useContext(UserContext);
 
-  const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC)
-  const { user } = useContext(UserContext)
-
-  console.log({user})
-
+  console.log({ user });
 
   const handleSendNotification = () => {
     console.log('Send Notification');
     // TODO: send notification by calling APIs
-  }
+  };
 
   return (
     <Box p={5}>
-      <Box display={'flex'} alignItems={'center'}>
+      <Box display={{ base: 'grid', md: 'flex' }} alignItems={'center'} gap={5} placeItems={'center'}>
         <Box width={'fit-content'}>
           <NTabs
             activeTab={tab}
             tabs={[
               { name: MessageType.PUBLIC, title: 'Public Message' },
               { name: MessageType.PERSONAL, title: 'Personal Message' },
-              { name: MessageType.BULK_PERSONAL, title: 'Bulk Personal Message' }
+              {
+                name: MessageType.BULK_PERSONAL,
+                title: 'Bulk Personal Message'
+              }
             ]}
             onTabSelected={setTab}
           />
         </Box>
-        <Box ml={5}>
+        <Box>
           <SelectChannel />
         </Box>
       </Box>
@@ -51,7 +52,7 @@ export default function SendPage() {
           <Input
             placeholder="Input address"
             backgroundColor={'gray.800'}
-            name='inputAddress'
+            name="inputAddress"
             size={'lg'}
             borderRadius={'xl'}
             p={'25px'}

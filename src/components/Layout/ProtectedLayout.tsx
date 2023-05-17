@@ -27,6 +27,7 @@ export default function ProtectedLayout(props: any) {
       </Show>
       <Box
         width={{ base: '100%', sm: '100%', md: '100%', xl: '80%' }}
+        marginBottom={{ base: '60px', xl: '0' }}
         id="main-content"
         backgroundColor={'gray.700'}
         height={{ base: '100%', sm: '100%', md: 'calc(100vh - 80px)' }}

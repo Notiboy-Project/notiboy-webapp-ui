@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Hide,
+  Icon,
   Menu,
   MenuButton,
   MenuItem,
@@ -34,16 +35,17 @@ export default function NTabs(props: NTabsProps) {
       backgroundColor={'gray.800'}
       width={'100%'}
       borderRadius={'full'}
-      p={1}
+      p={{ base: 0, md: 0, xl: 1 }}
     >
       <Show below="xl">
         <Menu>
           <MenuButton
             bgColor={'gray.800'}
             as={Button}
-            rightIcon={<FaCaretDown fill="blue.400" />}
+            rightIcon={<Icon as={FaCaretDown} fill="blue.400" />}
             borderRadius={'3xl'}
             size={'lg'}
+            minW="245px"
             p={5}
           >
             {activeTab}
