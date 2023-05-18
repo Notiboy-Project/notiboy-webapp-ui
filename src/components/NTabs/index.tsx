@@ -46,6 +46,7 @@ export default function NTabs(props: NTabsProps) {
             borderRadius={'3xl'}
             size={'lg'}
             minW="245px"
+            width={{ base: '100%', sm: '100%', md: '' }}
             p={5}
           >
             {activeTab}

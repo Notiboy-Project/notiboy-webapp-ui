@@ -1,18 +1,24 @@
 import { Box, Icon } from '@chakra-ui/react';
 import { routes } from '../../config';
-import { IconType } from 'react-icons';
-import { MdLiveHelp } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
-import { ImStatsBars } from 'react-icons/im';
-import { RiSendPlaneFill } from 'react-icons/ri';
-import { IoIosNotifications, IoMdSync } from 'react-icons/io';
+import {
+  ShareIcon,
+  SendIcon,
+  StatisticsIcon,
+  Notification1Icon,
+  MessgeQuestionIcon
+} from '../../assets/svgs';
 
-const NAV_MENUS: { icon: IconType; name: string; url: string }[] = [
-  { name: 'notifications', url: routes.notifications, icon: IoIosNotifications },
-  { name: 'channels', url: routes.channels, icon: IoMdSync },
-  { name: 'send', url: routes.send, icon: RiSendPlaneFill },
-  { name: 'statistics', url: routes.statistics, icon: ImStatsBars },
-  { name: 'support', url: routes.support, icon: MdLiveHelp }
+const NAV_MENUS: { icon: any; name: string; url: string }[] = [
+  {
+    name: 'notifications',
+    url: routes.notifications,
+    icon: Notification1Icon
+  },
+  { name: 'channels', url: routes.channels, icon: ShareIcon },
+  { name: 'send', url: routes.send, icon: SendIcon },
+  { name: 'statistics', url: routes.statistics, icon: StatisticsIcon },
+  { name: 'support', url: routes.support, icon: MessgeQuestionIcon }
 ];
 
 export default function MobileMenuBar() {
@@ -39,7 +45,12 @@ export default function MobileMenuBar() {
                   as={menu.icon}
                   h={35}
                   w={35}
-                  fill={isActive ? 'blue' : ''}
+                  stroke={'blue.400'}
+                  css={`
+                    path {
+                      stroke: ${isActive ? '#0B8BE6' : ''};
+                    }
+                  `}
                 />
               </Box>
             )}

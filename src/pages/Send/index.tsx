@@ -28,7 +28,12 @@ export default function SendPage() {
 
   return (
     <Box p={5}>
-      <Box display={{ base: 'grid', md: 'flex' }} alignItems={'center'} gap={5} placeItems={'center'}>
+      <Box
+        display={{ base: 'grid', sm: 'flex', md: 'flex' }}
+        alignItems={'center'}
+        gap={5}
+        placeItems={'center'}
+      >
         <Box width={'fit-content'}>
           <NTabs
             activeTab={tab}

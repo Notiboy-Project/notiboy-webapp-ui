@@ -7,7 +7,6 @@ export { ReactComponent as CheckIcon } from './check.svg'
 export { ReactComponent as CloseCircleIcon } from './close-circle.svg'
 export { ReactComponent as CopyIcon } from './copy.svg'
 export { ReactComponent as FilterIcon } from './filter.svg'
-export { ReactComponent as HomeTrendUpIcon } from './home-trend-up.svg'
 export { ReactComponent as LinkIcon } from './link.svg'
 export { ReactComponent as LoginIcon } from './login.svg'
 export { ReactComponent as MessgeQuestionIcon } from './message-question.svg'
@@ -22,6 +21,7 @@ export { ReactComponent as ShareIcon } from './share.svg'
 export { ReactComponent as ShareIcon2 } from './share-1.svg'
 export { ReactComponent as SunIcon } from './sun.svg'
 export { ReactComponent as VerifyIcon } from './verify.svg'
+export { ReactComponent as StatisticsIcon } from './statistics-icon.svg'
 
 
 
