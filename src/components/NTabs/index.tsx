@@ -77,6 +77,7 @@ export default function NTabs(props: NTabsProps) {
           <TabList>
             {tabs.map((tab) => (
               <Tab
+                key={tab.name}
                 _selected={{ backgroundColor: 'gray.600', color: '#fff' }}
                 p={'10px 35px'}
               >

@@ -21,17 +21,16 @@ const SupportPage = React.lazy(() => import('./pages/Support'));
 const SettingsPage = React.lazy(() => import('./pages/Settings'));
 
 const walletProvider = initializeProviders([
-  PROVIDER_ID.MYALGO,
   PROVIDER_ID.DEFLY,
   PROVIDER_ID.PERA,
   PROVIDER_ID.WALLETCONNECT
 ]);
 
-const theme = extendTheme({  
-  config:{
+const theme = extendTheme({
+  config: {
     initialColorMode: 'dark'
   }
-})
+});
 
 export const App = () => {
   React.useEffect(() => {
@@ -44,72 +43,72 @@ export const App = () => {
       <UserContextProvider>
         <ChakraProvider theme={theme}>
           {/* <Box> */}
-            <BrowserRouter>
-              <Routes>
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={<Navigate to={routes.notifications} />}
+              />
+              <Route
+                path={routes.connectWallet}
+                element={
+                  <React.Suspense fallback={<PageLoading />}>
+                    <ConnectWallet />
+                  </React.Suspense>
+                }
+              />
+              <Route path="/" element={<ProtectedRoutes />}>
                 <Route
-                  path="/"
-                  element={<Navigate to={routes.notifications} />}
-                />
-                <Route
-                  path={routes.connectWallet}
+                  path={routes.notifications}
                   element={
                     <React.Suspense fallback={<PageLoading />}>
-                      <ConnectWallet />
+                      <NotificationPage />
                     </React.Suspense>
                   }
                 />
-                <Route path="/" element={<ProtectedRoutes />}>
-                  <Route
-                    path={routes.notifications}
-                    element={
-                      <React.Suspense fallback={<PageLoading />}>
-                        <NotificationPage />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path={routes.channels}
-                    element={
-                      <React.Suspense fallback={<PageLoading />}>
-                        <ChannelsPage />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path={routes.send}
-                    element={
-                      <React.Suspense fallback={<PageLoading />}>
-                        <SendPage />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path={routes.statistics}
-                    element={
-                      <React.Suspense fallback={<PageLoading />}>
-                        <StatisticsPage />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path={routes.support}
-                    element={
-                      <React.Suspense fallback={<PageLoading />}>
-                        <SupportPage />
-                      </React.Suspense>
-                    }
-                  />
-                  <Route
-                    path={routes.settings}
-                    element={
-                      <React.Suspense fallback={<PageLoading />}>
-                        <SettingsPage />
-                      </React.Suspense>
-                    }
-                  />
-                </Route>
-              </Routes>
-            </BrowserRouter>
+                <Route
+                  path={routes.channels}
+                  element={
+                    <React.Suspense fallback={<PageLoading />}>
+                      <ChannelsPage />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path={routes.send}
+                  element={
+                    <React.Suspense fallback={<PageLoading />}>
+                      <SendPage />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path={routes.statistics}
+                  element={
+                    <React.Suspense fallback={<PageLoading />}>
+                      <StatisticsPage />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path={routes.support}
+                  element={
+                    <React.Suspense fallback={<PageLoading />}>
+                      <SupportPage />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path={routes.settings}
+                  element={
+                    <React.Suspense fallback={<PageLoading />}>
+                      <SettingsPage />
+                    </React.Suspense>
+                  }
+                />
+              </Route>
+            </Routes>
+          </BrowserRouter>
           {/* </Box> */}
         </ChakraProvider>
       </UserContextProvider>

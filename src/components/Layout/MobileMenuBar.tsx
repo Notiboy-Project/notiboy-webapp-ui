@@ -38,9 +38,9 @@ export default function MobileMenuBar() {
         height={'100%'}
       >
         {NAV_MENUS.map((menu) => (
-          <NavLink to={menu.url}>
+          <NavLink to={menu.url} key={menu.name}>
             {({ isActive }) => (
-              <Box key={menu.name}>
+              <Box>
                 <Icon
                   as={menu.icon}
                   h={35}

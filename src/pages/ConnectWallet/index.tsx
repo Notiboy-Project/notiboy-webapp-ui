@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Box, Image, Text, useToast } from '@chakra-ui/react';
+import { Box, Hide, Image, Show, Text, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import ImageLogo from '../../assets/images/notiboy_nam.png';
+import LogoNameImage from '../../assets/images/notiboy.png';
 import algosdk from 'algosdk';
 import {
   useWallet,
@@ -15,13 +15,12 @@ import NetworkLists from './NetworkList';
 import { AlgorandIcon } from '../../assets/svgs';
 import { NetworkType } from './wallet.types';
 import NetworkWalletLists from '../../components/Wallets/NetworkWalletList';
-import {
-  convertJSTOBase64,
-} from '../../services/algorand.service';
+import { convertJSTOBase64 } from '../../services/algorand.service';
 import { loginToApp } from '../../services/api.service';
 import { storeTokenToStorage } from '../../services/storage.service';
 import { fetchUserInfo } from '../../services/users.service';
 import { UserContext } from '../../Context/userContext';
+import SectionLoading from '../../components/Layout/SectionLoading';
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -31,7 +30,8 @@ const algodClient = new algosdk.Algodv2(
 
 export default function WalletConnect(props: any) {
   const { activeAccount, signTransactions } = useWallet();
-  const { saveUsersData } = React.useContext(UserContext)
+  const [isRequestProcessing, setRequestProcessing] = React.useState(false);
+  const { saveUsersData } = React.useContext(UserContext);
   const [selectedNetwork, setSelectedNetwork] =
     React.useState<NetworkType | null>(null);
 
@@ -50,6 +50,8 @@ export default function WalletConnect(props: any) {
           amount: 0,
           suggestedParams: params
         });
+
+      setRequestProcessing(true);
       console.log('transaction', transaction);
 
       const encodedTransaction = algosdk.encodeUnsignedTransaction(transaction);
@@ -64,35 +66,47 @@ export default function WalletConnect(props: any) {
       // storetoken into localstorag
       const { data } = response.data;
       if (data?.token) {
-        storeTokenToStorage(data.token)
+        storeTokenToStorage(data.token);
         // TODO: get logged in users information
         const resp = await fetchUserInfo(selectedNetwork || '', address);
-        console.log("userInfo response= =>", resp.data)
-        saveUsersData(resp.data)
-        navigate(routes.notifications)
+        console.log('userInfo response= =>', resp.data);
+        saveUsersData(resp.data);
+        navigate(routes.notifications);
       } else {
         toast({
           description: 'Failed to connect to Wallet ! please try again.',
           status: 'error',
           duration: 3000,
           position: 'top'
-        })
+        });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log('error', err);
-      navigate(routes.notifications)
-      toast({
-        description: 'Failed to connect to Wallet ! please try again.',
-        status: 'error',
-        duration: 3000,
-        position: 'top'
-      })
+      const errorString = err?.toString();
+      if (errorString.includes('Transaction Request Rejected')) {
+        toast({
+          description: err?.toString(),
+          status: 'error',
+          duration: 3000,
+          position: 'top'
+        });
+      } else {
+        toast({
+          description: 'Services looks down ! Please try again',
+          status: 'error',
+          duration: 3000,
+          position: 'top'
+        });
+        // Needs to remove this navigation once the APIs is fully working
+        navigate(routes.notifications);
+      }
+      setRequestProcessing(false);
+      setSelectedNetwork(null);
     }
   };
 
   React.useEffect(() => {
-
-    if (activeAccount && activeAccount.address) {
+    if (activeAccount && activeAccount.address && selectedNetwork) {
       signedTransaction(activeAccount.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,8 +115,6 @@ export default function WalletConnect(props: any) {
   const handleSelectNetwork = (type: NetworkType) => {
     setSelectedNetwork(type);
   };
-
-  // console.log('activeAccount', activeAccount);
 
   return (
     <Box
@@ -120,9 +132,16 @@ export default function WalletConnect(props: any) {
         placeItems={'center'}
         borderRadius={15}
         width={['95%', '75%', '65%']}
+        position="relative"
       >
-        <ColorModeSwitcher />
-        <Image src={ImageLogo} alt="logo" height={75} width={250} />
+        {isRequestProcessing && <SectionLoading />}
+        {/* <ColorModeSwitcher /> */}
+        <Show above="md">
+          <Image src={ImageLogo} alt="logo" height={75} width={250} />
+        </Show>
+        <Hide above="md">
+          <Image src={LogoNameImage} alt="logo" height={75} width={85} />
+        </Hide>
         <Text fontWeight={600} mt={2} as="small">
           Web3 communication made efficient
         </Text>
