@@ -32,11 +32,12 @@ export default function SelectChannel(props: any) {
         {selectedChannel}
       </MenuButton>
       <MenuList borderRadius={'3xl'} p={3}>
+        {channels?.length === 0 && <MenuItem>No channels found!</MenuItem>}
         {(channels || []).map((channel) => (
           <MenuItem
             minH="48px"
             onClick={() => {
-              setSelectedChannel('Channel 1');
+              setSelectedChannel(channel);
             }}
             p={2}
             borderRadius={'2xl'}
@@ -44,16 +45,6 @@ export default function SelectChannel(props: any) {
             <Text as="small">{channel}</Text>
           </MenuItem>
         ))}
-        <MenuItem
-          minH="40px"
-          onClick={() => {
-            setSelectedChannel('Channel 2');
-          }}
-          p={2}
-          borderRadius={'2xl'}
-        >
-          <Text as="small">Channel 2</Text>
-        </MenuItem>
       </MenuList>
     </Menu>
   );

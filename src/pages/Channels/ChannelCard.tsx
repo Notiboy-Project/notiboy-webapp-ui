@@ -3,10 +3,9 @@ import { Avatar, Box, Button, Icon, Text, useToast } from '@chakra-ui/react';
 import { CardLayout } from '../../components/Layout/CardLayout';
 import { VerifyIcon } from '../../assets/svgs';
 import { ChannelsDto } from '../../services/services.types';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdEdit } from 'react-icons/md';
 import { ImUsers } from 'react-icons/im';
 import {
-  deleteChannel,
   fetchChannelUsersLists,
   optIntoChannel,
   optOutChannel
@@ -16,13 +15,15 @@ import { UserContext } from '../../Context/userContext';
 interface ChannelListsProps {
   channel: ChannelsDto;
   updateChannelList: () => void;
+  handleEditChannel: (channel: ChannelsDto) => void;
+  handleDeleteChannel: (appId: string) => void;
 }
 
 function ChannelCard(props: ChannelListsProps) {
-  const [isDeleting, setDeleting] = React.useState(false);
   const [isUserDownloading, setUserDownloading] = React.useState(false);
   const [optInoutLoading, setOptInoutLoading] = React.useState(false);
-  const { channel, updateChannelList } = props;
+  const { channel, updateChannelList, handleEditChannel, handleDeleteChannel } =
+    props;
   const { user, refetchUserInfo } = React.useContext(UserContext);
 
   const { channels = [], optins = [], chain = '', address = '' } = user || {};
@@ -32,18 +33,18 @@ function ChannelCard(props: ChannelListsProps) {
   const imgSrc = `data:image/png;base64, ${channel.logo}`;
 
   const isUserOptin = (appId: string) => {
-    return optins?.includes(appId) || channels.includes(appId);
+    return (optins || [])?.includes(appId) || (channels || []).includes(appId);
   };
 
   const amIOwner = () => {
-    return channels?.includes(channel.app_id);
+    return (channels || [])?.includes(channel.app_id);
   };
 
   const handleDownloadUsers = async () => {
     // TODO: fetch users and create csv file to download
     setUserDownloading(true);
     try {
-      const resp = await fetchChannelUsersLists('algorand', channel.app_id);
+      const resp = await fetchChannelUsersLists(chain, channel.app_id);
       const { status_code } = resp;
       if (status_code === 200) {
         // TODO: create blob file and download it.
@@ -53,29 +54,6 @@ function ChannelCard(props: ChannelListsProps) {
     } catch (err) {
       console.log('Error fetching users ==>', err);
       setUserDownloading(false);
-    }
-  };
-
-  const handleDeleteChannel = async () => {
-    // TODO: delete channel API call and update lists
-    setDeleting(true);
-    try {
-      const resp = await deleteChannel('algorand', channel.app_id);
-      const { status_code } = resp;
-      if (status_code === 200) {
-        toast({
-          description: `'${channel.name}'Channel deleted !`,
-          duration: 3000,
-          isClosable: true,
-          position: 'top',
-          status: 'success'
-        });
-        updateChannelList();
-      }
-      console.log('delete response', resp);
-    } catch (err) {
-      console.log('Error deleting channel', err);
-      setDeleting(false);
     }
   };
 
@@ -186,26 +164,33 @@ function ChannelCard(props: ChannelListsProps) {
         {showOptInOutOption()}
 
         {amIOwner() && (
-          <Box display={'flex'} justifyContent={'flex-end'}>
+          <Box display={'flex'} justifyContent={'flex-end'} mt={4}>
             <Button
               onClick={handleDownloadUsers}
               isLoading={isUserDownloading}
               backgroundColor={'blue.500'}
+              size="sm"
               borderRadius={'3xl'}
-              mt={4}
             >
               <Icon as={ImUsers} h={18} w={18} /> &nbsp; Download users
             </Button>
             <Button
-              onClick={handleDeleteChannel}
-              isLoading={isDeleting}
+              onClick={() => handleDeleteChannel(channel?.app_id)}
               ml={2}
               backgroundColor={'red.400'}
               borderRadius={'3xl'}
-              mt={4}
+              size="sm"
             >
               <Icon as={MdDelete} h={18} w={18} />
-              Delete Channel
+            </Button>
+            <Button
+              onClick={() => handleEditChannel(channel)}
+              ml={2}
+              backgroundColor={'blue.400'}
+              borderRadius={'3xl'}
+              size="sm"
+            >
+              <Icon as={MdEdit} h={18} w={18} />
             </Button>
           </Box>
         )}

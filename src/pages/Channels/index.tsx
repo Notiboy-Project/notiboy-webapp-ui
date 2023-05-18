@@ -16,14 +16,29 @@ import {
 import { BsPlus } from 'react-icons/bs';
 import { fetchChannelLists } from '../../services/channels.service';
 import PageLoading from '../../components/Layout/PageLoading';
+import { useState } from 'react';
+import { ChannelsDto } from '../../services/services.types';
+import DeleteChannelModal from './DeleteChannelModal';
 
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [editChannel, setEditChannel] = useState<ChannelsDto | null>(null);
+  const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
 
   const { error, isLoading, data, mutate } = useSWR(
     'api/channels/algorand',
     fetchChannelLists
   );
+
+  const handleEditChannel = (channel: ChannelsDto) => {
+    setEditChannel(channel);
+    onOpen();
+  };
+
+  const handleCloseModal = () => {
+    setEditChannel(null);
+    onClose();
+  };
 
   if (isLoading) return <PageLoading />;
 
@@ -66,7 +81,12 @@ export default function ChannelsPage() {
       </Box>
       <Box mt={4}>
         {data?.data?.length === 0 && (
-          <Flex mt={20} height={'100%'} justifyContent={'center'} alignItems={'center'}>
+          <Flex
+            mt={20}
+            height={'100%'}
+            justifyContent={'center'}
+            alignItems={'center'}
+          >
             <Text fontSize={'2xl'}>No channels found !</Text>
           </Flex>
         )}
@@ -75,10 +95,23 @@ export default function ChannelsPage() {
             key={channel.app_id}
             updateChannelList={mutate}
             channel={channel}
+            handleEditChannel={handleEditChannel}
+            handleDeleteChannel={setDeleteAppId}
           />
         ))}
       </Box>
-      <CreateChannelModal mutate={mutate} isOpen={isOpen} onClose={onClose} />
+      <CreateChannelModal
+        channel={editChannel}
+        mutate={mutate}
+        isOpen={isOpen}
+        onClose={handleCloseModal}
+      />
+      <DeleteChannelModal
+        appId={deleteAppId}
+        isOpen={!!deleteAppId}
+        onClose={() => setDeleteAppId(null)}
+        updateChannelList={mutate}
+      />
     </Box>
   );
 }
