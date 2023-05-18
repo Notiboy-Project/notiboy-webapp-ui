@@ -45,8 +45,7 @@ export default function NTabs(props: NTabsProps) {
             rightIcon={<Icon as={FaCaretDown} fill="blue.400" />}
             borderRadius={'3xl'}
             size={'lg'}
-            minW="245px"
-            width={{ base: '100%', sm: '100%', md: '' }}
+            width={'100%'}
             p={5}
           >
             {activeTab}

@@ -27,14 +27,14 @@ export default function SelectChannel(props: any) {
         borderRadius={'3xl'}
         size={'lg'}
         p={5}
-        minW="245px"
+        width="100%"
       >
         {selectedChannel}
       </MenuButton>
       <MenuList borderRadius={'3xl'} p={3}>
         {(channels || []).map((channel) => (
           <MenuItem
-            minH="48px"            
+            minH="48px"
             onClick={() => {
               setSelectedChannel('Channel 1');
             }}

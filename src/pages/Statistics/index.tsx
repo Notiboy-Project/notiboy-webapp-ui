@@ -15,7 +15,7 @@ export default function StatisticsPage() {
   return (
     <Box p={5}>
       <Text>Statistics page UI</Text>
-      <Box position={'relative'}>
+      <Box position={'relative'} mt={5}>
         <Box width={{base: '95%', md: '90%', xl: '80%'}} minH={'550px'} margin={'0 auto'}>
           {currentChart === ChartType.LINE_CHART && <LineCharUsers />}
           {currentChart === ChartType.PIE_CHART && <PieChartStatistics />}

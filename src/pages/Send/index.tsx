@@ -34,7 +34,7 @@ export default function SendPage() {
         gap={5}
         placeItems={'center'}
       >
-        <Box width={'fit-content'}>
+        <Box width={{ base: '100%', md: 'fit-content' }}>
           <NTabs
             activeTab={tab}
             tabs={[
@@ -48,7 +48,7 @@ export default function SendPage() {
             onTabSelected={setTab}
           />
         </Box>
-        <Box>
+        <Box width={{ base: '100%', md: 'fit-content' }}>
           <SelectChannel />
         </Box>
       </Box>
@@ -97,7 +97,7 @@ export default function SendPage() {
           </InputRightElement>
         </InputGroup>
       </Box>
-      <Box mt={5}>
+      <Box mt={10} display={'flex'} justifyContent={'center'}>
         <Button
           p={'20px 60px'}
           borderRadius={'full'}

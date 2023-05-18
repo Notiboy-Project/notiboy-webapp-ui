@@ -83,7 +83,7 @@ export default function WalletConnect(props: any) {
     } catch (err: any) {
       console.log('error', err);
       const errorString = err?.toString();
-      if (errorString.includes('Transaction Request Rejected')) {
+      if (errorString.includes('Rejected')) {
         toast({
           description: err?.toString(),
           status: 'error',
