@@ -67,7 +67,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
       setSubmitting(true)
       const resp = await createChannel('algorand', payload)
       const { status_code } = resp
-      if (status_code === 200) {
+      if (status_code === 201) {
         toast({
           description: 'Channel created !',
           status: 'success',

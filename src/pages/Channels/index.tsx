@@ -8,6 +8,7 @@ import {
   AlertTitle,
   Box,
   Button,
+  Flex,
   Icon,
   Text,
   useDisclosure
@@ -65,9 +66,9 @@ export default function ChannelsPage() {
       </Box>
       <Box mt={4}>
         {data?.data?.length === 0 && (
-          <Box mt={20} height={'100%'}>
+          <Flex mt={20} height={'100%'} justifyContent={'center'} alignItems={'center'}>
             <Text fontSize={'2xl'}>No channels found !</Text>
-          </Box>
+          </Flex>
         )}
         {data?.data?.map((channel) => (
           <ChannelCard
