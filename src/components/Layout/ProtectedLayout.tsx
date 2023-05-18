@@ -30,7 +30,7 @@ export default function ProtectedLayout(props: any) {
         marginBottom={{ base: '60px', xl: '0' }}
         id="main-content"
         backgroundColor={'gray.700'}
-        height={{ base: '100%', sm: '100%', md: 'calc(100vh - 80px)' }}
+        height={{ base: 'calc(100vh - 60px)', md: 'calc(100vh - 80px)' }}
         overflow={'auto'}
         borderRadius={{ base: 0, md: 15, lg: 28 }}
         p={2}

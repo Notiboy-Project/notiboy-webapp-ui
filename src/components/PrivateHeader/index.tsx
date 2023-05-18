@@ -1,6 +1,6 @@
 import { Box, Button, Icon } from '@chakra-ui/react';
 import { AlgorandIcon } from '../../assets/svgs';
-import { ColorModeSwitcher } from '../../ColorModeSwitcher';
+// import { ColorModeSwitcher } from '../../ColorModeSwitcher';
 import { FiSettings } from 'react-icons/all';
 import WalletDropdown from '../Wallets/WalletDropdown';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ export default function PrivateHeader() {
           </Icon>
         </Box>
         <Box display={'flex'} justifyItems={'ce'}>
-          <ColorModeSwitcher />
+          {/* <ColorModeSwitcher /> */}
           <Button
             w={45}
             onClick={() => navigate(routes.settings)}

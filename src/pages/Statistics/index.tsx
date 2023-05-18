@@ -25,7 +25,7 @@ export default function StatisticsPage() {
             position={'absolute'}
             rounded={'full'}
             top={'45%'}
-            left={-10}
+            left={-5}
             display={currentChart === ChartType.LINE_CHART ? 'none': 'flex'}
             onClick={() => setCurrentChart(ChartType.LINE_CHART)}
             size={'lg'}
@@ -38,7 +38,7 @@ export default function StatisticsPage() {
             rounded={'full'}
             display={currentChart === ChartType.PIE_CHART ? 'none': 'flex'}
             top={'45%'}
-            right={-10}
+            right={-5}
             onClick={() => setCurrentChart(ChartType.PIE_CHART)}
             size={'lg'}
             padding={'15px'}
