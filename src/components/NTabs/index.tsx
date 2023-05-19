@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { MessageType } from '../../pages/Send/send.types';
 import { FaCaretDown } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 interface NTabsProps {
   activeTab: string;
@@ -24,11 +25,18 @@ interface NTabsProps {
 
 export default function NTabs(props: NTabsProps) {
   const { tabs, onTabSelected, activeTab } = props;
+  const [activeTabTitle, setActiveTabTitle] = useState('');
 
   const handleChangeTab = (index: number) => {
     const selectedTabName = tabs[index].name;
+    const selectedTabTitle = tabs[index].title;
     onTabSelected(selectedTabName);
+    setActiveTabTitle(selectedTabTitle);
   };
+
+  useEffect(() => {
+    setActiveTabTitle(tabs.find((tab) => tab.name === activeTab)?.title || '');
+  }, [activeTab, tabs]);
 
   return (
     <Box
@@ -48,7 +56,7 @@ export default function NTabs(props: NTabsProps) {
             width={'100%'}
             p={5}
           >
-            {activeTab}
+            {activeTabTitle}
           </MenuButton>
           <MenuList borderRadius={'3xl'} p={3}>
             {tabs.map((tab) => (

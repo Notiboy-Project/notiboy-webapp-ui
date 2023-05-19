@@ -17,13 +17,36 @@ import { UserContext } from '../../Context/userContext';
 
 export default function SendPage() {
   const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC);
+  const [payload, setPayload] = useState({
+    message: '',
+    link: '',
+    user: []
+  });
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [currentChannel, setCurrentChannel] = useState('');
+
+  const handleChange = (
+    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.currentTarget;
+
+    setPayload({
+      ...payload,
+      [name]: value
+    });
+  };
+
   const { user } = useContext(UserContext);
 
-  console.log({ user });
-
   const handleSendNotification = () => {
-    console.log('Send Notification');
+    setIsProcessing(true);    
+    // TODO: check validation before sending notification
+    
     // TODO: send notification by calling APIs
+    console.log({ payload });
+    console.log({ currentChannel });
+    console.log({ user });
+    setIsProcessing(false);
   };
 
   return (
@@ -49,7 +72,7 @@ export default function SendPage() {
           />
         </Box>
         <Box width={{ base: '100%', md: 'fit-content' }}>
-          <SelectChannel />
+          <SelectChannel onChannelSelect={setCurrentChannel} />
         </Box>
       </Box>
       <Box mt={5}>
@@ -74,11 +97,12 @@ export default function SendPage() {
 
         <Textarea
           borderRadius={'xl'}
-          placeholder="Input a message..."
+          placeholder="Input a message *"
           name="message"
           mt={4}
           backgroundColor={'gray.800'}
           rows={4}
+          onChange={handleChange}
           p={4}
           fontWeight={600}
         />
@@ -89,6 +113,8 @@ export default function SendPage() {
             size={'lg'}
             borderRadius={'xl'}
             p={'25px'}
+            name="link"
+            onChange={handleChange}
             fontWeight={500}
             mt={4}
           />
@@ -102,6 +128,7 @@ export default function SendPage() {
           p={'20px 60px'}
           borderRadius={'full'}
           backgroundColor={'blue.600'}
+          isLoading={isProcessing}
           onClick={handleSendNotification}
         >
           Send

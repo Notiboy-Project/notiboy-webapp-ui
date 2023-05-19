@@ -1,3 +1,4 @@
+import useSWR from 'swr';
 import {
   Button,
   Icon,
@@ -10,13 +11,20 @@ import {
 import { useState, useContext } from 'react';
 import { FaCaretDown } from 'react-icons/fa';
 import { UserContext } from '../../Context/userContext';
+import { fetchChannelsByUser } from '../../services/channels.service';
 
-export default function SelectChannel(props: any) {
+interface SelectChannelProps {
+  onChannelSelect: (appId: string) => void;
+}
+
+export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
   const [selectedChannel, setSelectedChannel] = useState('Select Channel');
-
   const { user } = useContext(UserContext);
 
-  const { channels = [] } = user || {};
+  const { isLoading, data } = useSWR(
+    `api/${user?.chain}/${user?.address}`,
+    fetchChannelsByUser
+  );
 
   return (
     <Menu>
@@ -27,22 +35,24 @@ export default function SelectChannel(props: any) {
         borderRadius={'3xl'}
         size={'lg'}
         p={5}
+        isLoading={isLoading}
         width="100%"
       >
         {selectedChannel}
       </MenuButton>
       <MenuList borderRadius={'3xl'} p={3}>
-        {channels?.length === 0 && <MenuItem>No channels found!</MenuItem>}
-        {(channels || []).map((channel) => (
+        {data?.length === 0 && <MenuItem>No channels found!</MenuItem>}
+        {(data || []).map((channel) => (
           <MenuItem
             minH="48px"
             onClick={() => {
-              setSelectedChannel(channel);
+              setSelectedChannel(channel.name);
+              onChannelSelect(channel.app_id);
             }}
             p={2}
             borderRadius={'2xl'}
           >
-            <Text as="small">{channel}</Text>
+            <Text as="small">{channel.name}</Text>
           </MenuItem>
         ))}
       </MenuList>

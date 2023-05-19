@@ -30,7 +30,7 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
 
   const handleFileSelect = async (event: React.FormEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
-    console.log('file ==>', files?.[0]);
+
     setFile(event.currentTarget.value);
     if (files && files?.length > 0) {
       const _file = files?.[0];
@@ -58,7 +58,7 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
       let reader = new FileReader();
       // Register event listeners
       reader.addEventListener('loadend', (e: ProgressEvent<FileReader>) => {
-        console.log('ArrayBugger', e.target?.result);
+        // console.log('ArrayBugger', e.target?.result);
         resolve(e?.target?.result);
       });
       reader.addEventListener('error', reject);

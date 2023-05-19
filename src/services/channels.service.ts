@@ -1,6 +1,10 @@
 import api, { apiURL } from './api.service';
 import { Fetcher } from 'swr';
-import { ChannelListsResponse, createChannelParams } from './services.types';
+import {
+  ChannelListsResponse,
+  ChannelsDto,
+  createChannelParams
+} from './services.types';
 
 export const fetchChannelLists: Fetcher<ChannelListsResponse> = async (
   args: string
@@ -21,7 +25,7 @@ export const createChannel = async (
 export const updateChannel = async (
   chain: string,
   appId: string,
-  payload: { logo: string | null, description: string }
+  payload: { logo: string | null; description: string }
 ) => {
   const resp = await api.put(apiURL.updateChannelUrl(chain, appId), payload);
   return resp.data;
@@ -56,4 +60,12 @@ export const optOutChannel = async (
 ) => {
   const resp = await api.delete(apiURL.channelOptOutUrl(chain, appId, address));
   return resp.data;
+};
+
+export const fetchChannelsByUser: Fetcher<ChannelsDto[]> = async (
+  args: string
+) => {
+  const [, chain, address] = args.split('/');
+  const resp = await api.get(apiURL.channelsByUsersURL(chain, address));
+  return resp?.data?.data || [];
 };
