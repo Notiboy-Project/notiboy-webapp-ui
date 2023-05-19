@@ -18,5 +18,5 @@ export const data = {
 };
 
 export function PieChartStatistics() {
-  return <Pie data={data} height={'550px'} />;
+  return <Pie data={data} />;
 }

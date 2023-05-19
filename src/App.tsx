@@ -21,6 +21,7 @@ const SupportPage = React.lazy(() => import('./pages/Support'));
 const SettingsPage = React.lazy(() => import('./pages/Settings'));
 
 const walletProvider = initializeProviders([
+  PROVIDER_ID.MYALGO,
   PROVIDER_ID.DEFLY,
   PROVIDER_ID.PERA,
   PROVIDER_ID.WALLETCONNECT
