@@ -125,25 +125,29 @@ function ChannelCard(props: ChannelListsProps) {
     }
 
     if (isUserOptin(channel.app_id)) {
-      <Button
-        isLoading={optInoutLoading}
-        backgroundColor={'red.400'}
-        borderRadius={'3xl'}
-        mt={4}
-        onClick={handleOptOut}
-      >
-        Opt-out
-      </Button>;
+      return (
+        <Button
+          isLoading={optInoutLoading}
+          backgroundColor={'red.400'}
+          borderRadius={'3xl'}
+          mt={4}
+          onClick={handleOptOut}
+        >
+          Opt-out
+        </Button>
+      );
     } else {
-      <Button
-        isLoading={optInoutLoading}
-        onClick={handleOptIn}
-        backgroundColor={'blue.500'}
-        borderRadius={'3xl'}
-        mt={4}
-      >
-        Opt-in
-      </Button>;
+      return (
+        <Button
+          isLoading={optInoutLoading}
+          onClick={handleOptIn}
+          backgroundColor={'blue.500'}
+          borderRadius={'3xl'}
+          mt={4}
+        >
+          Opt-in
+        </Button>
+      );
     }
   };
 
@@ -151,7 +155,11 @@ function ChannelCard(props: ChannelListsProps) {
     <CardLayout p={5} mt={4}>
       <Box display={'flex'} alignItems={'center'}>
         <Avatar name="avatar" src={imgSrc} height={'40px'} width={'40px'} />
-        <Box display={{ base: 'grid', md: 'flex' }} alignContent={'center'} alignItems={'center'}>
+        <Box
+          display={{ base: 'grid', md: 'flex' }}
+          alignContent={'center'}
+          alignItems={'center'}
+        >
           <Text ml={3}>{channel.name}</Text>
           <Text ml={2} as="small">
             ({channel.app_id})
