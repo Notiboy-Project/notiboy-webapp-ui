@@ -2,10 +2,7 @@ import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
+import {  
   Box,
   Button,
   Flex,
@@ -19,6 +16,7 @@ import PageLoading from '../../components/Layout/PageLoading';
 import { useState } from 'react';
 import { ChannelsDto } from '../../services/services.types';
 import DeleteChannelModal from './DeleteChannelModal';
+import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,22 +42,7 @@ export default function ChannelsPage() {
 
   if (!isLoading && error) {
     console.log('Error loading channels', error);
-    return (
-      <Box
-        display={'flex'}
-        alignItems={'center'}
-        height={'80%'}
-        width={{ base: '100%', sm: '70%' }}
-        margin={'0 auto'}
-      >
-        <Alert status="error" borderRadius={'2xl'}>
-          <AlertIcon />
-          <AlertTitle>
-            Resources are not available at the moment! Try again later!
-          </AlertTitle>
-        </Alert>
-      </Box>
-    );
+    return <ResourcesUnavailable />;
   }
 
   return (

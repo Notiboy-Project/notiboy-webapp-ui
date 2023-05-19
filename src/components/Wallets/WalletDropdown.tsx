@@ -13,7 +13,10 @@ import { BiCopy, BiLogOut } from 'react-icons/bi';
 import { FaCaretDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../config';
-import { removeCurrentUser, removeTokenFromStorage } from '../../services/storage.service';
+import {
+  removeCurrentUser,
+  removeTokenFromStorage
+} from '../../services/storage.service';
 
 export default function WalletDropdown() {
   const { activeAccount, providers } = useWallet();
@@ -32,7 +35,7 @@ export default function WalletDropdown() {
   };
 
   const handleLogout = async () => {
-    const connectedWallet = providers?.find((wallet) => wallet.isConnected);
+    const connectedWallet = providers?.find((wallet) => wallet.isActive);
 
     toast({
       description: 'Logged out !',
@@ -42,15 +45,15 @@ export default function WalletDropdown() {
       position: 'top'
     });
     removeTokenFromStorage();
+    removeCurrentUser();
     if (connectedWallet) {
       await connectedWallet.disconnect();
-      removeCurrentUser()
       navigate(routes.connectWallet);
     }
   };
 
   const truncatedAddress = `${activeAccount?.address.slice(0, 4)}...
-  ${activeAccount?.address?.slice(-3)}`
+  ${activeAccount?.address?.slice(-3)}`;
 
   return (
     <Menu>
@@ -61,17 +64,38 @@ export default function WalletDropdown() {
         borderRadius={'3xl'}
         size={'lg'}
       >
-       {truncatedAddress}
+        {truncatedAddress}
       </MenuButton>
-      <MenuList borderRadius={'3xl'} p={3} maxWidth={{ base: '315px', md: '100%', xs: '350px' }} right={15}>
-        <MenuItem minH="48px" onClick={handleCopyAddress} p={2} borderRadius={'2xl'}>
-          <Text as={'small'} maxWidth={'325px'} wordBreak={"break-all"} textOverflow={'ellipsis'}>
+      <MenuList
+        borderRadius={'3xl'}
+        p={3}
+        maxWidth={{ base: '315px', md: '100%', xs: '350px' }}
+        right={15}
+      >
+        <MenuItem
+          minH="48px"
+          onClick={handleCopyAddress}
+          p={2}
+          borderRadius={'2xl'}
+        >
+          <Text
+            as={'small'}
+            maxWidth={'325px'}
+            wordBreak={'break-all'}
+            textOverflow={'ellipsis'}
+          >
             {activeAccount?.address.slice(0, 25)}...
           </Text>
           <Icon ml={2} as={BiCopy} h={6} w={6} />
         </MenuItem>
-        <MenuItem minH="40px" onClick={handleLogout} p={2} borderRadius={'2xl'} textAlign={'center'}>
-          <Text as='small'>Logout</Text>
+        <MenuItem
+          minH="40px"
+          onClick={handleLogout}
+          p={2}
+          borderRadius={'2xl'}
+          textAlign={'center'}
+        >
+          <Text as="small">Logout</Text>
           <Icon ml={2} as={BiLogOut} h={6} w={6} />
         </MenuItem>
       </MenuList>

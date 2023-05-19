@@ -131,6 +131,7 @@ function ChannelCard(props: ChannelListsProps) {
           backgroundColor={'red.400'}
           borderRadius={'3xl'}
           mt={4}
+          size={'sm'}
           onClick={handleOptOut}
         >
           Opt-out
@@ -143,6 +144,7 @@ function ChannelCard(props: ChannelListsProps) {
           onClick={handleOptIn}
           backgroundColor={'blue.500'}
           borderRadius={'3xl'}
+          size={'sm'}
           mt={4}
         >
           Opt-in

@@ -1,20 +1,17 @@
 import * as React from 'react';
-import {
-  Box,
-  Icon,
-  Text
-} from '@chakra-ui/react';
+import { Box, Icon, Text } from '@chakra-ui/react';
 import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import NotificationCard from './NotificationCard';
 import { fetchNotifications } from '../../services/notification.service';
 import { NoNotificationIcon } from '../../assets/svgs';
 import { UserContext } from '../../Context/userContext';
+import PageLoading from '../../components/Layout/PageLoading';
+import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 
 export default function NotificationPage(props: any) {
-
-  const { user } = React.useContext(UserContext)
-  console.log("user ==>", user);
+  const { user } = React.useContext(UserContext);
+  console.log('user ==>', user);
 
   const {
     error,
@@ -35,6 +32,14 @@ export default function NotificationPage(props: any) {
   console.log('isLoading', isLoading);
   console.log('data ==>', data);
 
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  if (error && !isLoading) {
+    return <ResourcesUnavailable />;
+  }
+
   return (
     <Box p={5}>
       <Box
@@ -43,7 +48,7 @@ export default function NotificationPage(props: any) {
         alignContent={'center'}
         height={'100%'}
       >
-        <SearchInput onChange={() => { }} value="" />
+        <SearchInput onChange={() => {}} value="" />
       </Box>
       <Box mt={5}>
         {data?.data?.length === 0 && (
