@@ -49,6 +49,7 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
               setSelectedChannel(channel.name);
               onChannelSelect(channel.app_id);
             }}
+            key={channel.app_id}
             p={2}
             borderRadius={'2xl'}
           >

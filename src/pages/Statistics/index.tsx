@@ -3,6 +3,7 @@ import { LineCharUsers } from './LineChart';
 import { PieChartStatistics } from './PieChart';
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
 import { useState } from 'react';
+import SelectChannel from '../../components/SelectChannel';
 
 export enum ChartType {
   LINE_CHART,
@@ -14,6 +15,9 @@ export default function StatisticsPage() {
 
   return (
     <Box p={5}>
+      <Flex justifyContent={'end'} width={'fit-content'}>
+        <SelectChannel onChannelSelect={console.log} />
+      </Flex>
       <Box mt={5}>
         <Box
           width={{ base: '95%', md: '90%', xl: '80%' }}

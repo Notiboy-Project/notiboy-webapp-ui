@@ -7,7 +7,7 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -25,13 +25,13 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: 'top' as const
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
-    },
-  },
+      text: 'Chart.js Line Chart'
+    }
+  }
 };
 
 const labels = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
@@ -41,23 +41,26 @@ export const data = {
   datasets: [
     {
       label: 'Number of Users',
-      data: [
-        25, 45, 35, 85, 65, 24, 14, 98, 25, 66
-      ],
+      data: [25, 45, 35, 85, 65, 24, 14, 98, 25, 66],
       borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)'
     },
     {
       label: 'Number of announcements',
-      data: [
-        15, 48, 65, 24, 12, 69, 77, 56, 18, 85
-      ],
+      data: [15, 48, 65, 24, 12, 69, 77, 56, 18, 85],
       borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
+      backgroundColor: 'rgba(53, 162, 235, 0.5)'
+    }
+  ]
 };
 
 export function LineCharUsers() {
-  return <Line options={options} data={data} updateMode='resize'/>;
+  return (
+    <Line
+      options={options}
+      data={data}
+      updateMode="resize"
+      style={{ minHeight: '275px' }}
+    />
+  );
 }

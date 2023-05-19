@@ -39,9 +39,9 @@ export default function SendPage() {
   const { user } = useContext(UserContext);
 
   const handleSendNotification = () => {
-    setIsProcessing(true);    
+    setIsProcessing(true);
     // TODO: check validation before sending notification
-    
+
     // TODO: send notification by calling APIs
     console.log({ payload });
     console.log({ currentChannel });
