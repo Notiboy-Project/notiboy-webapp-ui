@@ -6,7 +6,8 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Textarea
+  Textarea,
+  useToast
 } from '@chakra-ui/react';
 import NTabs from '../../components/NTabs';
 import { MessageType } from './send.types';
@@ -25,6 +26,8 @@ export default function SendPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentChannel, setCurrentChannel] = useState('');
 
+  const toast = useToast();
+
   const handleChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -38,10 +41,46 @@ export default function SendPage() {
 
   const { user } = useContext(UserContext);
 
-  const handleSendNotification = () => {
-    setIsProcessing(true);
-    // TODO: check validation before sending notification
+  const showErrorMsg = (msg: string) => {
+    toast({
+      description: msg,
+      duration: 3000,
+      isClosable: true,
+      position: 'top',
+      status: 'error'
+    });
+  };
 
+  const checkValidation = () => {
+    let isValid = true;
+
+    if (!currentChannel) {
+      isValid = false;
+      showErrorMsg('Please select a channel !');
+    }
+
+    if (!payload?.message?.trim()) {
+      isValid = false;
+      showErrorMsg('Please enter a message to send!');
+    }
+
+    if (tab === MessageType.PERSONAL && payload.user.length === 0) {
+      isValid = false;
+      showErrorMsg('Please enter an address to send notification!');
+    }
+
+    return isValid;
+  };
+
+  const handleSendNotification = () => {
+    // TODO: check validation before sending notification
+    const isDataValid = checkValidation();
+
+    if (!isDataValid) {
+      return;
+    }
+
+    setIsProcessing(true);
     // TODO: send notification by calling APIs
     console.log({ payload });
     console.log({ currentChannel });

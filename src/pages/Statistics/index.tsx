@@ -1,9 +1,17 @@
+import useSWR from 'swr';
 import { Box, Button, Flex, Icon } from '@chakra-ui/react';
 import { LineCharUsers } from './LineChart';
 import { PieChartStatistics } from './PieChart';
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import SelectChannel from '../../components/SelectChannel';
+import {
+  fetchGlobalStats,
+  fetchOptInOutStats,
+  fetchUsersStat,
+  fethcChannelsStats
+} from '../../services/statistics.service';
+import { UserContext } from '../../Context/userContext';
 
 export enum ChartType {
   LINE_CHART,
@@ -12,11 +20,36 @@ export enum ChartType {
 
 export default function StatisticsPage() {
   const [currentChart, setCurrentChart] = useState(ChartType.LINE_CHART);
+  const [currentChannel, setCurrentChannel] = useState('');
+  const { user } = useContext(UserContext);
+
+  const { data: globalStats } = useSWR(
+    `${user?.chain}/global/stat`,
+    fetchGlobalStats
+  );
+  const { data: userStats } = useSWR(
+    `${user?.chain}/users/stat`,
+    fetchUsersStat
+  );
+  const { data: channelStats } = useSWR(
+    `${user?.chain}/channels/stat`,
+    fethcChannelsStats
+  );
+  const { data: optInOutStats } = useSWR(
+    `${user?.chain}/${currentChannel}/opt-in-out/stat`,
+    fetchOptInOutStats
+  );
+
+  console.log('globalData ==>', globalStats);
+  console.log('usersData ==>', userStats);
+  console.log('channelStats ==>', channelStats);
+  console.log('currentChannel ==>', currentChannel);
+  console.log('optInOutStats ==>', optInOutStats);
 
   return (
     <Box p={5}>
       <Flex justifyContent={'end'} width={'fit-content'}>
-        <SelectChannel onChannelSelect={console.log} />
+        <SelectChannel onChannelSelect={setCurrentChannel} />
       </Flex>
       <Box mt={5}>
         <Box

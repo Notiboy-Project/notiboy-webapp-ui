@@ -11,14 +11,14 @@ export default function Settings(props: any) {
       <InputGroup size='md'>
         <Input
           pr='4.5rem'
-          p={'28px 25px'}
+          p={'25px 25px'}
           borderRadius={'3xl'}
           backgroundColor={'gray.800'}
           placeholder='Enter your email id'
         />
-        <InputRightElement width='7.5rem' top={2}>
+        <InputRightElement width='5.5rem' top={1.5}>
           <Button borderRadius={'3xl'} bgColor={'blue.400'} h='1.75rem' size='sm' onClick={() => { }}>
-            Verify email
+            Verify
           </Button>
         </InputRightElement>
       </InputGroup>

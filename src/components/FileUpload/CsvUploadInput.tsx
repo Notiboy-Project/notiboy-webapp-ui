@@ -1,51 +1,63 @@
-import { useRef, useState } from 'react'
-import { Box, CloseButton, Icon, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { useRef, useState } from 'react';
+import {
+  Box,
+  CloseButton,
+  Icon,
+  Input,
+  InputGroup,
+  InputRightElement
+} from '@chakra-ui/react';
 import { FaFileCsv } from 'react-icons/fa';
 
 interface CsvUploadInputProps {
-  onDataRecieved: (data: string[]) => void
+  onDataRecieved: (data: string[]) => void;
 }
 
 export default function CsvUploadInput(props: CsvUploadInputProps) {
+  const { onDataRecieved } = props;
 
-  const { onDataRecieved } = props
-
-  const csvFileRef = useRef<HTMLInputElement>(null)
-  const [fileName, setFileName] = useState('')
+  const csvFileRef = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState('');
 
   const handleChangeFile = (event: React.FormEvent<HTMLInputElement>) => {
-    const files = event.currentTarget.files
-    console.log("files ==>>", files)
+    const files = event.currentTarget.files;
+    console.log('files ==>>', files);
     if (files && files.length > 0) {
       const _file = files[0];
-      console.log("file", _file.name);
-      setFileName(_file.name)
+      console.log('file', _file.name);
+      setFileName(_file.name);
       const reader = new FileReader();
-      reader.readAsText(_file)
+      reader.readAsText(_file);
       reader.onloadend = (event) => {
-        const csvData = event?.target?.result || '' as string;
+        const csvData = event?.target?.result || ('' as string);
         if (typeof csvData === 'string') {
-          const rowData = csvData?.split('\n')
-          console.log('rowData: ', rowData)
-          onDataRecieved(rowData || [])
+          const rowData = csvData?.split('\n');
+          const [columns, ...data] = rowData;
+          const obj = data.map((row, index) => {
+            return {
+              [columns[index]]: row.split(', ')
+            }
+          })
+          console.log('columns: ', obj);
+          onDataRecieved(rowData || []);
         }
-      }
+      };
     }
-  }
+  };
 
   const resetFileControl = () => {
     // TODO: Reset file control
     setFileName('');
     onDataRecieved([]);
-  }
+  };
 
   return (
     <Box>
-      <InputGroup size='md'>
+      <InputGroup size="md">
         <Input
           placeholder="Upload CSV *"
           backgroundColor={'gray.800'}
-          name='csv_file'
+          name="csv_file"
           size={'lg'}
           borderRadius={'xl'}
           p={'25px'}
@@ -56,20 +68,19 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
           fontWeight={500}
           mt={4}
         />
-        <InputRightElement width='5.5rem' top={5}>
-          {fileName && (
-            <CloseButton mr={3} onClick={resetFileControl} />
-          )}
-          <Icon h='1.75rem' size='sm' fill='blue.600' as={FaFileCsv} />
+        <InputRightElement width="5.5rem" top={5}>
+          {fileName && <CloseButton mr={3} onClick={resetFileControl} />}
+          <Icon h="1.75rem" fill="blue.600" as={FaFileCsv} />
         </InputRightElement>
       </InputGroup>
       <Input
         onChange={handleChangeFile}
         ref={csvFileRef}
-        type='file'
-        name='csv_file'
+        type="file"
+        name="csv_file"
         display={'none'}
-        accept='text/csv' />
+        accept="text/csv"
+      />
     </Box>
-  )
+  );
 }
