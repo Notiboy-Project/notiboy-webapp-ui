@@ -45,14 +45,31 @@ function ChannelCard(props: ChannelListsProps) {
     setUserDownloading(true);
     try {
       const resp = await fetchChannelUsersLists(chain, channel.app_id);
-      const { status_code } = resp;
+      const { status_code, data } = resp;
       if (status_code === 200) {
+        let csvString = `Address \n`;
+        csvString += data
+          .map((obj: { address: string }) => obj?.address || '')
+          ?.join('\n');
         // TODO: create blob file and download it.
+
+        window.URL = window.webkitURL || window.URL;
+        const contentType = 'text/csv';
+        const csvFile = new Blob([csvString], { type: contentType });
+
+        const a = document.createElement('a');
+        a.download = `${channel.name}-addresses.csv`;
+        a.href = window.URL.createObjectURL(csvFile);
+        a.textContent = 'Download CSV';
+
+        a.dataset.downloadurl = [contentType, a.download, a.href].join(':');
+        a.click();
+        a.remove();
+
       }
       setUserDownloading(false);
-      console.log('resp ==>', resp);
     } catch (err) {
-      console.log('Error fetching users ==>', err);
+      console.log('Error downloading users csv ==>', err);
       setUserDownloading(false);
     }
   };
