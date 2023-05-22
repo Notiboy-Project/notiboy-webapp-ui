@@ -16,9 +16,15 @@ import SelectChannel from '../../components/SelectChannel';
 import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 import { UserContext } from '../../Context/userContext';
 
+type PayloadParam = {
+  message: string
+  link: string
+  user: string[]
+}
+
 export default function SendPage() {
   const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC);
-  const [payload, setPayload] = useState({
+  const [payload, setPayload] = useState<PayloadParam>({
     message: '',
     link: '',
     user: []
