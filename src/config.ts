@@ -21,9 +21,7 @@ export const routes = Object.freeze({
 export const envs = Object.freeze({
   baseUrl: process.env.REACT_APP_BASE_URL,
   apiVersion: process.env.REACT_APP_API_VERSION,
-  discordClientId: process.env.REACT_APP_DISCORD_CLIENT_ID,
-  discordPublicKey: process.env.REACT_APP_DISCORD_PUBLIC_KEY,
+  discordClientId: process.env.REACT_APP_DISCORD_CLIENT_ID,  
   discordRedirectUrl: process.env.REACT_APP_DISCORD_REDIRECT_URL,
   discordAuthUrl: process.env.REACT_APP_DISCORD_AUTH_URL
-  
 })

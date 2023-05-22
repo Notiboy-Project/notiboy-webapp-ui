@@ -8,6 +8,8 @@ import {
 } from '@chakra-ui/react';
 // import DiscordOauth2 from 'discord-oauth2';
 import { envs } from '../../config';
+import { useContext } from 'react';
+import { UserContext } from '../../Context/userContext';
 
 // const oAuth = new DiscordOauth2({
 //   clientId: envs.discordClientId,
@@ -16,13 +18,22 @@ import { envs } from '../../config';
 // });
 
 export default function Settings(props: any) {
+  const { user } = useContext(UserContext);
+
   const handleDiscordVerification = () => {
     const windowFeatures = 'left=100,top=100,width=380,height=600';
-    const handle = window.open(
-      envs.discordAuthUrl,
-      'mozillaWindow',
-      windowFeatures
-    );
+
+    const redirect_uri = envs.discordRedirectUrl || '';
+    const urlParams = new URLSearchParams();
+    urlParams.append('client_id', envs?.discordClientId || '');
+    urlParams.append('redirect_uri', redirect_uri);
+    urlParams.append('response_type', 'code');
+    urlParams.append('scope', 'identify guilds.join');
+    urlParams.append('state', `${user?.chain},${user?.address}`);
+
+    const fullUrl = ` ${envs.discordAuthUrl}?${urlParams.toString()}`;
+
+    const handle = window.open(fullUrl, 'mozillaWindow', windowFeatures);
 
     console.log({ handle });
 
