@@ -59,7 +59,7 @@ export default function DeleteChannelModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent borderRadius={'2xl'}>
         <ModalHeader>Delete channel</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

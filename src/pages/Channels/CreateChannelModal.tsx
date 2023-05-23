@@ -67,7 +67,40 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     setSubmitting(false);
   };
 
+  const isPayloadValid = () => {
+    let isValid = true;
+    if (!payload?.name?.trim()) {
+      isValid = false;
+      toast({
+        description: 'Channel name is required',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+        status: 'error'
+      });
+    }
+
+    if (!payload?.description) {
+      isValid = false;
+      toast({
+        description: 'Description is required',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+        status: 'error'
+      });
+    }
+    return isValid;
+  };
+
   const handleCreateChannel = async () => {
+    // TODO: Check validation before creating a new channel
+    const isValid = isPayloadValid();
+
+    if (!isValid) {
+      return;
+    }
+
     // TODO: call API to create a channel
     try {
       setSubmitting(true);
@@ -137,7 +170,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
             </Box>
             <Input
               size="lg"
-              placeholder="Enter channel name"
+              placeholder="Enter channel name *"
               mt={5}
               onChange={handleChange}
               value={payload.name}
@@ -148,7 +181,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
               fontWeight={500}
             />
             <Textarea
-              placeholder="Enter channel description"
+              placeholder="Enter channel description *"
               rows={5}
               mt={5}
               p={4}
