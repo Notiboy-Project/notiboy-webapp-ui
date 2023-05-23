@@ -56,6 +56,7 @@ export default function Settings(props: any) {
           isClosable: true,
           position: 'top'
         });
+        setEmail('');
         setEmailSending(false);
       }
     } catch (err) {
@@ -106,6 +107,7 @@ export default function Settings(props: any) {
             bgColor={'blue.400'}
             h="1.75rem"
             size="sm"
+            disabled={email?.trim()?.length === 0 ? true : false}
             onClick={handleEmailVerification}
           >
             Verify

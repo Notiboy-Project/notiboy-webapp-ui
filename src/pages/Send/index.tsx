@@ -222,7 +222,7 @@ export default function SendPage() {
         />
         <InputGroup size="md">
           <Input
-            placeholder="Uploa a link"
+            placeholder="Upload a link"
             backgroundColor={'gray.800'}
             size={'lg'}
             borderRadius={'xl'}

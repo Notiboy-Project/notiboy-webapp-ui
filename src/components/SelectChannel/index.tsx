@@ -41,7 +41,7 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
         {selectedChannel}
       </MenuButton>
       <MenuList borderRadius={'3xl'} p={3}>
-        {data?.length === 0 && <MenuItem>No channels found!</MenuItem>}
+        {data?.length === 0 && <MenuItem disabled>No channels found!</MenuItem>}
         {(data || []).map((channel) => (
           <MenuItem
             minH="48px"
