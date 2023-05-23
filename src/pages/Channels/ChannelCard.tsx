@@ -179,7 +179,7 @@ function ChannelCard(props: ChannelListsProps) {
           alignContent={'center'}
           alignItems={'center'}
         >
-          <Text ml={3}>{channel.name}</Text>         
+          <Text ml={3} fontWeight={600}>{channel.name}</Text>         
         </Box>
         {channel.verified && <Icon as={VerifyIcon} ml={3} />}
       </Box>
