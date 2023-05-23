@@ -32,13 +32,6 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
         const csvData = event?.target?.result || ('' as string);
         if (typeof csvData === 'string') {
           const rowData = csvData?.split('\n');
-          const [columns, ...data] = rowData;
-          const obj = data.map((row, index) => {
-            return {
-              [columns[index]]: row.split(', ')
-            }
-          })
-          console.log('columns: ', obj);
           onDataRecieved(rowData || []);
         }
       };

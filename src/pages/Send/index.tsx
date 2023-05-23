@@ -15,12 +15,14 @@ import { LinkIcon } from '../../assets/svgs';
 import SelectChannel from '../../components/SelectChannel';
 import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 import { UserContext } from '../../Context/userContext';
+import { sendNotificaiton } from '../../services/notification.service';
+import { KindType } from '../../services/services.types';
 
 type PayloadParam = {
-  message: string
-  link: string
-  user: string[]
-}
+  message: string;
+  link: string;
+  user: string[];
+};
 
 export default function SendPage() {
   const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC);
@@ -30,7 +32,7 @@ export default function SendPage() {
     user: []
   });
   const [isProcessing, setIsProcessing] = useState(false);
-  const [currentChannel, setCurrentChannel] = useState('');
+  const [appId, setAppId] = useState('');
 
   const toast = useToast();
 
@@ -57,10 +59,18 @@ export default function SendPage() {
     });
   };
 
+  const handleAddressChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    setPayload({
+      ...payload,
+      user: value?.trim() ? [value] : []
+    });
+  };
+
   const checkValidation = () => {
     let isValid = true;
 
-    if (!currentChannel) {
+    if (!appId) {
       isValid = false;
       showErrorMsg('Please select a channel !');
     }
@@ -78,7 +88,29 @@ export default function SendPage() {
     return isValid;
   };
 
-  const handleSendNotification = () => {
+  const hadleCsvData = (data: string[]) => {
+    console.log('CSV data ===>', data);
+    if (
+      data?.[0]?.toLowerCase()?.trim() !== 'address' ||
+      String(data?.[1]).length === 0
+    ) {
+      toast({
+        description: 'Invalid CSV uploaded',
+        status: 'error',
+        isClosable: true,
+        position: 'top',
+        duration: 3000
+      });
+      return;
+    }
+    const [, ...address] = data;
+    setPayload({
+      ...payload,
+      user: address
+    });
+  };
+
+  const handleSendNotification = async () => {
     // TODO: check validation before sending notification
     const isDataValid = checkValidation();
 
@@ -86,13 +118,49 @@ export default function SendPage() {
       return;
     }
 
-    setIsProcessing(true);
-    // TODO: send notification by calling APIs
-    console.log({ payload });
-    console.log({ currentChannel });
-    console.log({ user });
-    setIsProcessing(false);
+    let kind: KindType = 'public';
+
+    if (tab === MessageType.PERSONAL || tab === MessageType.BULK_PERSONAL) {
+      kind = 'private';
+    }
+
+    try {
+      setIsProcessing(true);
+
+      const response = await sendNotificaiton({
+        appId: appId,
+        chain: user?.chain || '',
+        kind,
+        address: user?.address || '',
+        payload: {
+          link: payload?.link || '',
+          message: payload?.message || '',
+          user: payload?.user
+        }
+      });
+      if (response?.status_code === 200) {
+        toast({
+          description: 'Notification sent successfully!',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+          status: 'success'
+        });
+      }
+      setIsProcessing(false);
+    } catch (err) {
+      console.log('Error sending notication message', err);
+      toast({
+        description: 'Failed to send notifications! Please try again later',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+        status: 'error'
+      });
+    }
   };
+
+  console.log('payload ==>', payload);
 
   return (
     <Box p={5}>
@@ -117,7 +185,7 @@ export default function SendPage() {
           />
         </Box>
         <Box width={{ base: '100%', md: 'fit-content' }}>
-          <SelectChannel onChannelSelect={setCurrentChannel} />
+          <SelectChannel onChannelSelect={setAppId} />
         </Box>
       </Box>
       <Box mt={5}>
@@ -131,12 +199,13 @@ export default function SendPage() {
             p={'25px'}
             fontWeight={500}
             mt={4}
+            onChange={handleAddressChange}
           />
         )}
 
         {tab === MessageType.BULK_PERSONAL && (
           <>
-            <CsvUploadInput onDataRecieved={console.log} />
+            <CsvUploadInput onDataRecieved={hadleCsvData} />
           </>
         )}
 

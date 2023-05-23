@@ -34,4 +34,21 @@ export interface NotificationFetcher {
   message: string
 }
 
+export type KindType = 'public' | 'private'
+
+export interface sendNotificationPaylod {
+  user: string[];
+  message: string;
+  link: string;
+}
+
+export interface sendNotificaitonArgs {
+  chain: string,
+  appId: string,
+  kind: 'public' | 'private',
+  address: string
+  payload: sendNotificationPaylod
+}
+
+
 ///*********** END Notifications APIs types ****/
