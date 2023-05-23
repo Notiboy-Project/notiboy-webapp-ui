@@ -160,8 +160,6 @@ export default function SendPage() {
     }
   };
 
-  console.log('payload ==>', payload);
-
   return (
     <Box p={5}>
       <Box
