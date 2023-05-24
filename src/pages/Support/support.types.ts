@@ -13,15 +13,13 @@ export const FAQS_DATA: SupportDto[] = [
   {
     id: 3,
     question: 'How can I start receiving notifications ?',
-    answer:
-      'You can start getting notifications by opting -in to a channel.When you opt - out of a channel you will stop getting notifications.'
+    answer: `You can start getting notifications by opting-in to a channel. When you 
+      opt-out of a channel you will stop getting notifications.`
   },
   {
     id: 4,
     question: ' Can I get notifications via email and discord ?',
-    answer: ` Yes, you can start getting notifications by verifying your email - id.To get notifications via discord,
-  you have to verify and then join penguin labs discord where the bot which sends you
-  notification lives.`
+    answer: ` Yes, you can start getting notifications via email and discord by verifying via settings page.`
   },
   {
     id: 5,

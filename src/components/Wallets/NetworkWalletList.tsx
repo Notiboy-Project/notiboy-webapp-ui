@@ -58,11 +58,11 @@ export default function NetworkWalletLists(props: NetworkWalletListsProps) {
             </Button>
           ))}
         </Box>
-        <Text as="small" mt={2}>
-          By connecting your wallet, you are agree to terms and conditions and
-          privacy
+        <Text as="small" p={5}>
+          By connecting the wallet, you agree to terms & conditions and privacy
+          policy.
         </Text>
-        <Button mt={4} onClick={onBackClick}>
+        <Button onClick={onBackClick}>
           <Icon as={FaArrowLeft}></Icon>
         </Button>
       </Box>

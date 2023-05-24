@@ -142,8 +142,8 @@ export default function WalletConnect(props: any) {
         <Hide above="md">
           <Image src={LogoNameImage} alt="logo" height={75} width={85} />
         </Hide>
-        <Text fontWeight={600} mt={2} as="small">
-          Web3 communication made efficient
+        <Text fontWeight={600} mt={2}>
+          Effective Communication on Web3
         </Text>
         <Box
           mt={5}
