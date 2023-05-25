@@ -2,14 +2,7 @@ import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
-import {  
-  Box,
-  Button,
-  Flex,
-  Icon,
-  Text,
-  useDisclosure
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import { BsPlus } from 'react-icons/bs';
 import { fetchChannelLists } from '../../services/channels.service';
 import PageLoading from '../../components/Layout/PageLoading';
@@ -25,7 +18,11 @@ export default function ChannelsPage() {
 
   const { error, isLoading, data, mutate } = useSWR(
     'api/channels/algorand',
-    fetchChannelLists
+    fetchChannelLists,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
+    }
   );
 
   const handleEditChannel = (channel: ChannelsDto) => {

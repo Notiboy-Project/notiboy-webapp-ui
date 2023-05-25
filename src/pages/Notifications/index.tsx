@@ -25,7 +25,11 @@ export default function NotificationPage(props: any) {
       url: `api/notifications`,
       params: { chain: 'algorand' }
     },
-    fetchNotifications
+    fetchNotifications,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,      
+    }
   );
 
   console.log('error', error);
