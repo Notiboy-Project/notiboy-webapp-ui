@@ -145,10 +145,10 @@ export default function Settings(props: any) {
 
   return (
     <Box mt={4} p={5}>
-      <Text size={'2xl'} fontWeight={600}>
+      <Text fontSize={'2xl'} fontWeight={600}>
         Notifications
       </Text>
-      <Divider mt={2} mb={2} />
+      <Divider mt={4} mb={2} />
       <Text mt={4} fontWeight={600}>
         Email:{' '}
       </Text>

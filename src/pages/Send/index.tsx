@@ -21,7 +21,7 @@ import { KindType } from '../../services/services.types';
 type PayloadParam = {
   message: string;
   link: string;
-  user: string[];
+  user: string;
 };
 
 export default function SendPage() {
@@ -29,7 +29,7 @@ export default function SendPage() {
   const [payload, setPayload] = useState<PayloadParam>({
     message: '',
     link: '',
-    user: []
+    user: ''
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [appId, setAppId] = useState('');
@@ -63,7 +63,7 @@ export default function SendPage() {
     const { value } = event.currentTarget;
     setPayload({
       ...payload,
-      user: value?.trim() ? [value] : []
+      user: value?.trim()
     });
   };
 
@@ -106,7 +106,7 @@ export default function SendPage() {
     const [, ...address] = data;
     setPayload({
       ...payload,
-      user: address
+      user: address.join(',')
     });
   };
 
@@ -138,6 +138,7 @@ export default function SendPage() {
           user: payload?.user
         }
       });
+      console.log('Response message', response);
       if (response?.status_code === 200) {
         toast({
           description: 'Notification sent successfully!',
@@ -146,17 +147,28 @@ export default function SendPage() {
           position: 'top',
           status: 'success'
         });
+      } else {
+        toast({
+          description:
+            response?.message || 'Something went wrong ! try again later',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+          status: 'success'
+        });
       }
       setIsProcessing(false);
-    } catch (err) {
-      console.log('Error sending notication message', err);
+    } catch (err: any) {      
       toast({
-        description: 'Failed to send notifications! Please try again later',
+        description:
+          err?.response?.data?.message ||
+          'Failed to send notifications! Please try again later',
         duration: 3000,
         isClosable: true,
         position: 'top',
         status: 'error'
       });
+      setIsProcessing(false);
     }
   };
 

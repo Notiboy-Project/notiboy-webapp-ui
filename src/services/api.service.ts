@@ -54,6 +54,7 @@ api.interceptors.response.use(
       window.location.href = routes.connectWallet;
     }
     console.log('Error calling API', err);
+    return Promise.reject(err);
   }
 );
 

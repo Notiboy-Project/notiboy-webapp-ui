@@ -37,7 +37,7 @@ export interface NotificationFetcher {
 export type KindType = 'public' | 'private'
 
 export interface sendNotificationPaylod {
-  user: string[];
+  user: string;
   message: string;
   link: string;
 }
