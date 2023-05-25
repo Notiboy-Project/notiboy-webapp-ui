@@ -32,7 +32,7 @@ export default function ChannelsPage() {
     onOpen();
   };
 
-  const filterBytext = (channels: ChannelsDto[], text: string) => {
+  const filterBytext = (channels: ChannelsDto[], text: string) => {                              
     if (!channels || text?.trim()?.length === 0) return;
 
     const str = text.trim()?.toLowerCase();

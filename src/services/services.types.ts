@@ -52,3 +52,11 @@ export interface sendNotificaitonArgs {
 
 
 ///*********** END Notifications APIs types ****/
+
+////********* USERS profile API types */
+
+export interface updateMediumPayload {
+  allowed_mediums: string[]
+}
+
+///******** */

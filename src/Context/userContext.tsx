@@ -12,6 +12,12 @@ export type UserDto = {
   membership: string;
   optins: string[];
   status: string;
+  medium_metadata: {
+    [key: string]: {
+      ID: string;
+      Verified: boolean;
+    };
+  }[];
   supported_mediums: string[];
 };
 
