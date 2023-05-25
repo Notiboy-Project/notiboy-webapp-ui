@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
@@ -6,15 +7,16 @@ import { Box, Button, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import { BsPlus } from 'react-icons/bs';
 import { fetchChannelLists } from '../../services/channels.service';
 import PageLoading from '../../components/Layout/PageLoading';
-import { useState } from 'react';
 import { ChannelsDto } from '../../services/services.types';
 import DeleteChannelModal from './DeleteChannelModal';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [searchText, setSearchText] = useState('');
   const [editChannel, setEditChannel] = useState<ChannelsDto | null>(null);
   const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
+  const [filteredData, setFilteredData] = useState<ChannelsDto[]>([]);
 
   const { error, isLoading, data, mutate } = useSWR(
     'api/channels/algorand',
@@ -30,10 +32,34 @@ export default function ChannelsPage() {
     onOpen();
   };
 
+  const filterBytext = (channels: ChannelsDto[], text: string) => {
+    if (!channels || text?.trim()?.length === 0) return;
+
+    const str = text.trim()?.toLowerCase();
+    const fdata = channels?.filter(
+      (channel) =>
+        channel?.name?.toLowerCase()?.includes(str) ||
+        channel?.description?.toLowerCase()?.includes(str)
+    );
+    setFilteredData(fdata);
+  };
+
   const handleCloseModal = () => {
     setEditChannel(null);
     onClose();
   };
+
+  useEffect(() => {
+    if (
+      data?.data &&
+      data?.data?.length > 0 &&
+      searchText?.trim()?.length > 1
+    ) {
+      filterBytext(data?.data || [], searchText);
+    } else {
+      setFilteredData(data?.data || []);
+    }
+  }, [data, searchText]);
 
   if (isLoading) return <PageLoading />;
 
@@ -45,7 +71,10 @@ export default function ChannelsPage() {
   return (
     <Box p={5}>
       <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
-        <SearchInput value="" onChange={() => {}} />
+        <SearchInput
+          value={searchText}
+          onChange={({ currentTarget }) => setSearchText(currentTarget.value)}
+        />
         <Button
           h={38}
           ml={4}
@@ -60,7 +89,7 @@ export default function ChannelsPage() {
         </Button>
       </Box>
       <Box mt={4}>
-        {data?.data?.length === 0 && (
+        {filteredData?.length === 0 && (
           <Flex
             mt={20}
             height={'100%'}
@@ -70,7 +99,7 @@ export default function ChannelsPage() {
             <Text fontSize={'2xl'}>No channels found !</Text>
           </Flex>
         )}
-        {data?.data?.map((channel) => (
+        {filteredData?.map((channel) => (
           <ChannelCard
             key={channel.app_id}
             updateChannelList={mutate}

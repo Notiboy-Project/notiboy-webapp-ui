@@ -11,7 +11,14 @@ export const fetchChannelLists: Fetcher<ChannelListsResponse> = async (
 ) => {
   const chain = args.split('/')[2];
   const resp = await api.get(apiURL.channelListsURL(chain));
-  return resp.data;
+  const { data, status_code, message } = resp?.data;
+  const verified = data?.filter((d: any) => d.verified === true);
+  const notVerified = data?.filter((d: any) => d.verified === false);
+  return {
+    data: [...verified, ...notVerified],
+    status_code,
+    message
+  };
 };
 
 export const createChannel = async (

@@ -6,7 +6,7 @@ import { NotificationData } from "../pages/Notifications/notification.types";
 export interface ChannelListsResponse {
   status_code: number;
   data: ChannelsDto[]
-  messsage: string
+  message: string
 }
 
 export interface ChannelsDto {

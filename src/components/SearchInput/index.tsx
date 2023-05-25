@@ -1,9 +1,9 @@
-import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { BiSearch } from "react-icons/bi";
+import { Icon, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { BiSearch } from 'react-icons/bi';
 
 interface SearchInputProps {
-  onChange: (text: string) => void,
-  value: string
+  onChange: (event: React.FormEvent<HTMLInputElement>) => void;
+  value: string;
 }
 
 export default function SearchInput(props: SearchInputProps) {
@@ -26,6 +26,8 @@ export default function SearchInput(props: SearchInputProps) {
       <Input
         size={'lg'}
         padding={'25px 60px'}
+        onChange={props.onChange}
+        value={props.value}
         borderRadius={'3xl'}
         bgColor={'gray.800'}
         placeholder="Search anything here..."
