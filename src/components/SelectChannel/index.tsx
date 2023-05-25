@@ -23,7 +23,10 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
 
   const { isLoading, data } = useSWR(
     `api/${user?.chain}/${user?.address}`,
-    fetchChannelsByUser
+    fetchChannelsByUser,
+    {
+      revalidateOnFocus: false
+    }
   );
 
   return (

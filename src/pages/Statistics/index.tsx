@@ -27,6 +27,10 @@ export enum ChartType {
   PIE_CHART
 }
 
+const swrConfig = {
+  revalidateOnFocus: false
+};
+
 export default function StatisticsPage() {
   const [currentChart, setCurrentChart] = useState(ChartType.LINE_CHART);
   const [currentChannel, setCurrentChannel] = useState('');
@@ -38,15 +42,18 @@ export default function StatisticsPage() {
   );
   const { data: userStats } = useSWR(
     `${user?.chain}/users/stat`,
-    fetchUsersStat
+    fetchUsersStat,
+    swrConfig
   );
   const { data: channelStats } = useSWR(
     `${user?.chain}/channels/stat`,
-    fethcChannelsStats
+    fethcChannelsStats,
+    swrConfig
   );
   const { data: optInOutStats } = useSWR(
     `${user?.chain}/${currentChannel}/opt-in-out/stat`,
-    fetchOptInOutStats
+    fetchOptInOutStats,
+    swrConfig
   );
 
   console.log('globalData ==>', globalStats);
