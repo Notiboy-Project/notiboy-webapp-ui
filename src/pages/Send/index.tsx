@@ -21,7 +21,7 @@ import { KindType } from '../../services/services.types';
 type PayloadParam = {
   message: string;
   link: string;
-  user: string;
+  user: string[];
 };
 
 export default function SendPage() {
@@ -29,10 +29,11 @@ export default function SendPage() {
   const [payload, setPayload] = useState<PayloadParam>({
     message: '',
     link: '',
-    user: ''
+    user: []
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [appId, setAppId] = useState('');
+  const { user } = useContext(UserContext);
 
   const toast = useToast();
 
@@ -47,8 +48,6 @@ export default function SendPage() {
     });
   };
 
-  const { user } = useContext(UserContext);
-
   const showErrorMsg = (msg: string) => {
     toast({
       description: msg,
@@ -59,11 +58,19 @@ export default function SendPage() {
     });
   };
 
+  const handleTabChange = (_tab: MessageType) => {
+    setPayload({
+      ...payload,
+      user: []
+    });
+    setTab(_tab);
+  };
+
   const handleAddressChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setPayload({
       ...payload,
-      user: value?.trim()
+      user: [value?.trim()]
     });
   };
 
@@ -80,7 +87,10 @@ export default function SendPage() {
       showErrorMsg('Please enter a message to send!');
     }
 
-    if (tab === MessageType.PERSONAL && payload.user.length === 0) {
+    if (
+      (tab === MessageType.PERSONAL || tab === MessageType.BULK_PERSONAL) &&
+      payload.user.length === 0
+    ) {
       isValid = false;
       showErrorMsg('Please enter an address to send notification!');
     }
@@ -90,25 +100,14 @@ export default function SendPage() {
 
   const hadleCsvData = (data: string[]) => {
     console.log('CSV data ===>', data);
-    if (
-      data?.[0]?.toLowerCase()?.trim() !== 'address' ||
-      String(data?.[1]).length === 0
-    ) {
-      toast({
-        description: 'Invalid CSV uploaded',
-        status: 'error',
-        isClosable: true,
-        position: 'top',
-        duration: 3000
-      });
-      return;
-    }
     const [, ...address] = data;
     setPayload({
       ...payload,
-      user: address.join(',')
+      user: address
     });
   };
+
+  console.log({ payload })
 
   const handleSendNotification = async () => {
     // TODO: check validation before sending notification
@@ -124,52 +123,101 @@ export default function SendPage() {
       kind = 'private';
     }
 
-    try {
+    if (kind === MessageType.PUBLIC) {
       setIsProcessing(true);
-
-      const response = await sendNotificaiton({
-        appId: appId,
-        chain: user?.chain || '',
-        kind,
-        address: user?.address || '',
-        payload: {
-          link: payload?.link || '',
-          message: payload?.message || '',
-          user: payload?.user
+      try {
+        const response = await sendNotificaiton({
+          appId: appId,
+          chain: user?.chain || '',
+          kind,
+          address: user?.address || '',
+          payload: {
+            link: payload?.link || '',
+            message: payload?.message || ''
+          }
+        });
+        if (response?.status_code === 200) {
+          toast({
+            description: `public notification has been sent out`,
+            duration: 3000,
+            isClosable: true,
+            position: 'top',
+            status: 'success'
+          });
         }
-      });
-      console.log('Response message', response);
-      if (response?.status_code === 200) {
+        return;
+      } catch (e) {
         toast({
-          description: 'Notification sent successfully!',
+          description: `Failed to send public notification ! please try again later`,
           duration: 3000,
           isClosable: true,
           position: 'top',
-          status: 'success'
+          status: 'error'
         });
-      } else {
-        toast({
-          description:
-            response?.message || 'Something went wrong ! try again later',
-          duration: 3000,
-          isClosable: true,
-          position: 'top',
-          status: 'success'
-        });
+        console.log('Failed to send public notification', e);
+        return;
+      } finally {
+        setIsProcessing(false);
       }
-      setIsProcessing(false);
-    } catch (err: any) {      
+    }
+
+    ///******** For private notification sending  ******/
+
+    const succeeded = [];
+    const failed = [];
+    setIsProcessing(true);
+    for (const addr of payload?.user) {
+      try {
+        const response = await sendNotificaiton({
+          appId: appId,
+          chain: user?.chain || '',
+          kind,
+          address: user?.address || '',
+          payload: {
+            link: payload?.link || '',
+            message: payload?.message || '',
+            user: addr
+          }
+        });
+        console.log('Response message', response);
+        if (response?.status_code === 200) {
+          succeeded.push(addr);
+        } else {
+          failed.push(addr);
+        }
+      } catch (err: any) {
+        // toast({
+        //   description:
+        //     err?.response?.data?.message ||
+        //     'Failed to send notifications! Please try again later',
+        //   duration: 3000,
+        //   isClosable: true,
+        //   position: 'top',
+        //   status: 'error'
+        // });
+        failed.push(addr);
+      }
+    }
+    if (succeeded?.length > 0) {
       toast({
-        description:
-          err?.response?.data?.message ||
-          'Failed to send notifications! Please try again later',
+        description: `${succeeded.length} notification sent out of ${payload?.user.length}`,
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+        status: 'success'
+      });
+    }
+
+    if (failed.length > 0) {
+      toast({
+        description: `Notification failed to send to ${failed.length} address`,
         duration: 3000,
         isClosable: true,
         position: 'top',
         status: 'error'
       });
-      setIsProcessing(false);
     }
+    setIsProcessing(false);
   };
 
   return (
@@ -191,7 +239,7 @@ export default function SendPage() {
                 title: 'Bulk Personal Message'
               }
             ]}
-            onTabSelected={setTab}
+            onTabSelected={handleTabChange}
           />
         </Box>
         <Box width={{ base: '100%', md: 'fit-content' }}>
