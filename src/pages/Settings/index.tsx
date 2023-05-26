@@ -15,6 +15,7 @@ import { envs } from '../../config';
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { updateMediums, verifyEmail } from '../../services/users.service';
+import { capitalize } from '../../utils';
 
 export default function Settings(props: any) {
   const [email, setEmail] = useState('');
@@ -96,12 +97,15 @@ export default function Settings(props: any) {
   const handleUpdateMediums = async (obj: { [key: string]: boolean }) => {
     try {
       const medium = Object.keys(obj)[0];
+      let msg = '';
       let payload = user?.allowed_mediums?.slice() || [];
       if (user?.allowed_mediums?.includes(medium)) {
         // remove from medium
+        msg = `${capitalize(medium)} notification disabled`;
         payload.splice(payload.indexOf(medium), 1);
       } else {
         payload.push(medium);
+        msg = `${capitalize(medium)} notification enabled`;
       }
       setMediumUpdating(true);
       const resp = await updateMediums(user?.chain || '', user?.address || '', {
@@ -113,7 +117,7 @@ export default function Settings(props: any) {
       if (resp.status_code === 200) {
         // Toast message
         toast({
-          description: 'Notification medium updated !',
+          description: msg,
           duration: 3000,
           isClosable: true,
           position: 'top',
@@ -218,6 +222,10 @@ export default function Settings(props: any) {
         </Flex>
       </Box>
       <Divider mt={4} />
+      <Text mt={4} fontWeight={500}>
+        Note: After verification you can use the toggle to enable or disable
+        notifications via email and discord.
+      </Text>
     </Box>
   );
 }

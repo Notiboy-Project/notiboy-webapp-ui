@@ -63,7 +63,13 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
         />
         <InputRightElement width="5.5rem" top={5}>
           {fileName && <CloseButton mr={3} onClick={resetFileControl} />}
-          <Icon h="1.75rem" fill="blue.600" as={FaFileCsv} />
+          <Icon
+            h="1.75rem"
+            fill="blue.600"
+            as={FaFileCsv}
+            cursor={'pointer'}
+            onClick={() => csvFileRef?.current?.click()}
+          />
         </InputRightElement>
       </InputGroup>
       <Input
