@@ -47,13 +47,11 @@ api.interceptors.response.use(
     return response;
   },
   (err) => {
-    console.log('err.response', err.response);
     const { data } = err?.response;
     if (data?.status_code === 401) {
       clearLocalStorage();
       window.location.href = routes.connectWallet;
     }
-    console.log('Error calling API', err);
     return Promise.reject(err);
   }
 );

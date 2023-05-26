@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   Flex,
+  Icon,
   Input,
   InputGroup,
   InputRightElement,
@@ -16,6 +17,7 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { updateMediums, verifyEmail } from '../../services/users.service';
 import { capitalize } from '../../utils';
+import { AiFillCheckCircle } from 'react-icons/ai';
 
 export default function Settings(props: any) {
   const [email, setEmail] = useState('');
@@ -25,7 +27,10 @@ export default function Settings(props: any) {
   const { user, refetchUserInfo } = useContext(UserContext);
 
   console.log(' user?.medium_metadata', user?.medium_metadata);
-
+  const {
+    Email = { ID: '', Verified: false },
+    Discord = { ID: '', Verified: false }
+  } = user?.medium_metadata || {};
   const [mediums, setMediums] = useState({
     email: user?.allowed_mediums?.includes('email') || false,
     discord: user?.allowed_mediums?.includes('discord') || false
@@ -147,6 +152,12 @@ export default function Settings(props: any) {
     });
   }, [user?.allowed_mediums]);
 
+  useEffect(() => {
+    if (user?.medium_metadata?.Email) {
+      setEmail(user?.medium_metadata?.Email?.ID || '');
+    }
+  }, [user?.medium_metadata]);
+
   return (
     <Box mt={4} p={5}>
       <Text fontSize={'2xl'} fontWeight={600}>
@@ -164,21 +175,25 @@ export default function Settings(props: any) {
           backgroundColor={'gray.800'}
           placeholder="Enter your email id"
           name="email"
-          value={email}
+          value={email || ''}
           onChange={({ currentTarget }) => setEmail(currentTarget.value)}
         />
         <InputRightElement width="8rem" top={1.5}>
-          <Button
-            isLoading={isEmailSending}
-            borderRadius={'3xl'}
-            bgColor={'blue.400'}
-            h="1.75rem"
-            size="sm"
-            disabled={email?.trim()?.length === 0 ? true : false}
-            onClick={handleEmailVerification}
-          >
-            Verify
-          </Button>
+          {Email.Verified && email === Email.ID ? (
+            <Icon as={AiFillCheckCircle} fill="blue.400" h={25} w={25} mr={2} />
+          ) : (
+            <Button
+              isLoading={isEmailSending}
+              borderRadius={'3xl'}
+              bgColor={'blue.400'}
+              h="1.75rem"
+              size="sm"
+              disabled={email?.trim()?.length === 0 ? true : false}
+              onClick={handleEmailVerification}
+            >
+              Verify
+            </Button>
+          )}
           <Switch
             ml={2}
             size="md"
@@ -207,6 +222,9 @@ export default function Settings(props: any) {
           >
             Verify discord
           </Button>
+          {Discord.Verified && (
+            <Icon as={AiFillCheckCircle} fill="blue.400" h={22} w={22} ml={2} />
+          )}
           <Switch
             ml={2}
             isChecked={mediums.discord}
@@ -220,6 +238,7 @@ export default function Settings(props: any) {
             }
           />
         </Flex>
+        {Discord?.ID && <Text p={4}>Discord ID: {Discord.ID}</Text>}
       </Box>
       <Divider mt={4} />
       <Text mt={4} fontWeight={500}>

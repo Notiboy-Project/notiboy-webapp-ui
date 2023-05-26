@@ -13,11 +13,15 @@ export type UserDto = {
   optins: string[];
   status: string;
   medium_metadata: {
-    [key: string]: {
+    Email: {
       ID: string;
       Verified: boolean;
     };
-  }[];
+    Discord: {
+      ID: string;
+      Verified: boolean;
+    };
+  }
   supported_mediums: string[];
 };
 
