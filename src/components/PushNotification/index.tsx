@@ -3,7 +3,7 @@ import { UserContext } from '../../Context/userContext';
 import { envs } from '../../config';
 
 export default function PushNotificationService() {
-  const { user, refetchUserInfo } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const handleWebsocketConnection = () => {
     const socket = new WebSocket(
@@ -37,9 +37,6 @@ export default function PushNotificationService() {
   };
 
   useEffect(() => {
-    if (user) {
-      refetchUserInfo();
-    }
     const socket = handleWebsocketConnection();
 
     return () => {
