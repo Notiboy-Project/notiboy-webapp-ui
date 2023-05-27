@@ -12,17 +12,19 @@ import { LineCharUsers } from './LineChart';
 import { PieChartStatistics } from './PieChart';
 
 interface StatisticsPlaceholderProps {
-  channel: string
-  currentChart: ChartType
+  channel: string;
+  currentChart: ChartType;
 }
 
 const swrConfig = {
   revalidateOnFocus: false
 };
 
-export default function StatisticsPlaceholder(props: StatisticsPlaceholderProps) {
+export default function StatisticsPlaceholder(
+  props: StatisticsPlaceholderProps
+) {
   const { user } = useContext(UserContext);
-  const { channel, currentChart } = props
+  const { channel, currentChart } = props;
 
   const { data: globalStats } = useSWR(
     `${user?.chain}/global/stat`,
@@ -44,15 +46,15 @@ export default function StatisticsPlaceholder(props: StatisticsPlaceholderProps)
     swrConfig
   );
 
-  console.log({ globalStats })
-  console.log({ userStats })
-  console.log({ channelStats })
-  console.log({ optInOutStats })
+  console.log({ globalStats });
+  console.log({ userStats });
+  console.log({ channelStats });
+  console.log({ optInOutStats });
 
   return (
     <>
-        {currentChart === ChartType.LINE_CHART && <LineCharUsers />}
-        {currentChart === ChartType.PIE_CHART && <PieChartStatistics />}
+      {currentChart === ChartType.LINE_CHART && <LineCharUsers />}
+      {currentChart === ChartType.PIE_CHART && <PieChartStatistics />}
     </>
   );
 }

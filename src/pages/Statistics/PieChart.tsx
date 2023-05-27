@@ -5,7 +5,7 @@ import { Pie } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const data = {
-  labels: ['Green', 'Purple', 'Orange'],
+  // labels: ['Green', 'Purple', 'Orange'],
   datasets: [
     {
       label: '# of Votes',
@@ -18,5 +18,5 @@ export const data = {
 };
 
 export function PieChartStatistics() {
-  return <Pie data={data} />;
+  return <Pie data={data} style={{ margin: '0 auto' }} />;
 }

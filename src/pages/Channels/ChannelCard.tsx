@@ -22,7 +22,7 @@ interface ChannelListsProps {
 function ChannelCard(props: ChannelListsProps) {
   const [isUserDownloading, setUserDownloading] = React.useState(false);
   const [optInoutLoading, setOptInoutLoading] = React.useState(false);
-  const { channel, updateChannelList, handleEditChannel, handleDeleteChannel } =
+  const { channel, handleEditChannel, handleDeleteChannel } =
     props;
   const { user, refetchUserInfo } = React.useContext(UserContext);
 
@@ -88,7 +88,7 @@ function ChannelCard(props: ChannelListsProps) {
           position: 'top'
         });
         refetchUserInfo();
-        updateChannelList();
+        // updateChannelList();
       } else {
         toast({
           description: 'Failed to subscribe to channel! Please try again',
@@ -119,7 +119,7 @@ function ChannelCard(props: ChannelListsProps) {
           position: 'top'
         });
         refetchUserInfo();
-        updateChannelList();
+        // updateChannelList();
       } else {
         toast({
           description: 'Failed to unsubscribe to channel! Please try again',

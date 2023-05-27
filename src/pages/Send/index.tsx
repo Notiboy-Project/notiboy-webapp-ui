@@ -107,7 +107,7 @@ export default function SendPage() {
     });
   };
 
-  console.log({ payload })
+  console.log({ payload });
 
   const handleSendNotification = async () => {
     // TODO: check validation before sending notification
@@ -163,61 +163,43 @@ export default function SendPage() {
 
     ///******** For private notification sending  ******/
 
-    const succeeded = [];
-    const failed = [];
     setIsProcessing(true);
-    for (const addr of payload?.user) {
-      try {
-        const response = await sendNotificaiton({
-          appId: appId,
-          chain: user?.chain || '',
-          kind,
-          address: user?.address || '',
-          payload: {
-            link: payload?.link || '',
-            message: payload?.message || '',
-            user: addr
-          }
-        });
-        console.log('Response message', response);
-        if (response?.status_code === 200) {
-          succeeded.push(addr);
-        } else {
-          failed.push(addr);
+    try {
+      const response = await sendNotificaiton({
+        appId: appId,
+        chain: user?.chain || '',
+        kind,
+        address: user?.address || '',
+        payload: {
+          link: payload?.link || '',
+          message: payload?.message || '',
+          recievers: payload?.user
         }
-      } catch (err: any) {
-        // toast({
-        //   description:
-        //     err?.response?.data?.message ||
-        //     'Failed to send notifications! Please try again later',
-        //   duration: 3000,
-        //   isClosable: true,
-        //   position: 'top',
-        //   status: 'error'
-        // });
-        failed.push(addr);
-      }
-    }
-    if (succeeded?.length > 0) {
-      toast({
-        description: `${succeeded.length} notification sent out of ${payload?.user.length}`,
-        duration: 3000,
-        isClosable: true,
-        position: 'top',
-        status: 'success'
       });
-    }
-
-    if (failed.length > 0) {
+      console.log('Response message', response);
+      if (response?.status_code === 200) {
+        toast({
+          description: `Notification sent out of ${payload?.user.length} addresses`,
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+          status: 'success'
+        });
+      } else {
+      }
+    } catch (err: any) {
       toast({
-        description: `Notification failed to send to ${failed.length} address`,
+        description:
+          err?.response?.data?.message ||
+          'Failed to send notifications! Please try again later',
         duration: 3000,
         isClosable: true,
         position: 'top',
         status: 'error'
       });
+    } finally {
+      setIsProcessing(false);
     }
-    setIsProcessing(false);
   };
 
   return (

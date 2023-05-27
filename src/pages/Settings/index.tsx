@@ -238,7 +238,11 @@ export default function Settings(props: any) {
             }
           />
         </Flex>
-        {Discord?.ID && <Text p={4}>Discord ID: {Discord.ID}</Text>}
+        {Discord?.ID && (
+          <Text p={4} as="small">
+            Discord ID: {Discord.ID}
+          </Text>
+        )}
       </Box>
       <Divider mt={4} />
       <Text mt={4} fontWeight={500}>
