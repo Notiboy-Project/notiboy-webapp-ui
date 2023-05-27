@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Flex,
   Text
 } from '@chakra-ui/react';
 import { SupportDto } from './support.types';
@@ -18,8 +19,13 @@ export default function SupportLists(props: SupportListsProps) {
 
   return (
     <Box mt={5}>
+      {data.length === 0 && (
+        <Flex mt={10} justifyContent={'center'}>
+          <Text>No FAQs found !</Text>
+        </Flex>
+      )}
       {data.map((support) => (
-        <Accordion      
+        <Accordion
           allowToggle
           backgroundColor={'gray.800'}
           borderRadius={'2xl'}
