@@ -27,7 +27,7 @@ export default function NotificationCard(props: NotificationCardProps) {
     >
       <Box display={'flex'} alignItems={'center'}>
         <Avatar
-          name="channelName"
+          name={notification.channel_name}
           src={'srcFromAppId'}
           height={45}
           width={45}
