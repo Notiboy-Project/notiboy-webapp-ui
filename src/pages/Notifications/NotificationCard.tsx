@@ -3,18 +3,25 @@ import { Avatar, Box, Icon, Text } from '@chakra-ui/react';
 import { NotificationData } from './notification.types';
 import { VerifyIcon } from '../../assets/svgs';
 import { CardLayout } from '../../components/Layout/CardLayout';
+import { ChannelsDto } from '../../services/services.types';
 
 interface NotificationCardProps {
   notification: NotificationData;
+  channels: ChannelsDto[]
 }
 
 export default function NotificationCard(props: NotificationCardProps) {
-  const { notification } = props;
+  const { notification, channels } = props;
 
   const handleRedirect = () => {
     if (!notification.link) return;
 
     window.open(notification.link, '_blank');
+  };
+
+  const getLogo = (appId: string) => {
+    const logoBase64 = channels?.find((c) => c.app_id === appId)?.logo || '';
+    return `data:image/png;base64, ${logoBase64}`
   };
 
   return (
@@ -28,7 +35,7 @@ export default function NotificationCard(props: NotificationCardProps) {
       <Box display={'flex'} alignItems={'center'}>
         <Avatar
           name={notification.channel_name}
-          src={'srcFromAppId'}
+          src={getLogo(notification.app_id)}
           height={45}
           width={45}
         />

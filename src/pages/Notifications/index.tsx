@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Icon, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Icon, Text } from '@chakra-ui/react';
 import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import NotificationCard from './NotificationCard';
@@ -9,11 +9,11 @@ import { UserContext } from '../../Context/userContext';
 import PageLoading from '../../components/Layout/PageLoading';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { FaSyncAlt } from 'react-icons/fa';
+import { fetchOptedInChannels } from '../../services/channels.service';
 
 export default function NotificationPage(props: any) {
   const { user } = React.useContext(UserContext);
   const [text, setText] = React.useState('');
-  console.log('user ==>', user);
 
   const {
     error,
@@ -33,6 +33,14 @@ export default function NotificationPage(props: any) {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false
+    }
+  );
+
+  const { data: channels = [] } = useSWR(
+    { chain: user?.chain, address: user?.address },
+    fetchOptedInChannels,
+    {
+      revalidateOnFocus: false
     }
   );
 
@@ -63,9 +71,7 @@ export default function NotificationPage(props: any) {
           ml={2}
           bgColor={'blue.400'}
         >
-          <Tooltip label="Reload notification">
-            <Icon as={FaSyncAlt} fill={'#fff'} />
-          </Tooltip>
+          <Icon as={FaSyncAlt} fill={'#fff'} />
         </Button>
       </Box>
       <Box mt={5}>
@@ -86,6 +92,7 @@ export default function NotificationPage(props: any) {
           <NotificationCard
             notification={notification}
             key={notification.uuid}
+            channels={channels}
           />
         ))}
       </Box>

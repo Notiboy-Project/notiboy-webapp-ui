@@ -76,3 +76,13 @@ export const fetchChannelsByUser: Fetcher<ChannelsDto[]> = async (
   const resp = await api.get(apiURL.channelsByUsersURL(chain, address));
   return resp?.data?.data || [];
 };
+
+export const fetchOptedInChannels: Fetcher<
+  ChannelsDto[],
+  { chain: string; address: string }
+> = async (params: { chain: string; address: string }) => {
+  const { chain, address } = params;
+
+  const resp = await api.get(apiURL.channelsByOptedIn(chain, address));
+  return resp?.data?.data || [];
+};
