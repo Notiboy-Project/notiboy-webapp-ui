@@ -28,7 +28,7 @@ export default function NotificationPage(props: any) {
     fetchNotifications,
     {
       revalidateOnFocus: false,
-      revalidateOnReconnect: false,      
+      revalidateOnReconnect: false
     }
   );
 
@@ -55,7 +55,7 @@ export default function NotificationPage(props: any) {
         <SearchInput onChange={() => {}} value="" />
       </Box>
       <Box mt={5}>
-        {data?.data?.length === 0 && (
+        {(data?.data || [])?.length === 0 && (
           <Box
             display={'grid'}
             alignItems={'center'}
@@ -68,7 +68,7 @@ export default function NotificationPage(props: any) {
             </Text>
           </Box>
         )}
-        {data?.data?.map((notification: any) => (
+        {(data?.data || [])?.map((notification: any) => (
           <NotificationCard
             notification={notification}
             key={notification.uuid}
