@@ -8,7 +8,9 @@ export default function PushNotificationService() {
 
   const handleWebsocketConnection = () => {
     const socket = new WebSocket(
-      `${envs.websocketUrl}?chain=${user?.chain}&address=${user?.address}&token=${getTokenFromStorage()}`
+      `${envs.websocketUrl}?chain=${user?.chain}&address=${
+        user?.address
+      }&token=${getTokenFromStorage()}`
     );
 
     socket.addEventListener('open', function (event) {
@@ -23,7 +25,7 @@ export default function PushNotificationService() {
     });
 
     socket.addEventListener('close', function (event) {
-      console.log('WebSocket connection closed.');
+      console.log('WebSocket connection closed. ==>', event);
     });
 
     socket.addEventListener('error', function (event) {
@@ -40,8 +42,12 @@ export default function PushNotificationService() {
   useEffect(() => {
     const socket = handleWebsocketConnection();
 
+    console.log('socket.readyState ==>', socket?.readyState);
+
     return () => {
-      if (socket?.close) socket.close();
+      if (socket?.readyState === 1) {
+        socket.close();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Icon, Text } from '@chakra-ui/react';
+import { Box, Button, Icon, Text, Tooltip } from '@chakra-ui/react';
 import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import NotificationCard from './NotificationCard';
@@ -8,18 +8,22 @@ import { NoNotificationIcon } from '../../assets/svgs';
 import { UserContext } from '../../Context/userContext';
 import PageLoading from '../../components/Layout/PageLoading';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
+import { FaSyncAlt } from 'react-icons/fa';
 
 export default function NotificationPage(props: any) {
   const { user } = React.useContext(UserContext);
+  const [text, setText] = React.useState('');
   console.log('user ==>', user);
 
   const {
     error,
     isLoading,
+    isValidating,
     data = {
       status_code: 200,
       data: []
-    }
+    },
+    mutate
   } = useSWR(
     {
       url: `api/notifications`,
@@ -32,11 +36,7 @@ export default function NotificationPage(props: any) {
     }
   );
 
-  console.log('error', error);
-  console.log('isLoading', isLoading);
-  console.log('data ==>', data);
-
-  if (isLoading) {
+  if (isLoading || isValidating) {
     return <PageLoading />;
   }
 
@@ -51,8 +51,17 @@ export default function NotificationPage(props: any) {
         justifyContent={'center'}
         alignContent={'center'}
         height={'100%'}
+        alignItems={'center'}
       >
-        <SearchInput onChange={() => {}} value="" />
+        <SearchInput
+          onChange={({ currentTarget }) => setText(currentTarget.value)}
+          value={text}
+        />
+        <Button onClick={() => mutate()} borderRadius={'full'} ml={2}>
+          <Tooltip label="Reload notification">
+            <Icon as={FaSyncAlt} fill={'blue.500'} />
+          </Tooltip>
+        </Button>
       </Box>
       <Box mt={5}>
         {(data?.data || [])?.length === 0 && (
