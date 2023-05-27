@@ -10,10 +10,14 @@ import PageLoading from '../../components/Layout/PageLoading';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { FaSyncAlt } from 'react-icons/fa';
 import { fetchOptedInChannels } from '../../services/channels.service';
+import { NotificationData } from './notification.types';
 
 export default function NotificationPage(props: any) {
   const { user } = React.useContext(UserContext);
   const [text, setText] = React.useState('');
+  const [filteredData, setFilteredData] = React.useState<NotificationData[]>(
+    []
+  );
 
   const {
     error,
@@ -43,6 +47,29 @@ export default function NotificationPage(props: any) {
       revalidateOnFocus: false
     }
   );
+
+  const filterNotificationByText = (
+    notifications: NotificationData[],
+    searchStr: string
+  ) => {
+    if (notifications.length === 0 || searchStr?.length === 0) return;
+
+    const fData = notifications.filter(
+      (n) =>
+        n?.channel_name?.toLowerCase()?.includes(searchStr?.toLowerCase()) ||
+        n?.message?.toLowerCase()?.includes(searchStr?.toLowerCase())
+    );
+    setFilteredData(fData);
+  };
+
+  React.useEffect(() => {
+    if (data?.data?.length > 0 && text?.trim()?.length > 0) {
+      filterNotificationByText(data?.data || [], text?.trim());
+    } else {
+      setFilteredData(data?.data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, text]);
 
   if (isLoading || isValidating) {
     return <PageLoading />;
@@ -75,7 +102,7 @@ export default function NotificationPage(props: any) {
         </Button>
       </Box>
       <Box mt={5}>
-        {(data?.data || [])?.length === 0 && (
+        {(filteredData || [])?.length === 0 && (
           <Box
             display={'grid'}
             alignItems={'center'}
@@ -84,11 +111,11 @@ export default function NotificationPage(props: any) {
           >
             <Icon h={300} w={300} as={NoNotificationIcon} />
             <Text mt={5} fontSize={28} fontWeight={600}>
-              No Notification Yet!
+              No Notification Found!
             </Text>
           </Box>
         )}
-        {(data?.data || [])?.map((notification: any) => (
+        {(filteredData || [])?.map((notification: any) => (
           <NotificationCard
             notification={notification}
             key={notification.uuid}
