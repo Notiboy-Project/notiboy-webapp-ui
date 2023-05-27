@@ -12,6 +12,8 @@ export default function NotificationCard(props: NotificationCardProps) {
   const { notification } = props;
 
   const handleRedirect = () => {
+    if (!notification.link) return;
+
     window.open(notification.link, '_blank');
   };
 
@@ -20,7 +22,7 @@ export default function NotificationCard(props: NotificationCardProps) {
       mt={5}
       p={5}
       onClick={handleRedirect}
-      cursor={'pointer'}
+      cursor={notification.link ? 'pointer' : '-moz-initial'}
       _hover={{ border: '.5px solid lightblue' }}
     >
       <Box display={'flex'} alignItems={'center'}>
@@ -31,7 +33,7 @@ export default function NotificationCard(props: NotificationCardProps) {
           width={45}
         />
         <Text fontWeight={600} fontSize={'lg'} textAlign={'left'} ml={3}>
-          {notification.appid}
+          {notification.channel_name}
         </Text>
         <Icon ml={3} as={VerifyIcon} h={6} w={6} />
         <Text ml={5} fontWeight={600} as="small" color="gray.600">
@@ -51,7 +53,7 @@ export default function NotificationCard(props: NotificationCardProps) {
         alignItems={'center'}
         justifyContent={'flex-end'}
       >
-        {moment(notification.time).format('LLL')}
+        {moment(notification.created_time).format('LLL')}
         {/* <Icon
           h={6}
           w={6}

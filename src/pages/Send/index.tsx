@@ -144,6 +144,11 @@ export default function SendPage() {
             position: 'top',
             status: 'success'
           });
+          setPayload({
+            link: '',
+            user: [],
+            message: ''
+          });
         }
         return;
       } catch (e: any) {
