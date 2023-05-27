@@ -1,13 +1,14 @@
 import { useContext, useEffect } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { envs } from '../../config';
+import { getTokenFromStorage } from '../../services/storage.service';
 
 export default function PushNotificationService() {
   const { user } = useContext(UserContext);
 
   const handleWebsocketConnection = () => {
     const socket = new WebSocket(
-      `${envs.websocketUrl}?chain=${user?.chain}&address=${user?.address}`
+      `${envs.websocketUrl}?chain=${user?.chain}&address=${user?.address}&token=${getTokenFromStorage()}`
     );
 
     socket.addEventListener('open', function (event) {
