@@ -146,9 +146,11 @@ export default function SendPage() {
           });
         }
         return;
-      } catch (e) {
+      } catch (e: any) {
         toast({
-          description: `Failed to send public notification ! please try again later`,
+          description:
+            e?.response?.data?.message ||
+            `Failed to send public notification ! please try again later`,
           duration: 3000,
           isClosable: true,
           position: 'top',
@@ -173,18 +175,24 @@ export default function SendPage() {
         payload: {
           link: payload?.link || '',
           message: payload?.message || '',
-          recievers: payload?.user
+          receivers: payload?.user
         }
       });
       console.log('Response message', response);
       if (response?.status_code === 200) {
         toast({
-          description: `Notification sent out of ${payload?.user.length} addresses`,
+          description: `Notification sent out to ${payload?.user.length} addresses`,
           duration: 3000,
           isClosable: true,
           position: 'top',
           status: 'success'
         });
+        setPayload({
+          link: '',
+          user: [],
+          message: ''
+        });
+        setTab(MessageType.PUBLIC);
       } else {
       }
     } catch (err: any) {
@@ -254,6 +262,7 @@ export default function SendPage() {
           placeholder="Input a message *"
           name="message"
           mt={4}
+          value={payload?.message}
           backgroundColor={'gray.800'}
           rows={4}
           onChange={handleChange}
@@ -268,6 +277,7 @@ export default function SendPage() {
             borderRadius={'xl'}
             p={'25px'}
             name="link"
+            value={payload?.link}
             onChange={handleChange}
             fontWeight={500}
             mt={4}

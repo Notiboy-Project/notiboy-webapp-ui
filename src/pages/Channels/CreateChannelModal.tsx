@@ -101,6 +101,9 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
       return;
     }
 
+
+    console.log("user data", user)
+
     // TODO: call API to create a channel
     try {
       setSubmitting(true);
