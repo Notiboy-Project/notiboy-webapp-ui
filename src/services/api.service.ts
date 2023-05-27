@@ -90,7 +90,7 @@ export const apiURL = {
     `${baseURL}/chains/${chain}/channels?logo=true`, // GET
 
   channelsByUsersURL: (chain: string, address: string) =>
-    `${baseURL}/chains/${chain}/channels/users/${address}`, // GET
+    `${baseURL}/chains/${chain}/channels/users/${address}/owned`, // GET
 
   channelUsersListsUrl: (chain: string, channel: string) =>
     `${baseURL}/chains/${chain}/channels/${channel}/users`, // GET

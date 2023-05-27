@@ -57,9 +57,14 @@ export default function NotificationPage(props: any) {
           onChange={({ currentTarget }) => setText(currentTarget.value)}
           value={text}
         />
-        <Button onClick={() => mutate()} borderRadius={'full'} ml={2}>
+        <Button
+          onClick={() => mutate()}
+          borderRadius={'full'}
+          ml={2}
+          bgColor={'blue.400'}
+        >
           <Tooltip label="Reload notification">
-            <Icon as={FaSyncAlt} fill={'blue.500'} />
+            <Icon as={FaSyncAlt} fill={'#fff'} />
           </Tooltip>
         </Button>
       </Box>
