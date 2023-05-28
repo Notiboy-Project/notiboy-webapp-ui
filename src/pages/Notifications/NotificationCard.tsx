@@ -7,7 +7,7 @@ import { ChannelsDto } from '../../services/services.types';
 
 interface NotificationCardProps {
   notification: NotificationData;
-  channels: ChannelsDto[]
+  channels: ChannelsDto[];
 }
 
 export default function NotificationCard(props: NotificationCardProps) {
@@ -21,7 +21,11 @@ export default function NotificationCard(props: NotificationCardProps) {
 
   const getLogo = (appId: string) => {
     const logoBase64 = channels?.find((c) => c.app_id === appId)?.logo || '';
-    return `data:image/png;base64, ${logoBase64}`
+    return `data:image/png;base64, ${logoBase64}`;
+  };
+
+  const isChennelVerified = (appId: string) => {
+    return channels.find((c) => c.app_id === appId)?.verified || false;
   };
 
   return (
@@ -42,7 +46,9 @@ export default function NotificationCard(props: NotificationCardProps) {
         <Text fontWeight={600} fontSize={'lg'} textAlign={'left'} ml={3}>
           {notification.channel_name}
         </Text>
-        <Icon ml={3} as={VerifyIcon} h={6} w={6} />
+        {isChennelVerified(notification.app_id) && (
+          <Icon ml={3} as={VerifyIcon} h={6} w={6} />
+        )}
         <Text ml={5} fontWeight={600} as="small" color="gray.600">
           {notification.kind === 'public' ? 'Annoucement' : 'Notifications'}
         </Text>
