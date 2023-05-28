@@ -96,14 +96,9 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
   const handleCreateChannel = async () => {
     // TODO: Check validation before creating a new channel
     const isValid = isPayloadValid();
-
     if (!isValid) {
       return;
     }
-
-
-    console.log("user data", user)
-
     // TODO: call API to create a channel
     try {
       setSubmitting(true);

@@ -22,8 +22,7 @@ interface ChannelListsProps {
 function ChannelCard(props: ChannelListsProps) {
   const [isUserDownloading, setUserDownloading] = React.useState(false);
   const [optInoutLoading, setOptInoutLoading] = React.useState(false);
-  const { channel, handleEditChannel, handleDeleteChannel } =
-    props;
+  const { channel, handleEditChannel, handleDeleteChannel } = props;
   const { user, refetchUserInfo } = React.useContext(UserContext);
 
   const { channels = [], optins = [], chain = '', address = '' } = user || {};
@@ -65,7 +64,6 @@ function ChannelCard(props: ChannelListsProps) {
         a.dataset.downloadurl = [contentType, a.download, a.href].join(':');
         a.click();
         a.remove();
-
       }
       setUserDownloading(false);
     } catch (err) {
@@ -130,17 +128,22 @@ function ChannelCard(props: ChannelListsProps) {
         });
       }
       setOptInoutLoading(false);
-    } catch (err) {
+    } catch (err: any) {
+      toast({
+        description:
+          err?.response?.data?.message ||
+          'Failed to unsubscribe to channel! Please try again',
+        duration: 3000,
+        isClosable: true,
+        status: 'error',
+        position: 'top'
+      });
       setOptInoutLoading(false);
       console.log('Error while Optout to channels', channel.app_id, err);
     }
   };
 
   const showOptInOutOption = () => {
-    if (amIOwner()) {
-      return null;
-    }
-
     if (isUserOptin(channel.app_id)) {
       return (
         <Button
@@ -179,7 +182,9 @@ function ChannelCard(props: ChannelListsProps) {
           alignContent={'center'}
           alignItems={'center'}
         >
-          <Text ml={3} fontWeight={600}>{channel.name}</Text>         
+          <Text ml={3} fontWeight={600}>
+            {channel.name}
+          </Text>
         </Box>
         {channel.verified && <Icon as={VerifyIcon} ml={3} />}
       </Box>
