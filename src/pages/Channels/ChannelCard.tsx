@@ -32,7 +32,7 @@ function ChannelCard(props: ChannelListsProps) {
   const imgSrc = `data:image/png;base64, ${channel.logo}`;
 
   const isUserOptin = (appId: string) => {
-    return (optins || [])?.includes(appId) || (channels || []).includes(appId);
+    return (optins || [])?.includes(appId);
   };
 
   const amIOwner = () => {
