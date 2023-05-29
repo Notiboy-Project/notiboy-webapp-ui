@@ -13,7 +13,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { UserContext } from '../../Context/userContext';
-import { ChannelStatsDto, fetchUsersStat } from '../../services/statistics.service';
+import { UsersStatDto, fetchUsersStat } from '../../services/statistics.service';
 
 ChartJS.register(
   CategoryScale,
@@ -65,16 +65,16 @@ export default function UsersStatistics() {
 
   console.log({ userStats });
 
-  const formatAndSetData = (channels: ChannelStatsDto[]) => {
-    if (channels.length > 0) {
-      const deleted: number[] = channels.map((c) => c.deleted);
-      const created: number[] = channels.map((c) => c.created);
-      const _date: string[] = channels.map((c) => c.date);
+  const formatAndSetData = (users: UsersStatDto[]) => {
+    if (users.length > 0) {
+      const offboard: number[] = users.map((c) => c.offboard);
+      const onboard: number[] = users.map((c) => c.onboard);
+      const _date: string[] = users.map((c) => c.date);
 
       setDataSet({
         labels: _date || [],
-        offboard: created || [],
-        onboard: deleted || []
+        offboard: offboard || [],
+        onboard: onboard || []
       });
     } else {
       setDataSet({

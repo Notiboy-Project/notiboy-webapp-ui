@@ -13,6 +13,12 @@ export interface GlobalStatResp {
   message: string;
 }
 
+export interface UsersStatDto {
+  onboard: number
+  offboard: number
+  date: string
+}
+
 export interface ChannelStatsDto {
   created: number;
   deleted: number;
@@ -33,7 +39,7 @@ export const fetchGlobalStats: Fetcher<GlobalStatResp> = async () => {
 export const fetchUsersStat: Fetcher<{
   status_code: number;
   message: string;
-  data: any[];
+  data: UsersStatDto[];
 }> = async (args: string) => {
   const [chain] = args.split('/');
   const resp = await api.get(apiURL.getUsersStatsUrl(chain));
