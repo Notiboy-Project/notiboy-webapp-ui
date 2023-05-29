@@ -32,7 +32,8 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const
+      position: 'top' as const,
+      display: false
     },
     title: {
       display: false,
@@ -88,12 +89,12 @@ export default function ChannelsStatistics() {
   const data = {
     labels: dataset.labels,
     datasets: [
-      {        
+      {
         data: dataset.deleted,
         borderColor: channel_colors.deleted,
         backgroundColor: 'rgba(255, 99, 132, 0.5)'
       },
-      {       
+      {
         data: dataset.created,
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: channel_colors.created
