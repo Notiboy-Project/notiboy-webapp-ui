@@ -244,8 +244,8 @@ export default function Settings(props: any) {
       </Box>
       <Divider mt={4} />
       <Text mt={4} fontWeight={500}>
-        Note: After verification you can use the toggle to enable or disable
-        notifications via email and discord.
+        Note: After verification, click the toggle button to enable or disable
+        discord notifications
       </Text>
     </Box>
   );

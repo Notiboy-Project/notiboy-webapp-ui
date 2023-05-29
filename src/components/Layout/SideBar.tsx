@@ -50,11 +50,13 @@ export default function SidebarLayout(props: any) {
           w={40}
           objectFit={'contain'}
           borderRadius={10}
+          display={'none'}
           cursor={'pointer'}
         />
         <Image
           src={AppleStoreImg}
           h={42}
+          display={'none'}
           w={40}
           objectFit={'contain'}
           borderRadius={10}

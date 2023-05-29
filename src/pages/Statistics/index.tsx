@@ -1,13 +1,13 @@
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
-import { Box, Button, Divider, Flex, Icon } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon } from '@chakra-ui/react';
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
 import GeneralStatisticsChart from './GeneralStatisticsChart';
 import { UserContext } from '../../Context/userContext';
 import { fetchGlobalStats } from '../../services/statistics.service';
-import ChannelsStatistics from './ChannelsStatistics';
-import UsersStatistics from './UsersStatistics';
-import OptInOutStatistics from './OptInOutStatistics';
+// import ChannelsStatistics from './ChannelsStatistics';
+// import UsersStatistics from './UsersStatistics';
+// import OptInOutStatistics from './OptInOutStatistics';
 
 export enum ChartType {
   LINE_CHART,
@@ -33,12 +33,12 @@ export default function StatisticsPage() {
           // maxHeight={'550px'}
         >
           <GeneralStatisticsChart data={globalStats?.data || []} />
-          <Divider mt={5} mb={5} />
-          <ChannelsStatistics />
-          <Divider mt={5} mb={5} />
-          <UsersStatistics />
-          <Divider mt={5} mb={5} />
-          <OptInOutStatistics />
+          {/* <Divider mt={5} mb={5} /> */}
+          {/* <ChannelsStatistics /> */}
+          {/* <Divider mt={5} mb={5} /> */}
+          {/* <UsersStatistics /> */}
+          {/* <Divider mt={5} mb={5} /> */}
+          {/* <OptInOutStatistics /> */}
         </Box>
         <Flex mt={5} justifyContent={'center'} display={'none'}>
           <>

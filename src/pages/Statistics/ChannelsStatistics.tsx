@@ -37,7 +37,7 @@ export const options = {
     },
     title: {
       display: false,
-      text: 'Channles Statistics'
+      text: 'Channels Statistics'
     },
     labels: false
   }
@@ -138,7 +138,7 @@ export default function ChannelsStatistics() {
         style={{ minHeight: '275px' }}
       />
       <Text mt={5} fontWeight={600} textAlign={'center'}>
-        Channles Statistics
+        Channels Statistics
       </Text>
     </Box>
   );

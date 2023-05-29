@@ -70,7 +70,7 @@ export default function GeneralStatisticsChart({
       </Flex>
       <Pie data={pieData} style={{ margin: '0 auto' }} />
       <Text fontWeight={600} textAlign={'center'} mt={4}>
-        General Statistics
+        Notiboy traffic
       </Text>
     </Box>
   );
