@@ -13,6 +13,18 @@ export interface GlobalStatResp {
   message: string;
 }
 
+export interface ChannelStatsDto {
+  created: number;
+  deleted: number;
+  date: string;
+}
+
+export interface optinOutStatsDto {
+  optin: number;
+  optout: number;
+  date: string;
+}
+
 export const fetchGlobalStats: Fetcher<GlobalStatResp> = async () => {
   const resp = await api.get(apiURL.getGlobalStatsUrl());
   return resp.data;
@@ -31,7 +43,7 @@ export const fetchUsersStat: Fetcher<{
 export const fethcChannelsStats: Fetcher<{
   status_code: number;
   message: string;
-  data: any[];
+  data: ChannelStatsDto[];
 }> = async (args: string) => {
   const [chain] = args.split('/');
   const resp = await api.get(apiURL.getChannelStatUrl(chain));
@@ -41,7 +53,7 @@ export const fethcChannelsStats: Fetcher<{
 export const fetchOptInOutStats: Fetcher<{
   status_code: number;
   message: string;
-  data: any[];
+  data: optinOutStatsDto[];
 }> = async (args: string) => {
   const [chain, channel] = args.split('/');
   const resp = await api.get(apiURL.getOptinOutStatUrl(chain, channel));

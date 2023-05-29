@@ -12,7 +12,11 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export function PieChartStatistics({ data }: { data: GlobalStatDto[] }) {
+export default function GeneralStatisticsChart({
+  data
+}: {
+  data: GlobalStatDto[];
+}) {
   const getFormattedData = () => {
     if (data?.length > 0) {
       return Object.values(data[0]);
@@ -65,7 +69,9 @@ export function PieChartStatistics({ data }: { data: GlobalStatDto[] }) {
         <Text>Channels ({totalCounts?.[2] || 0})</Text>
       </Flex>
       <Pie data={pieData} style={{ margin: '0 auto' }} />
-      <Text fontWeight={600} textAlign={'center'} mt={4}>General Statistics</Text>
+      <Text fontWeight={600} textAlign={'center'} mt={4}>
+        General Statistics
+      </Text>
     </Box>
   );
 }

@@ -7,7 +7,6 @@ import {
 import { useContext } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { ChartType } from '.';
-import { LineCharUsers } from './LineChart';
 
 interface StatisticsPlaceholderProps {
   channel: string;
@@ -22,7 +21,7 @@ export default function StatisticsPlaceholder(
   props: StatisticsPlaceholderProps
 ) {
   const { user } = useContext(UserContext);
-  const { channel, currentChart } = props;
+  const { channel } = props;
 
   const { data: userStats } = useSWR(
     `${user?.chain}/users/stat`,
@@ -44,5 +43,5 @@ export default function StatisticsPlaceholder(
   console.log({ channelStats });
   console.log({ optInOutStats });
 
-  return <>{currentChart === ChartType.LINE_CHART && <LineCharUsers />}</>;
+  return <>p</>;
 }
