@@ -4,7 +4,7 @@ import SidebarLayout from './SideBar';
 import PrivateHeader from '../PrivateHeader';
 // import { UserContext } from '../../Context/userContext';
 import MobileMenuBar from './MobileMenuBar';
-import PushNotificationService from '../PushNotification';
+// import PushNotificationService from '../PushNotification';
 
 export default function ProtectedLayout(props: any) {
   // const { user } = React.useContext(UserContext);
@@ -39,7 +39,7 @@ export default function ProtectedLayout(props: any) {
         <PrivateHeader />
         {props.children}
       </Box>
-      <PushNotificationService />
+      {/* <PushNotificationService /> */}
     </Box>
   );
 }
