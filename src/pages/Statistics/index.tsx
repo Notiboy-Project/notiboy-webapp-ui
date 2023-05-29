@@ -1,3 +1,4 @@
+import useSWR from 'swr';
 import {
   Alert,
   AlertIcon,
@@ -9,10 +10,13 @@ import {
   Text
 } from '@chakra-ui/react';
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import SelectChannel from '../../components/SelectChannel';
 
 import StatisticsPlaceholder from './StatisticsPlaceholder';
+import { PieChartStatistics } from './PieChart';
+import { UserContext } from '../../Context/userContext';
+import { fetchGlobalStats } from '../../services/statistics.service';
 
 export enum ChartType {
   LINE_CHART,
@@ -22,6 +26,13 @@ export enum ChartType {
 export default function StatisticsPage() {
   const [currentChart, setCurrentChart] = useState(ChartType.PIE_CHART);
   const [currentChannel, setCurrentChannel] = useState('');
+  const { user } = useContext(UserContext);
+
+  const { data: globalStats } = useSWR(
+    `${user?.chain}/global/stat`,
+    fetchGlobalStats,
+    { revalidateOnFocus: false }
+  );
 
   return (
     <Box p={5}>
@@ -32,8 +43,11 @@ export default function StatisticsPage() {
         <Box
           width={{ base: '95%', md: '90%', xl: '80%' }}
           margin={'0 auto'}
-          maxHeight={'550px'}
+          // maxHeight={'550px'}
         >
+          {currentChart === ChartType.PIE_CHART && (
+            <PieChartStatistics data={globalStats?.data || []} />
+          )}
           {currentChannel ? (
             <StatisticsPlaceholder
               channel={currentChannel}
@@ -44,6 +58,7 @@ export default function StatisticsPage() {
               justifyContent={'center'}
               boxSizing="border-box"
               alignItems={'center'}
+              display={'none'}
               mt={20}
             >
               <Alert
@@ -59,7 +74,7 @@ export default function StatisticsPage() {
             </Flex>
           )}
         </Box>
-        <Flex mt={5} justifyContent={'center'}>
+        <Flex mt={5} justifyContent={'center'} display={'none'}>
           {currentChannel && (
             <>
               <Button

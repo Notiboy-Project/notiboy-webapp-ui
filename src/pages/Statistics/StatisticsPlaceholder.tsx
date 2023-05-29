@@ -1,6 +1,5 @@
 import useSWR from 'swr';
 import {
-  fetchGlobalStats,
   fetchOptInOutStats,
   fetchUsersStat,
   fethcChannelsStats
@@ -9,7 +8,6 @@ import { useContext } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { ChartType } from '.';
 import { LineCharUsers } from './LineChart';
-import { PieChartStatistics } from './PieChart';
 
 interface StatisticsPlaceholderProps {
   channel: string;
@@ -26,10 +24,6 @@ export default function StatisticsPlaceholder(
   const { user } = useContext(UserContext);
   const { channel, currentChart } = props;
 
-  const { data: globalStats } = useSWR(
-    `${user?.chain}/global/stat`,
-    fetchGlobalStats
-  );
   const { data: userStats } = useSWR(
     `${user?.chain}/users/stat`,
     fetchUsersStat,
@@ -46,15 +40,9 @@ export default function StatisticsPlaceholder(
     swrConfig
   );
 
-  console.log({ globalStats });
   console.log({ userStats });
   console.log({ channelStats });
   console.log({ optInOutStats });
 
-  return (
-    <>
-      {currentChart === ChartType.LINE_CHART && <LineCharUsers />}
-      {currentChart === ChartType.PIE_CHART && <PieChartStatistics />}
-    </>
-  );
+  return <>{currentChart === ChartType.LINE_CHART && <LineCharUsers />}</>;
 }

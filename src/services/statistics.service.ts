@@ -1,12 +1,14 @@
 import api, { apiURL } from './api.service';
 import { Fetcher } from 'swr';
 
-interface GlobalStatResp {
-  data: {
-    users: number;
-    notifications_sent: number;
-    channels: number;
-  }[];
+export interface GlobalStatDto {
+  users: number;
+  notifications_sent: number;
+  channels: number;
+}
+
+export interface GlobalStatResp {
+  data: GlobalStatDto[];
   status_code: number;
   message: string;
 }
@@ -21,7 +23,7 @@ export const fetchUsersStat: Fetcher<{
   message: string;
   data: any[];
 }> = async (args: string) => {
-  const [chain,] = args.split('/')
+  const [chain] = args.split('/');
   const resp = await api.get(apiURL.getUsersStatsUrl(chain));
   return resp.data;
 };
@@ -31,17 +33,17 @@ export const fethcChannelsStats: Fetcher<{
   message: string;
   data: any[];
 }> = async (args: string) => {
-  const [chain,] = args.split('/')
+  const [chain] = args.split('/');
   const resp = await api.get(apiURL.getChannelStatUrl(chain));
-  return resp?.data
-}
+  return resp?.data;
+};
 
 export const fetchOptInOutStats: Fetcher<{
   status_code: number;
   message: string;
   data: any[];
 }> = async (args: string) => {
-  const [chain, channel] = args.split('/')
+  const [chain, channel] = args.split('/');
   const resp = await api.get(apiURL.getOptinOutStatUrl(chain, channel));
-  return resp?.data
-}
+  return resp?.data;
+};
