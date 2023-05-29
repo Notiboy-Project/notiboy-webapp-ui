@@ -26,7 +26,6 @@ export default function Settings(props: any) {
 
   const { user, refetchUserInfo } = useContext(UserContext);
 
-  console.log(' user?.medium_metadata', user?.medium_metadata);
   const {
     Email = { ID: '', Verified: false },
     Discord = { ID: '', Verified: false }
@@ -118,7 +117,6 @@ export default function Settings(props: any) {
         // we should refactor this logic asap from be side then fe side
         allowed_mediums: payload.length === 0 ? ['xyz'] : payload
       });
-      console.log('Obj ==>', resp);
       if (resp.status_code === 200) {
         // Toast message
         toast({

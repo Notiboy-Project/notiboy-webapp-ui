@@ -99,15 +99,12 @@ export default function SendPage() {
   };
 
   const hadleCsvData = (data: string[]) => {
-    console.log('CSV data ===>', data);
     const [, ...address] = data;
     setPayload({
       ...payload,
       user: address
     });
   };
-
-  console.log({ payload });
 
   const handleSendNotification = async () => {
     // TODO: check validation before sending notification

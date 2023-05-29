@@ -52,7 +52,7 @@ export default function WalletConnect(props: any) {
         });
 
       setRequestProcessing(true);
-      console.log('transaction', transaction);
+      // console.log('transaction', transaction);
 
       const encodedTransaction = algosdk.encodeUnsignedTransaction(transaction);
       // console.log('encodedTransaction ==>', encodedTransaction);
@@ -69,7 +69,6 @@ export default function WalletConnect(props: any) {
         storeTokenToStorage(data.token);
         // TODO: get logged in users information
         const resp = await fetchUserInfo(selectedNetwork || '', address);
-        console.log('userInfo response= =>', resp.data);
         saveUsersData(resp.data);
         navigate(routes.notifications);
       } else {

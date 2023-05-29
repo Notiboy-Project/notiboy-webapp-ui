@@ -69,7 +69,6 @@ export default function OptInOutStatistics() {
     fetchOptInOutStats,
     { revalidateOnFocus: false }
   );
-  console.log({ optInOutStats });
 
   const formatAndSetData = (optinOut: optinOutStatsDto[]) => {
     if (optinOut.length > 0) {

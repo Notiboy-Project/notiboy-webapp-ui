@@ -49,7 +49,6 @@ export default function DeleteChannelModal({
         updateChannelList();
         onClose();
       }
-      console.log('delete response', resp);
     } catch (err) {
       console.log('Error deleting channel', err);
       setDeleting(false);
