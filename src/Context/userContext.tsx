@@ -60,13 +60,11 @@ const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const refetchUserInfo = async () => {
     // TODO: Call api and save user information.
-    console.log('refetchUserInfo', user?.chain);
     if (!user?.chain) {
       return null;
     }
 
     try {
-      console.log('Calling API', user?.chain);
       const resp = await fetchUserInfo(user?.chain || '', user?.address || '');
       saveUsersData(resp.data);
     } catch (err) {
