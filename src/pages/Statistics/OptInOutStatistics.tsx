@@ -142,7 +142,7 @@ export default function OptInOutStatistics() {
         style={{ minHeight: '275px' }}
       />
       <Text mt={5} fontWeight={600} textAlign={'center'}>
-        Opted-in-out Statistics
+        User Opt-in Opt-out Statistics
       </Text>
     </Box>
   );
