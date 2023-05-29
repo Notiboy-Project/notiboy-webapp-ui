@@ -65,6 +65,7 @@ export function PieChartStatistics({ data }: { data: GlobalStatDto[] }) {
         <Text>Channels ({totalCounts?.[2] || 0})</Text>
       </Flex>
       <Pie data={pieData} style={{ margin: '0 auto' }} />
+      <Text fontWeight={600} textAlign={'center'} mt={4}>General Statistics</Text>
     </Box>
   );
 }
