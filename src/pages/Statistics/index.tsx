@@ -20,7 +20,7 @@ export enum ChartType {
 }
 
 export default function StatisticsPage() {
-  const [currentChart, setCurrentChart] = useState(ChartType.LINE_CHART);
+  const [currentChart, setCurrentChart] = useState(ChartType.PIE_CHART);
   const [currentChannel, setCurrentChannel] = useState('');
 
   return (

@@ -164,10 +164,10 @@ export default function Settings(props: any) {
         Notifications
       </Text>
       <Divider mt={4} mb={2} />
-      <Text mt={4} fontWeight={600}>
+      <Text mt={4} fontWeight={600} display={'none'}>
         Email:{' '}
       </Text>
-      <InputGroup mt={2} size="md">
+      <InputGroup mt={2} size="md" display={'none'}>
         <Input
           pr="4.5rem"
           p={'25px 25px'}
