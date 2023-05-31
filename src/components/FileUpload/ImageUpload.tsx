@@ -121,10 +121,12 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
       )}
 
       <Text mt={2}>Upload your channel Logo (Max. size 50kb)</Text>
+      <Text mt={2}>Allowed: PNG, JPEG</Text>
       <Input
         onChange={handleFileSelect}
         ref={fileRef}
         type="file"
+        accept='image/png, image/jpeg'
         value-={file}
         display={'none'}
       />

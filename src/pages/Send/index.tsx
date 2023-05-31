@@ -31,6 +31,8 @@ export default function SendPage() {
     link: '',
     user: []
   });
+  // its been used to reset csv upload after sending notification
+  const [showCSVUpload, setShowCSVUpload] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [appId, setAppId] = useState('');
   const { user } = useContext(UserContext);
@@ -104,6 +106,13 @@ export default function SendPage() {
       ...payload,
       user: address
     });
+  };
+
+  const resetCsvUpload = () => {
+    setShowCSVUpload(false);
+    setTimeout(() => {
+      setShowCSVUpload(true);
+    }, 500);
   };
 
   const handleSendNotification = async () => {
@@ -194,7 +203,7 @@ export default function SendPage() {
           user: [],
           message: ''
         });
-        setTab(MessageType.PUBLIC);
+        resetCsvUpload();
       } else {
       }
     } catch (err: any) {
@@ -255,7 +264,7 @@ export default function SendPage() {
 
         {tab === MessageType.BULK_PERSONAL && (
           <>
-            <CsvUploadInput onDataRecieved={hadleCsvData} />
+            {showCSVUpload && <CsvUploadInput onDataRecieved={hadleCsvData} />}
           </>
         )}
 

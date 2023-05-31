@@ -18,6 +18,7 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
 
   const csvFileRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState('');
+  const [showControl, setShowControl] = useState(true);
 
   const handleChangeFile = (event: React.FormEvent<HTMLInputElement>) => {
     const files = event.currentTarget.files;
@@ -40,6 +41,10 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
     // TODO: Reset file control
     setFileName('');
     onDataRecieved([]);
+    setShowControl(false);
+    setTimeout(() => {
+      setShowControl(true);
+    }, 500);
   };
 
   return (
@@ -70,14 +75,16 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
           />
         </InputRightElement>
       </InputGroup>
-      <Input
-        onChange={handleChangeFile}
-        ref={csvFileRef}
-        type="file"
-        name="csv_file"
-        display={'none'}
-        accept="text/csv"
-      />
+      {showControl && (
+        <Input
+          onChange={handleChangeFile}
+          ref={csvFileRef}
+          type="file"
+          name="csv_file"
+          display={'none'}
+          accept="text/csv"
+        />
+      )}
     </Box>
   );
 }
