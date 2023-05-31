@@ -37,7 +37,7 @@ export default function ProtectedLayout(props: any) {
         p={2}
       >
         <PrivateHeader />
-        {props.children}
+        <Box p={{ base: 2, md: 5 }} mt={2}>{props.children}</Box>
       </Box>
       {/* <PushNotificationService /> */}
     </Box>

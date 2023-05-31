@@ -157,7 +157,7 @@ export default function Settings(props: any) {
   }, [user?.medium_metadata]);
 
   return (
-    <Box mt={4} p={5}>
+    <Box mt={4}>
       <Text fontSize={'2xl'} fontWeight={600}>
         Notifications
       </Text>
@@ -221,20 +221,28 @@ export default function Settings(props: any) {
             Verify discord
           </Button>
           {Discord.Verified && (
-            <Icon as={AiFillCheckCircle} fill="blue.400" h={22} w={22} ml={2} />
+            <>
+              <Icon
+                as={AiFillCheckCircle}
+                fill="blue.400"
+                h={22}
+                w={22}
+                ml={2}
+              />
+              <Switch
+                ml={2}
+                isChecked={mediums.discord}
+                size="md"
+                name="discord-switch"
+                disabled={isMediumUpdating}
+                onChange={({ currentTarget }) =>
+                  handleUpdateMediums({
+                    discord: currentTarget.checked
+                  })
+                }
+              />
+            </>
           )}
-          <Switch
-            ml={2}
-            isChecked={mediums.discord}
-            size="md"
-            name="discord-switch"
-            disabled={isMediumUpdating}
-            onChange={({ currentTarget }) =>
-              handleUpdateMediums({
-                discord: currentTarget.checked
-              })
-            }
-          />
         </Flex>
         {Discord?.ID && (
           <Text p={4} as="small">

@@ -21,10 +21,8 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
 
   const handleChangeFile = (event: React.FormEvent<HTMLInputElement>) => {
     const files = event.currentTarget.files;
-    console.log('files ==>>', files);
     if (files && files.length > 0) {
       const _file = files[0];
-      console.log('file', _file.name);
       setFileName(_file.name);
       const reader = new FileReader();
       reader.readAsText(_file);

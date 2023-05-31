@@ -32,7 +32,7 @@ export default function ChannelsPage() {
     onOpen();
   };
 
-  const filterBytext = (channels: ChannelsDto[], text: string) => {                              
+  const filterBytext = (channels: ChannelsDto[], text: string) => {
     if (!channels || text?.trim()?.length === 0) return;
 
     const str = text.trim()?.toLowerCase();
@@ -69,23 +69,28 @@ export default function ChannelsPage() {
   }
 
   return (
-    <Box p={5}>
-      <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
+    <Box>
+      <Box
+        display={{ base: 'grid', md: 'flex' }}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={4}
+      >
         <SearchInput
           value={searchText}
           onChange={({ currentTarget }) => setSearchText(currentTarget.value)}
         />
         <Button
           h={38}
-          ml={4}
-          w={38}
           backgroundColor="blue.400"
-          size="xl"
-          p={5}
+          size="lg"
+          p={'1.4rem 2.2rem'}
+          fontWeight={600}
           borderRadius={'full'}
           onClick={onOpen}
         >
           <Icon h={8} w={8} as={BsPlus} fill={'#fff'} fontWeight={600} />
+          Create Channel
         </Button>
       </Box>
       <Box mt={4}>

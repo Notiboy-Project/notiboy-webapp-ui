@@ -213,7 +213,7 @@ export default function SendPage() {
   };
 
   return (
-    <Box p={5}>
+    <Box>
       <Box
         display={{ base: 'grid', sm: 'flex', md: 'flex' }}
         alignItems={'center'}

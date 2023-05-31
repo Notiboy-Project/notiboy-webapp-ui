@@ -48,23 +48,25 @@ export default function NotificationPage(props: any) {
     }
   );
 
-  const filterNotificationByText = (
-    notifications: NotificationData[],
-    searchStr: string
-  ) => {
-    if (notifications.length === 0 || searchStr?.length === 0) return;
+  const filterNotificationByText = React.useCallback(
+    (notifications: NotificationData[]) => {
+      const searchStr: string = text?.trim();
 
-    const fData = notifications.filter(
-      (n) =>
-        n?.channel_name?.toLowerCase()?.includes(searchStr?.toLowerCase()) ||
-        n?.message?.toLowerCase()?.includes(searchStr?.toLowerCase())
-    );
-    setFilteredData(fData);
-  };
+      if (notifications.length === 0 || searchStr?.length === 0) return;
+
+      const fData = notifications.filter(
+        (n) =>
+          n?.channel_name?.toLowerCase()?.includes(searchStr?.toLowerCase()) ||
+          n?.message?.toLowerCase()?.includes(searchStr?.toLowerCase())
+      );
+      setFilteredData(fData);
+    },
+    [text]
+  );
 
   React.useEffect(() => {
     if (data?.data?.length > 0 && text?.trim()?.length > 0) {
-      filterNotificationByText(data?.data || [], text?.trim());
+      filterNotificationByText(data?.data || []);
     } else {
       setFilteredData(data?.data);
     }
@@ -79,10 +81,10 @@ export default function NotificationPage(props: any) {
     return <ResourcesUnavailable />;
   }
 
-  console.log("Rendering...");
+  console.log('Rendering...');
 
   return (
-    <Box p={5}>
+    <Box>
       <Box
         display={'flex'}
         justifyContent={'center'}

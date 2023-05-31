@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { Avatar, Box, Icon, Text } from '@chakra-ui/react';
 import { NotificationData } from './notification.types';
-import { VerifyIcon } from '../../assets/svgs';
+import { LinkIcon, VerifyIcon } from '../../assets/svgs';
 import { CardLayout } from '../../components/Layout/CardLayout';
 import { ChannelsDto } from '../../services/services.types';
 
@@ -21,6 +21,9 @@ export default function NotificationCard(props: NotificationCardProps) {
 
   const getLogo = (appId: string) => {
     const logoBase64 = channels?.find((c) => c.app_id === appId)?.logo || '';
+
+    if (!logoBase64) return '';
+
     return `data:image/png;base64, ${logoBase64}`;
   };
 
@@ -52,6 +55,9 @@ export default function NotificationCard(props: NotificationCardProps) {
         <Text ml={5} fontWeight={600} as="small" color="gray.600">
           {notification.kind === 'public' ? 'Annoucement' : 'Notifications'}
         </Text>
+        {notification.link && (
+          <Icon ml={3} as={LinkIcon} height={5} width={5} />
+        )}
       </Box>
       <Text as="p" textAlign={'left'} fontSize={'md'} fontWeight={500} p={2}>
         {notification.message}

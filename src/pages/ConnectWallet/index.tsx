@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { Box, Hide, Image, Show, Text, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Hide,
+  Image,
+  Show,
+  Text,
+  useDisclosure,
+  useToast
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ImageLogo from '../../assets/images/notiboy_nam.png';
 import LogoNameImage from '../../assets/images/notiboy.png';
-import algosdk from 'algosdk';
+import algosdk, { Transaction } from 'algosdk';
 import {
   useWallet,
   DEFAULT_NODE_BASEURL,
@@ -21,6 +29,7 @@ import { storeTokenToStorage } from '../../services/storage.service';
 import { fetchUserInfo } from '../../services/users.service';
 import { UserContext } from '../../Context/userContext';
 import SectionLoading from '../../components/Layout/SectionLoading';
+import AuthenticateSignedTransaction from './AuthenticateModal';
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
@@ -32,13 +41,16 @@ export default function WalletConnect(props: any) {
   const { activeAccount, signTransactions } = useWallet();
   const [isRequestProcessing, setRequestProcessing] = React.useState(false);
   const { saveUsersData } = React.useContext(UserContext);
+  const [unSignedTransactions, setUnsignedTransactions] =
+    React.useState<Transaction | null>(null);
   const [selectedNetwork, setSelectedNetwork] =
     React.useState<NetworkType | null>(null);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
-  const signedTransaction = async (address: string) => {
+  const unSignedTransaction = async (address: string) => {
     //navigate(routes.notifications);
     try {
       const params = await algodClient.getTransactionParams().do();
@@ -50,17 +62,48 @@ export default function WalletConnect(props: any) {
           amount: 0,
           suggestedParams: params
         });
+      setUnsignedTransactions(transaction);
+      onOpen();
+    } catch (err: any) {
+      console.log('error', err);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setUnsignedTransactions(null);
+    onClose();
+  }
+
+  const signTransactionAndLogin = async () => {
+    const address = activeAccount?.address || '';
+    //navigate(routes.notifications);
+    try {
+      if (!unSignedTransactions || !address) {
+        toast({
+          description: 'Failed to connect to Wallet ! please try again.',
+          status: 'error',
+          duration: 3000,
+          position: 'top'
+        });
+        return;
+      }
+      onClose()
 
       setRequestProcessing(true);
       // console.log('transaction', transaction);
 
-      const encodedTransaction = algosdk.encodeUnsignedTransaction(transaction);
+      const encodedTransaction =
+        algosdk.encodeUnsignedTransaction(unSignedTransactions);
       // console.log('encodedTransaction ==>', encodedTransaction);
       const [signedTransactions] = await signTransactions([encodedTransaction]);
       // console.log('signedTransactions ==>', signedTransactions);
       const base64Str = convertJSTOBase64(signedTransactions);
       // console.log('base64 String ==>', base64Str);
-      const response = await loginToApp(base64Str, 'algorand', address);
+      const response = await loginToApp(
+        base64Str,
+        selectedNetwork || 'algorand',
+        address
+      );
       // console.log('response base64 login ==>', response);
 
       // storetoken into localstorag
@@ -81,6 +124,7 @@ export default function WalletConnect(props: any) {
       }
     } catch (err: any) {
       console.log('error', err);
+      handleCloseModal()
       const errorString = err?.toString();
       if (errorString.includes('Rejected')) {
         toast({
@@ -106,7 +150,7 @@ export default function WalletConnect(props: any) {
 
   React.useEffect(() => {
     if (activeAccount && activeAccount.address && selectedNetwork) {
-      signedTransaction(activeAccount.address);
+      unSignedTransaction(activeAccount.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeAccount]);
@@ -172,6 +216,11 @@ export default function WalletConnect(props: any) {
             />
           )}
         </Box>
+        <AuthenticateSignedTransaction
+          isOpen={isOpen}
+          onClose={handleCloseModal}
+          onSignedTransaction={signTransactionAndLogin}
+        />
       </Box>
     </Box>
   );

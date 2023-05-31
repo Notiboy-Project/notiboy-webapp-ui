@@ -29,7 +29,7 @@ function ChannelCard(props: ChannelListsProps) {
 
   const toast = useToast();
 
-  const imgSrc = `data:image/png;base64, ${channel.logo}`;
+  const imgSrc = channel.logo ? `data:image/png;base64, ${channel.logo}` : '';
 
   const isUserOptin = (appId: string) => {
     return (optins || [])?.includes(appId);
@@ -195,7 +195,13 @@ function ChannelCard(props: ChannelListsProps) {
         {showOptInOutOption()}
 
         {amIOwner() && (
-          <Box display={'flex'} justifyContent={'flex-end'} mt={4}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            mt={4}
+            flexWrap={'wrap'}
+            gap={'10px'}
+          >
             <Button
               onClick={handleDownloadUsers}
               isLoading={isUserDownloading}
@@ -203,25 +209,24 @@ function ChannelCard(props: ChannelListsProps) {
               size="sm"
               borderRadius={'3xl'}
             >
-              <Icon as={ImUsers} h={18} w={18} /> &nbsp; Download users
+              Download &nbsp;
+              <Icon as={ImUsers} h={18} w={18} />
             </Button>
             <Button
-              onClick={() => handleDeleteChannel(channel?.app_id)}
-              ml={2}
-              backgroundColor={'red.400'}
-              borderRadius={'3xl'}
-              size="sm"
-            >
-              <Icon as={MdDelete} h={18} w={18} />
-            </Button>
-            <Button
-              onClick={() => handleEditChannel(channel)}
-              ml={2}
+              onClick={() => handleEditChannel(channel)}              
               backgroundColor={'blue.400'}
               borderRadius={'3xl'}
               size="sm"
             >
               <Icon as={MdEdit} h={18} w={18} />
+            </Button>
+            <Button
+              onClick={() => handleDeleteChannel(channel?.app_id)}              
+              backgroundColor={'red.400'}
+              borderRadius={'3xl'}
+              size="sm"
+            >
+              <Icon as={MdDelete} h={18} w={18} />
             </Button>
           </Box>
         )}

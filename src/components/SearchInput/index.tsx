@@ -8,7 +8,7 @@ interface SearchInputProps {
 
 export default function SearchInput(props: SearchInputProps) {
   return (
-    <InputGroup borderRadius={'3xl'} w={'100%'} textAlign={'center'}>
+    <InputGroup borderRadius={'3xl'} width={'100%'} textAlign={'center'}>
       <InputLeftElement
         pointerEvents="none"
         color="blue.300"

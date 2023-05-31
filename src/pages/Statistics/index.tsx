@@ -25,7 +25,7 @@ export default function StatisticsPage() {
   );
 
   return (
-    <Box p={5}>
+    <Box>
       <Box mt={5}>
         <Box
           width={{ base: '95%', md: '90%', xl: '80%' }}

@@ -27,7 +27,7 @@ export default function SupportPage(props: any) {
   };
 
   return (
-    <Box p={5}>
+    <Box>
       <SearchInput value={text} onChange={handleSearch} />
       <Box>
         <SupportLists data={data} />
