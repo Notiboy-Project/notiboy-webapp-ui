@@ -156,6 +156,11 @@ export default function Settings(props: any) {
     }
   }, [user?.medium_metadata]);
 
+  useEffect(() => {
+    refetchUserInfo();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box mt={4}>
       <Text fontSize={'2xl'} fontWeight={600}>

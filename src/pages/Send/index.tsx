@@ -96,7 +96,6 @@ export default function SendPage() {
       isValid = false;
       showErrorMsg('Please enter an address to send notification!');
     }
-
     return isValid;
   };
 

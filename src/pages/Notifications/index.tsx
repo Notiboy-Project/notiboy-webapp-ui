@@ -81,8 +81,6 @@ export default function NotificationPage(props: any) {
     return <ResourcesUnavailable />;
   }
 
-  console.log('Rendering...');
-
   return (
     <Box>
       <Box
