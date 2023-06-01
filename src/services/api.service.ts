@@ -95,6 +95,9 @@ export const apiURL = {
   channelsByOptedIn: (chain: string, address: string) =>
     `${baseURL}/chains/${chain}/channels/users/${address}/optins`, // GET
 
+  channelsByOwned: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/channels/users/${address}/owned`, // GET
+
   channelUsersListsUrl: (chain: string, channel: string) =>
     `${baseURL}/chains/${chain}/channels/${channel}/users`, // GET
 

@@ -79,10 +79,25 @@ export const fetchChannelsByUser: Fetcher<ChannelsDto[]> = async (
 
 export const fetchOptedInChannels: Fetcher<
   ChannelsDto[],
+  { chain: string; address: string; logo: boolean }
+> = async (params) => {
+  const { chain, address, logo = false } = params;
+
+  const resp = await api.get(
+    apiURL.channelsByOptedIn(chain, address) +
+      `${logo ? `?logo=true` : 'logo=false'}`
+  );
+  return resp?.data?.data || [];
+};
+
+export const fetchOwnedChannels: Fetcher<
+  ChannelListsResponse,
   { chain: string; address: string }
-> = async (params: { chain: string; address: string }) => {
+> = async (params) => {
   const { chain, address } = params;
 
-  const resp = await api.get(apiURL.channelsByOptedIn(chain, address));
-  return resp?.data?.data || [];
+  const resp = await api.get(
+    apiURL.channelsByOwned(chain, address) + '?logo=true'
+  );
+  return resp?.data || [];
 };

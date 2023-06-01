@@ -41,7 +41,7 @@ export default function NotificationPage(props: any) {
   );
 
   const { data: channels = [] } = useSWR(
-    { chain: user?.chain, address: user?.address },
+    { chain: user?.chain, address: user?.address, logo: false },
     fetchOptedInChannels,
     {
       revalidateOnFocus: false
@@ -93,7 +93,7 @@ export default function NotificationPage(props: any) {
         <SearchInput
           onChange={({ currentTarget }) => setText(currentTarget.value)}
           value={text}
-          placeholder='Search notifications...'
+          placeholder="Search notifications..."
         />
         <Button
           onClick={() => mutate()}
