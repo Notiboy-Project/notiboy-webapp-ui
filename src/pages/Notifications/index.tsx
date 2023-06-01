@@ -93,6 +93,7 @@ export default function NotificationPage(props: any) {
         <SearchInput
           onChange={({ currentTarget }) => setText(currentTarget.value)}
           value={text}
+          placeholder='Search notifications...'
         />
         <Button
           onClick={() => mutate()}

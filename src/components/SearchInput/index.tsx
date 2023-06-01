@@ -4,9 +4,11 @@ import { BiSearch } from 'react-icons/bi';
 interface SearchInputProps {
   onChange: (event: React.FormEvent<HTMLInputElement>) => void;
   value: string;
+  placeholder?: string;
 }
 
 export default function SearchInput(props: SearchInputProps) {
+  const { placeholder = 'Search anything here...', onChange, value } = props;
   return (
     <InputGroup borderRadius={'3xl'} width={'100%'} textAlign={'center'}>
       <InputLeftElement
@@ -26,11 +28,11 @@ export default function SearchInput(props: SearchInputProps) {
       <Input
         size={'lg'}
         padding={'25px 60px'}
-        onChange={props.onChange}
-        value={props.value}
+        onChange={onChange}
+        value={value}
         borderRadius={'3xl'}
         bgColor={'gray.800'}
-        placeholder="Search anything here..."
+        placeholder={placeholder}
       />
     </InputGroup>
   );

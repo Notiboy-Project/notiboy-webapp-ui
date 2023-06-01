@@ -79,6 +79,7 @@ export default function ChannelsPage() {
         <SearchInput
           value={searchText}
           onChange={({ currentTarget }) => setSearchText(currentTarget.value)}
+          placeholder='Search channels here..'
         />
         <Button
           h={38}

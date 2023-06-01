@@ -77,7 +77,7 @@ export default function Settings(props: any) {
   };
 
   const handleDiscordVerification = () => {
-    const windowFeatures = 'left=100,top=100,width=380,height=600';
+    // const windowFeatures = 'left=100,top=100,width=380,height=600';
 
     const redirect_uri = envs.discordRedirectUrl || '';
     const urlParams = new URLSearchParams();
@@ -89,13 +89,9 @@ export default function Settings(props: any) {
 
     const fullUrl = ` ${envs.discordAuthUrl}?${urlParams.toString()}`;
 
-    const handle = window.open(fullUrl, 'mozillaWindow', windowFeatures);
+    // const handle = window.open(fullUrl, 'mozillaWindow', windowFeatures);
 
-    console.log({ handle });
-
-    if (!handle) {
-      console.log('Could not open pop-up windows..');
-    }
+    window.location.href = fullUrl;
   };
 
   const handleUpdateMediums = async (obj: { [key: string]: boolean }) => {

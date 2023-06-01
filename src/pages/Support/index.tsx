@@ -28,7 +28,7 @@ export default function SupportPage(props: any) {
 
   return (
     <Box>
-      <SearchInput value={text} onChange={handleSearch} />
+      <SearchInput value={text} onChange={handleSearch} placeholder='Search FAQs..' />
       <Box>
         <SupportLists data={data} />
       </Box>
