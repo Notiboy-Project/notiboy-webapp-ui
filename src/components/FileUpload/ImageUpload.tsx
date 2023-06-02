@@ -19,6 +19,7 @@ interface ImageUploadControlProps {
 export default function ImageUploadControl(props: ImageUploadControlProps) {
   const { onImageChange, image } = props;
   const [imgSrc, setImgSrc] = useState('');
+  const [showControl, setShowControl] = useState(true);
   const [file, setFile] = useState<string | null>(null);
   const toast = useToast();
 
@@ -28,12 +29,33 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
     fileRef?.current?.click();
   };
 
+  const handleResetFile = () => {
+    setShowControl(false);
+    setTimeout(() => {
+      setShowControl(true);
+    }, 200);
+  };
+
   const handleFileSelect = async (event: React.FormEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
 
     setFile(event.currentTarget.value);
     if (files && files?.length > 0) {
       const _file = files?.[0];
+      console.log({ _file });
+
+      if (_file.type !== 'image/jpeg' && _file.type !== 'image/png') {
+        toast({
+          description: 'Only JPEG & PNG images are supported',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+          status: 'error'
+        });
+        handleResetFile()
+        return;
+      }
+
       if (_file.size > 50000) {
         toast({
           description: 'Maximum size to upload image is 50kb!',
@@ -42,6 +64,7 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
           position: 'top',
           status: 'error'
         });
+        handleResetFile()
         setFile(null);
         return;
       }
@@ -78,6 +101,7 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
     setImgSrc('');
     setFile(null);
     onImageChange(null);
+    handleResetFile()
   };
 
   React.useEffect(() => {
@@ -122,14 +146,16 @@ export default function ImageUploadControl(props: ImageUploadControlProps) {
 
       <Text mt={2}>Upload your channel Logo (Max. size 50kb)</Text>
       <Text mt={2}>Allowed: PNG, JPEG</Text>
-      <Input
-        onChange={handleFileSelect}
-        ref={fileRef}
-        type="file"
-        accept='image/png, image/jpeg'
-        value-={file}
-        display={'none'}
-      />
+      {showControl && (
+        <Input
+          onChange={handleFileSelect}
+          ref={fileRef}
+          type="file"
+          accept="image/png, image/jpeg"
+          value-={file}
+          display={'none'}
+        />
+      )}
     </Box>
   );
 }
