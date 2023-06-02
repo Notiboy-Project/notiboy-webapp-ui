@@ -41,7 +41,7 @@ export default function GeneralStatisticsChart({
   };
 
   return (
-    <Box>
+    <Box w={'100%'} margin={'0 auto'}>
       <Flex justifyContent={'center'} alignItems={'center'} mb={5}>
         <Box
           borderRadius={'full'}

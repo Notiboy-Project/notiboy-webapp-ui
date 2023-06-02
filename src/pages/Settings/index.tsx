@@ -154,7 +154,7 @@ export default function Settings(props: any) {
 
   useEffect(() => {
     refetchUserInfo();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -207,11 +207,11 @@ export default function Settings(props: any) {
           />
         </InputRightElement>
       </InputGroup>
-      <Box mt={5} display={'flex'} flexDirection={'column'}>
+      <Box mt={5} display={'flex'} alignItems={'center'}>
         <Text as="p" fontWeight={600}>
           Discord:
         </Text>
-        <Flex alignItems={'center'} mt={2}>
+        <Flex alignItems={'center'}>
           <Button
             onClick={handleDiscordVerification}
             borderRadius={'3xl'}
@@ -245,12 +245,12 @@ export default function Settings(props: any) {
             </>
           )}
         </Flex>
-        {Discord?.ID && (
-          <Text p={4} as="small">
-            Discord ID: {Discord.ID}
-          </Text>
-        )}
       </Box>
+      {Discord?.ID && (
+        <Text mt={4}>
+          Discord ID: {Discord.ID}
+        </Text>
+      )}
       <Divider mt={4} />
       <Text mt={4} fontWeight={500}>
         Note: After verification, click the toggle button to enable or disable

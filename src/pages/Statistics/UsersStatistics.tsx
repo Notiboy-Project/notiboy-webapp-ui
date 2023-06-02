@@ -13,7 +13,10 @@ import {
 import { Line } from 'react-chartjs-2';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { UserContext } from '../../Context/userContext';
-import { UsersStatDto, fetchUsersStat } from '../../services/statistics.service';
+import {
+  UsersStatDto,
+  fetchUsersStat
+} from '../../services/statistics.service';
 
 ChartJS.register(
   CategoryScale,
@@ -44,8 +47,11 @@ const users_colors = {
   onboard: 'rgba(53, 162, 235, 0.5)'
 };
 
-export default function UsersStatistics() {
-
+export default function UsersStatistics({
+  activeIndex
+}: {
+  activeIndex: number;
+}) {
   const [dataset, setDataSet] = useState<{
     labels: string[];
     offboard: number[];
@@ -62,8 +68,6 @@ export default function UsersStatistics() {
     fetchUsersStat,
     { revalidateOnFocus: false }
   );
-
-  console.log({ userStats });
 
   const formatAndSetData = (users: UsersStatDto[]) => {
     if (users.length > 0) {
@@ -105,10 +109,10 @@ export default function UsersStatistics() {
 
   useEffect(() => {
     formatAndSetData(userStats?.data || []);
-  }, [userStats]);
+  }, [userStats, activeIndex]);
 
   return (
-    <Box>
+    <Box w={{ base: '100%', md: '65%' }} margin={'0 auto'}>
       <Flex justifyContent={'center'} alignItems={'center'} mb={5}>
         <Box
           borderRadius={'full'}
