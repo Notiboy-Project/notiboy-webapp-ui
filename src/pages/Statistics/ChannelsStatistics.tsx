@@ -48,7 +48,11 @@ const channel_colors = {
   created: 'rgba(53, 162, 235, 0.5)'
 };
 
-export default function ChannelsStatistics() {
+export default function ChannelsStatistics({
+  activeIndex
+}: {
+  activeIndex: number;
+}) {
   const { user } = useContext(UserContext);
   const [dataset, setDataSet] = useState<{
     labels: string[];
@@ -104,7 +108,8 @@ export default function ChannelsStatistics() {
 
   useEffect(() => {
     formatAndSetData(channelStats?.data || []);
-  }, [channelStats]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channelStats, activeIndex]);
 
   return (
     <Box
@@ -112,6 +117,8 @@ export default function ChannelsStatistics() {
       justifyContent={'center'}
       placeItems={'center'}
       mb={5}
+      w={{ base: '90%', md: '65%' }}
+      margin={'0 auto'}
     >
       <Flex justifyContent={'center'} alignItems={'center'} mb={5}>
         <Box

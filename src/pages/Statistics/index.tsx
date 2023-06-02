@@ -5,9 +5,13 @@ import { AiOutlineLeftCircle, AiOutlineRightCircle } from 'react-icons/ai';
 import GeneralStatisticsChart from './GeneralStatisticsChart';
 import { UserContext } from '../../Context/userContext';
 import { fetchGlobalStats } from '../../services/statistics.service';
-// import ChannelsStatistics from './ChannelsStatistics';
-// import UsersStatistics from './UsersStatistics';
-// import OptInOutStatistics from './OptInOutStatistics';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import ChannelsStatistics from './ChannelsStatistics';
+import UsersStatistics from './UsersStatistics';
+import OptInOutStatistics from './OptInOutStatistics';
 
 export enum ChartType {
   LINE_CHART,
@@ -16,6 +20,7 @@ export enum ChartType {
 
 export default function StatisticsPage() {
   const [currentChart, setCurrentChart] = useState(ChartType.PIE_CHART);
+  const [activeSwipIndex, setActiveIndex] = useState(0);
   const { user } = useContext(UserContext);
 
   const { data: globalStats } = useSWR(
@@ -30,15 +35,35 @@ export default function StatisticsPage() {
         <Box
           width={{ base: '95%', md: '90%', xl: '80%' }}
           margin={'0 auto'}
-          // maxHeight={'550px'}
+          maxHeight={'550px'}
+          css={`
+            @media (max-width: 48rem) {
+              .swiper-button-next,
+              .swiper-button-prev {
+                display: none;
+              }
+            }
+          `}
         >
-          <GeneralStatisticsChart data={globalStats?.data || []} />
-          {/* <Divider mt={5} mb={5} /> */}
-          {/* <ChannelsStatistics /> */}
-          {/* <Divider mt={5} mb={5} /> */}
-          {/* <UsersStatistics /> */}
-          {/* <Divider mt={5} mb={5} /> */}
-          {/* <OptInOutStatistics /> */}
+          <Swiper
+            modules={[Navigation]}
+            navigation={true}
+            className="mySwiper"
+            onSlideChange={({ activeIndex }) => setActiveIndex(activeIndex)}
+          >
+            <SwiperSlide>
+              <GeneralStatisticsChart data={globalStats?.data || []} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <ChannelsStatistics activeIndex={activeSwipIndex} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <UsersStatistics activeIndex={activeSwipIndex} />
+            </SwiperSlide>
+            <SwiperSlide>
+              <OptInOutStatistics activeIndex={activeSwipIndex} />
+            </SwiperSlide>
+          </Swiper>
         </Box>
         <Flex mt={5} justifyContent={'center'} display={'none'}>
           <>

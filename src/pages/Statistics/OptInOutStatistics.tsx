@@ -51,7 +51,7 @@ const optin_out_colors = {
   optout: 'rgba(53, 162, 235, 0.5)'
 };
 
-export default function OptInOutStatistics() {
+export default function OptInOutStatistics({ activeIndex }: { activeIndex: number }) {
   const { user } = useContext(UserContext);
   const [currentChannel, setCurrentChannel] = useState('');
   const [dataset, setDataSet] = useState<{
@@ -65,7 +65,7 @@ export default function OptInOutStatistics() {
   });
 
   const { data: optInOutStats } = useSWR(
-    `${user?.chain}/${currentChannel}/opt-in-out/stat`,
+    currentChannel ? `${user?.chain}/${currentChannel}/opt-in-out/stat` : null,
     fetchOptInOutStats,
     { revalidateOnFocus: false }
   );
@@ -110,10 +110,10 @@ export default function OptInOutStatistics() {
 
   useEffect(() => {
     formatAndSetData(optInOutStats?.data || []);
-  }, [optInOutStats]);
+  }, [optInOutStats, activeIndex]);
 
   return (
-    <Box>
+    <Box w={{ base: '100%', md: '65%' }} margin={'0 auto'}>
       <Flex justifyContent={'end'} width={'fit-content'}>
         <SelectChannel onChannelSelect={setCurrentChannel} />
       </Flex>
