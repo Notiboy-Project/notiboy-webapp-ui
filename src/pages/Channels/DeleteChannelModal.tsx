@@ -11,7 +11,7 @@ import {
   useToast
 } from '@chakra-ui/react';
 import { deleteChannel } from '../../services/channels.service';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { UserContext } from '../../Context/userContext';
 
 interface DeleteChannelModalProps {
@@ -31,7 +31,7 @@ export default function DeleteChannelModal({
   const { user } = React.useContext(UserContext);
   const toast = useToast();
 
-  const handleDeleteChannel = async () => {
+  const handleDeleteChannel = useCallback(async () => {
     // TODO: delete channel API call and update lists
     setDeleting(true);
     try {
@@ -45,7 +45,7 @@ export default function DeleteChannelModal({
           position: 'top',
           status: 'success'
         });
-        setDeleting(false)
+        setDeleting(false);
         updateChannelList();
         onClose();
       }
@@ -53,7 +53,8 @@ export default function DeleteChannelModal({
       console.log('Error deleting channel', err);
       setDeleting(false);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appId]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
