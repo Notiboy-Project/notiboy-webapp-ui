@@ -41,7 +41,7 @@ export default function NotificationPage(props: any) {
   );
 
   const { data: channels = [] } = useSWR(
-    { chain: user?.chain, address: user?.address, logo: false },
+    { chain: user?.chain, address: user?.address, logo: true },
     fetchOptedInChannels,
     {
       revalidateOnFocus: false

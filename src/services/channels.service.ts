@@ -85,7 +85,7 @@ export const fetchOptedInChannels: Fetcher<
 
   const resp = await api.get(
     apiURL.channelsByOptedIn(chain, address) +
-      `${logo ? `?logo=true` : 'logo=false'}`
+      `${logo ? `?logo=true` : '?logo=false'}`
   );
   return resp?.data?.data || [];
 };
