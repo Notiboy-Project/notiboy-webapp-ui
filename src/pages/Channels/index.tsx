@@ -35,7 +35,11 @@ export default function ChannelsPage() {
     }
   );
 
-  const { data: ownedChannels, isLoading: ownedLoading } = useSWR(
+  const {
+    data: ownedChannels,
+    isLoading: ownedLoading,
+    mutate: updateOwnedChannels
+  } = useSWR(
     filter === 'owned'
       ? { chain: user?.chain || '', address: user?.address || '' }
       : null,
@@ -46,7 +50,11 @@ export default function ChannelsPage() {
     }
   );
 
-  const { data: optinChannles = [], isLoading: optinLoading } = useSWR(
+  const {
+    data: optinChannles = [],
+    isLoading: optinLoading,
+    mutate: updateOptinChannels
+  } = useSWR(
     filter === 'optin'
       ? { chain: user?.chain, address: user?.address, logo: true }
       : null,
@@ -102,6 +110,20 @@ export default function ChannelsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, ownedChannels, filter, optinChannles]
   );
+
+  const updateChannelList = useCallback(() => {
+    if (filter === 'all') {
+      mutate();
+    } else if (filter === 'owned') {
+      updateOwnedChannels();
+    } else if (filter === 'optin') {
+      // TODO call murate functino
+      updateOptinChannels();
+    } else {
+      console.log('Invaid filter value', filter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   useEffect(() => {
     applyFiltersOnData(searchText, filter);
@@ -183,7 +205,7 @@ export default function ChannelsPage() {
         appId={deleteAppId}
         isOpen={!!deleteAppId}
         onClose={() => setDeleteAppId(null)}
-        updateChannelList={mutate}
+        updateChannelList={updateChannelList}
       />
     </Box>
   );
