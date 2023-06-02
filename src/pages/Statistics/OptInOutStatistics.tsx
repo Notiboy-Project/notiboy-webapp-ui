@@ -47,8 +47,8 @@ export const options = {
 };
 
 const optin_out_colors = {
-  optin: 'rgba(255, 99, 132, 0.5)',
-  optout: 'rgba(53, 162, 235, 0.5)'
+  optout: 'rgba(255, 99, 132, 0.5)',
+  optin: 'rgba(53, 162, 235, 0.5)'
 };
 
 export default function OptInOutStatistics({ activeIndex }: { activeIndex: number }) {
@@ -122,7 +122,7 @@ export default function OptInOutStatistics({ activeIndex }: { activeIndex: numbe
           borderRadius={'full'}
           height={'10px'}
           width={'10px'}
-          backgroundColor={optin_out_colors.optout}
+          backgroundColor={optin_out_colors.optin}
           mr={2}
         />
         <Text mr={4}>Opted-in</Text>
@@ -130,7 +130,7 @@ export default function OptInOutStatistics({ activeIndex }: { activeIndex: numbe
           borderRadius={'full'}
           height={'10px'}
           width={'10px'}
-          backgroundColor={optin_out_colors.optin}
+          backgroundColor={optin_out_colors.optout}
           mr={2}
         />
         <Text>Opted-out</Text>
