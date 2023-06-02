@@ -34,7 +34,7 @@ export default function ChannelsPage() {
   const { user } = useContext(UserContext);
 
   const { error, isLoading, data, mutate } = useSWR(
-    `api/channels/${user?.chain}`,
+    filter === 'all' ? `api/channels/${user?.chain}` : null,
     fetchChannelLists,
     {
       revalidateOnFocus: false,
@@ -43,7 +43,9 @@ export default function ChannelsPage() {
   );
 
   const { data: ownedChannels } = useSWR(
-    { chain: user?.chain || '', address: user?.address || '' },
+    filter === 'owned'
+      ? { chain: user?.chain || '', address: user?.address || '' }
+      : null,
     fetchOwnedChannels,
     {
       revalidateOnFocus: false,
@@ -52,7 +54,9 @@ export default function ChannelsPage() {
   );
 
   const { data: optinChannles = [] } = useSWR(
-    { chain: user?.chain, address: user?.address, logo: true },
+    filter === 'optin'
+      ? { chain: user?.chain, address: user?.address, logo: true }
+      : null,
     fetchOptedInChannels,
     {
       revalidateOnFocus: false
