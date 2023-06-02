@@ -3,15 +3,7 @@ import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
-import {
-  Box,
-  Button,
-  Flex,
-  Icon,
-  Select,
-  Text,
-  useDisclosure
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import { BsPlus } from 'react-icons/bs';
 import {
   fetchChannelLists,
@@ -23,6 +15,7 @@ import { ChannelsDto } from '../../services/services.types';
 import DeleteChannelModal from './DeleteChannelModal';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { UserContext } from '../../Context/userContext';
+import DropdownMenu from '../../components/DropdownMenu';
 
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -42,7 +35,7 @@ export default function ChannelsPage() {
     }
   );
 
-  const { data: ownedChannels } = useSWR(
+  const { data: ownedChannels, isLoading: ownedLoading } = useSWR(
     filter === 'owned'
       ? { chain: user?.chain || '', address: user?.address || '' }
       : null,
@@ -53,7 +46,7 @@ export default function ChannelsPage() {
     }
   );
 
-  const { data: optinChannles = [] } = useSWR(
+  const { data: optinChannles = [], isLoading: optinLoading } = useSWR(
     filter === 'optin'
       ? { chain: user?.chain, address: user?.address, logo: true }
       : null,
@@ -107,13 +100,13 @@ export default function ChannelsPage() {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, ownedChannels, filter]
+    [data, ownedChannels, filter, optinChannles]
   );
 
   useEffect(() => {
     applyFiltersOnData(searchText, filter);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText, filter, data, ownedChannels]);
+  }, [searchText, filter, data, ownedChannels, optinChannles]);
 
   if (isLoading) return <PageLoading />;
 
@@ -135,16 +128,15 @@ export default function ChannelsPage() {
           onChange={({ currentTarget }) => setSearchText(currentTarget.value)}
           placeholder="Search channels here.."
         />
-        <Select
-          size="lg"
-          onChange={({ currentTarget }) => setFilter(currentTarget.value)}
-          borderRadius={'3xl'}
-          maxW={{ base: '100%', md: '140px' }}
-        >
-          <option value="all">All</option>
-          <option value="owned">Owned</option>
-          <option value="optin">Opted in</option>
-        </Select>
+        <DropdownMenu
+          menus={[
+            { title: 'All', value: 'all' },
+            { title: 'Owned', value: 'owned' },
+            { title: 'Optin', value: 'optin' }
+          ]}
+          onSelectMenu={setFilter}
+          defaultTitle="All"
+        />
         <Button
           h={38}
           minW={'13rem'}
@@ -160,6 +152,7 @@ export default function ChannelsPage() {
         </Button>
       </Box>
       <Box mt={4}>
+        {(ownedLoading || optinLoading) && <PageLoading />}
         {filteredData?.length === 0 && (
           <Flex
             mt={20}
