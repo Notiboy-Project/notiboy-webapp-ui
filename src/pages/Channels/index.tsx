@@ -154,7 +154,7 @@ export default function ChannelsPage() {
           menus={[
             { title: 'All', value: 'all' },
             { title: 'Owned', value: 'owned' },
-            { title: 'Optin', value: 'optin' }
+            { title: 'Opted In', value: 'optin' }
           ]}
           onSelectMenu={setFilter}
           defaultTitle="All"
