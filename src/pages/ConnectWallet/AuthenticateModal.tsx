@@ -25,6 +25,7 @@ export default function AuthenticateSignedTransaction(
       blockScrollOnMount={false}
       isOpen={isOpen}
       onClose={onClose}
+      isCentered
       closeOnOverlayClick={false}
     >
       <ModalOverlay />
