@@ -2,7 +2,7 @@ import { Box, Hide, Show } from '@chakra-ui/react';
 import SidebarLayout from './SideBar';
 import PrivateHeader from '../PrivateHeader';
 import MobileMenuBar from './MobileMenuBar';
-import PushNotificationService from '../PushNotification';
+// import PushNotificationService from '../PushNotification';
 
 export default function ProtectedLayout(props: any) {
 
@@ -31,7 +31,7 @@ export default function ProtectedLayout(props: any) {
           {props.children}
         </Box>
       </Box>
-      <PushNotificationService />
+      {/* <PushNotificationService /> */}
     </Box>
   );
 }
