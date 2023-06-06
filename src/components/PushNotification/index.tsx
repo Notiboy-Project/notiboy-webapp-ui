@@ -43,8 +43,6 @@ export default function PushNotificationService() {
   useEffect(() => {
     const socket: WebSocket = handleWebsocketConnection();
 
-    console.log('socket.readyState ==>', socket?.readyState);
-
     return () => {
       console.log('socket checking.....', socket);
       if (socket) console.log('socket closing...', socket);

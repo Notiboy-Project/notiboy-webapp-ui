@@ -46,7 +46,12 @@ export default function NotificationCard(props: NotificationCardProps) {
           height={45}
           width={45}
         />
-        <Text fontWeight={600} fontSize={'lg'} textAlign={'left'} ml={3}>
+        <Text
+          fontWeight={notification.seen ? 500 : 600}
+          fontSize={'lg'}
+          textAlign={'left'}
+          ml={3}
+        >
           {notification.channel_name}
         </Text>
         {isChennelVerified(notification.app_id) && (
