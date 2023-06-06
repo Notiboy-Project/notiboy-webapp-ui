@@ -26,6 +26,7 @@ export default function PushNotificationService() {
 
     socket.addEventListener('close', function (event) {
       console.log('WebSocket connection closed. ==>', event);
+      setTimeout(handleWebsocketConnection, 1000);
     });
 
     socket.addEventListener('error', function (event) {
@@ -40,14 +41,12 @@ export default function PushNotificationService() {
   };
 
   useEffect(() => {
-    const socket = handleWebsocketConnection();
-
-    console.log('socket.readyState ==>', socket?.readyState);
+    const socket: WebSocket = handleWebsocketConnection();
 
     return () => {
-      if (socket?.readyState === 1) {
-        socket.close();
-      }
+      console.log('socket checking.....', socket);
+      if (socket) console.log('socket closing...', socket);
+      socket?.close();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

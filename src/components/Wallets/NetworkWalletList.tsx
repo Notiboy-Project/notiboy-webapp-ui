@@ -12,7 +12,7 @@ interface NetworkWalletListsProps {
 export default function NetworkWalletLists(props: NetworkWalletListsProps) {
   const { networkType, onBackClick } = props;
   const { providers } = useWallet();
-  console.log(networkType);
+  console.log({ networkType });
 
   const getBg = (name: string) => {
     switch (name) {
@@ -24,6 +24,8 @@ export default function NetworkWalletLists(props: NetworkWalletListsProps) {
         return '#faa500';
       case 'WalletConnect':
         return '#b741a7';
+      case 'Daffi':
+        return 'green.500';
       default:
         return '#3a57ea';
     }

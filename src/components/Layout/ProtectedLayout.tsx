@@ -1,20 +1,10 @@
-// import * as React from 'react';
 import { Box, Hide, Show } from '@chakra-ui/react';
 import SidebarLayout from './SideBar';
 import PrivateHeader from '../PrivateHeader';
-// import { UserContext } from '../../Context/userContext';
 import MobileMenuBar from './MobileMenuBar';
 // import PushNotificationService from '../PushNotification';
 
 export default function ProtectedLayout(props: any) {
-  // const { user } = React.useContext(UserContext);
-
-  // React.useEffect(() => {
-  //   if (user) {
-  //     // refetchUserInfo();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <Box p={{ sm: 0, md: 10 }} display={'flex'}>
@@ -37,7 +27,9 @@ export default function ProtectedLayout(props: any) {
         p={2}
       >
         <PrivateHeader />
-        <Box p={{ base: 2, md: 5 }} mt={2}>{props.children}</Box>
+        <Box p={{ base: 2, md: 5 }} mt={2}>
+          {props.children}
+        </Box>
       </Box>
       {/* <PushNotificationService /> */}
     </Box>

@@ -24,6 +24,7 @@ const walletProvider = initializeProviders([
   PROVIDER_ID.MYALGO,
   PROVIDER_ID.DEFLY,
   PROVIDER_ID.PERA,
+  PROVIDER_ID.DAFFI,
   PROVIDER_ID.WALLETCONNECT
 ]);
 
