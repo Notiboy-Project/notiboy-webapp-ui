@@ -2,7 +2,7 @@ import { Box, Button, Icon, Image, Text } from '@chakra-ui/react';
 import { NetworkType } from '../../pages/ConnectWallet/wallet.types';
 import { FaArrowLeft } from 'react-icons/fa';
 import { AlgorandIcon } from '../../assets/svgs';
-import { useWallet } from '@txnlab/use-wallet';
+import { PROVIDER_ID, useWallet } from '@txnlab/use-wallet';
 
 interface NetworkWalletListsProps {
   networkType: NetworkType;
@@ -42,22 +42,29 @@ export default function NetworkWalletLists(props: NetworkWalletListsProps) {
         </Text>
         <Box display={'grid'} placeItems={'center'} gap={3} mt={2}>
           {providers?.map((provider) => (
-            <Button
-              key={provider.metadata.id}
-              size={'lg'}
-              color={'#fff'}
-              backgroundColor={getBg(provider.metadata.name)}
-              width={{ xs: '100%', sm: '100%', md: '50%', xl: '40%' }}
-              justifyContent={'space-between'}
-              rightIcon={
-                <Image src={provider.metadata.icon} height={35} width={35} />
-              }
-              colorScheme="linkedin"
-              onClick={provider.connect}
-              minW={275}
-            >
-              {provider?.metadata?.name}
-            </Button>
+            <>
+              <Button
+                key={provider.metadata.id}
+                size={'lg'}
+                color={'#fff'}
+                backgroundColor={getBg(provider.metadata.name)}
+                width={{ xs: '100%', sm: '100%', md: '50%', xl: '40%' }}
+                justifyContent={'space-between'}
+                rightIcon={
+                  <Image src={provider.metadata.icon} height={35} width={35} />
+                }
+                colorScheme="linkedin"
+                onClick={provider.connect}
+                minW={275}
+              >
+                {provider?.metadata?.name}
+              </Button>
+              {provider.metadata.id === PROVIDER_ID.MYALGO && (
+                <Text as="small" color={'red.400'}>
+                  {provider.metadata.name}: Ledger/Multisig accounts only
+                </Text>
+              )}
+            </>
           ))}
         </Box>
         <Text as="small" p={5}>
