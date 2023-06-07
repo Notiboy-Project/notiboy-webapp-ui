@@ -13,13 +13,9 @@ import { BiCopy, BiLogOut } from 'react-icons/bi';
 import { FaCaretDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../config';
-import {
-  removeCurrentUser,
-  removeTokenFromStorage
-} from '../../services/storage.service';
 
 export default function WalletDropdown() {
-  const { activeAccount, providers } = useWallet();
+  const { activeAccount } = useWallet();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -35,21 +31,7 @@ export default function WalletDropdown() {
   };
 
   const handleLogout = async () => {
-    const connectedWallet = providers?.find((wallet) => wallet.isActive);
-
-    toast({
-      description: 'Logged out !',
-      status: 'info',
-      duration: 1500,
-      isClosable: true,
-      position: 'top'
-    });
-    removeTokenFromStorage();
-    removeCurrentUser();
-    if (connectedWallet) {
-      await connectedWallet.disconnect();
-      navigate(routes.connectWallet);
-    }
+    navigate(routes.logout);
   };
 
   const truncatedAddress = `${activeAccount?.address.slice(0, 4)}...
@@ -71,6 +53,7 @@ export default function WalletDropdown() {
         p={3}
         maxWidth={{ base: '315px', md: '100%', xs: '350px' }}
         right={15}
+        zIndex={2}
       >
         <MenuItem
           minH="48px"

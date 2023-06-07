@@ -19,13 +19,15 @@ const SendPage = React.lazy(() => import('./pages/Send'));
 const StatisticsPage = React.lazy(() => import('./pages/Statistics'));
 const SupportPage = React.lazy(() => import('./pages/Support'));
 const SettingsPage = React.lazy(() => import('./pages/Settings'));
+const LogoutPage = React.lazy(() => import('./pages/Logout'));
 
 const walletProvider = initializeProviders([
-  PROVIDER_ID.MYALGO,
   PROVIDER_ID.DEFLY,
   PROVIDER_ID.PERA,
   PROVIDER_ID.DAFFI,
-  PROVIDER_ID.WALLETCONNECT
+  // PROVIDER_ID.EXODUS,
+  PROVIDER_ID.WALLETCONNECT,
+  PROVIDER_ID.MYALGO
 ]);
 
 const theme = extendTheme({
@@ -56,6 +58,14 @@ export const App = () => {
                 element={
                   <React.Suspense fallback={<PageLoading />}>
                     <ConnectWallet />
+                  </React.Suspense>
+                }
+              />
+              <Route
+                path={routes.logout}
+                element={
+                  <React.Suspense fallback={<PageLoading />}>
+                    <LogoutPage />
                   </React.Suspense>
                 }
               />
@@ -109,6 +119,7 @@ export const App = () => {
                   }
                 />
               </Route>
+              
             </Routes>
           </BrowserRouter>
           {/* </Box> */}
