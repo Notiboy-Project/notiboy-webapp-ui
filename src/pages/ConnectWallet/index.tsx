@@ -72,7 +72,7 @@ export default function WalletConnect(props: any) {
   const handleCloseModal = () => {
     setUnsignedTransactions(null);
     onClose();
-  }
+  };
 
   const signTransactionAndLogin = async () => {
     const address = activeAccount?.address || '';
@@ -87,7 +87,7 @@ export default function WalletConnect(props: any) {
         });
         return;
       }
-      onClose()
+      onClose();
 
       setRequestProcessing(true);
       // console.log('transaction', transaction);
@@ -124,7 +124,7 @@ export default function WalletConnect(props: any) {
       }
     } catch (err: any) {
       console.log('error', err);
-      handleCloseModal()
+      handleCloseModal();
       const errorString = err?.toString();
       if (errorString.includes('Rejected')) {
         toast({
@@ -169,12 +169,12 @@ export default function WalletConnect(props: any) {
     >
       <Box
         backgroundColor={'blackAlpha.400'}
-        p={10}
+        p={[0, 10]}
         display={'grid'}
         alignContent={'center'}
         placeItems={'center'}
         borderRadius={15}
-        width={['95%', '75%', '65%']}
+        width={['95%', '75%', '55%', '45%']}
         position="relative"
       >
         {isRequestProcessing && <SectionLoading />}
