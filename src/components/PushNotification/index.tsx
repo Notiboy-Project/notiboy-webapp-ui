@@ -7,30 +7,22 @@ export default function PushNotificationService() {
   const { user } = useContext(UserContext);
 
   const handleWebsocketConnection = () => {
+    const token = getTokenFromStorage();
+
+    if (!token) {
+      return;
+    }
+
     const socket = new WebSocket(
-      `${envs.websocketUrl}?chain=${user?.chain}&address=${
-        user?.address
-      }&token=${getTokenFromStorage()}`
+      `${envs.websocketUrl}?chain=${user?.chain}&address=${user?.address}&token=${token}`
     );
+
+    socket.onmessage = onMessage;
+    socket.onerror = onError;
+    socket.onclose = onClose;
 
     socket.addEventListener('open', function (event) {
       console.log('WebSocket connection established.');
-    });
-
-    socket.addEventListener('message', function (event) {
-      const message = event.data;
-      console.log('Received message: ' + message);
-      const nf = new Notification('Notiboy', { body: message });
-      console.log({ nf });
-    });
-
-    socket.addEventListener('close', function (event) {
-      console.log('WebSocket connection closed. ==>', event);
-      setTimeout(handleWebsocketConnection, 1000);
-    });
-
-    socket.addEventListener('error', function (event) {
-      console.log('WebSocket connection failed.==>>', event);
     });
 
     if ('Notification' in window && Notification.permission !== 'granted') {
@@ -40,13 +32,30 @@ export default function PushNotificationService() {
     return socket;
   };
 
+  const onMessage = (event: any) => {
+    const message = event.data;
+    console.log('Received message: ' + message);
+    const nf = new Notification('Notiboy', { body: message });
+    console.log({ nf });
+  };
+
+  const onError = (event: any) => {
+    console.log('WebSocket connection failed.==>>', event);
+  };
+
+  const onClose = (event: any) => {
+    console.log('WebSocket connection closed. ==>', event);
+    setTimeout(handleWebsocketConnection, 3000);
+  };
+
   useEffect(() => {
-    const socket: WebSocket = handleWebsocketConnection();
+    const socket = handleWebsocketConnection();
 
     return () => {
-      console.log('socket checking.....', socket);
-      if (socket) console.log('socket closing...', socket);
-      socket?.close();
+      if (socket) {
+        console.log('socket closing...', socket);
+        socket?.close();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
