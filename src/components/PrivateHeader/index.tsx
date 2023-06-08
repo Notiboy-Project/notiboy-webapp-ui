@@ -11,7 +11,7 @@ export default function PrivateHeader() {
   const navigate = useNavigate();
 
   return (
-    <Box p={{base: 2, md: 5}}>
+    <Box p={{ base: 2, md: 5 }}>
       <Box
         display={'flex'}
         justifyContent={'space-between'}
@@ -27,7 +27,7 @@ export default function PrivateHeader() {
             </Icon>
           </Hide>
         </Box>
-        <Box display={'flex'} justifyItems={'ce'}>
+        <Box display={'flex'} justifyItems={'center'}>
           {/* <ColorModeSwitcher /> */}
           <Button
             w={45}
