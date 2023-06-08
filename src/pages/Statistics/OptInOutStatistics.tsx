@@ -141,7 +141,7 @@ export default function OptInOutStatistics({ activeIndex }: { activeIndex: numbe
         updateMode="resize"
         style={{ minHeight: '275px' }}
       />
-      <Text mt={5} fontWeight={600} textAlign={'center'}>
+      <Text mt={2} fontWeight={600} textAlign={'center'}>
         User Opt-in Opt-out Statistics
       </Text>
     </Box>

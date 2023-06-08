@@ -6,7 +6,7 @@ import GeneralStatisticsChart from './GeneralStatisticsChart';
 import { UserContext } from '../../Context/userContext';
 import { fetchGlobalStats } from '../../services/statistics.service';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper';
+import { Pagination, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import ChannelsStatistics from './ChannelsStatistics';
@@ -29,39 +29,36 @@ export default function StatisticsPage() {
     { revalidateOnFocus: false }
   );
 
+  const pagination = {
+    clickable: true,
+    renderBullet: function (index: number, className: string) {
+      return '<span class="' + className + '">' + (index + 1) + '</span>';
+    }
+  };
+
   return (
     <Box>
       <Box mt={5}>
-        <Box
-          width={{ base: '95%', md: '90%', xl: '80%' }}
-          margin={'0 auto'}
-          maxHeight={'550px'}
-          css={`
-            @media (max-width: 48rem) {
-              .swiper-button-next,
-              .swiper-button-prev {
-                display: none;
-              }
-            }
-          `}
-        >
+        <Box width={'100%'} margin={'0 auto'} maxHeight={'550px'} css={pageCss}>
           <Swiper
-            modules={[Navigation]}
+            pagination={pagination}
+            modules={[Pagination, Navigation]}
+            loop={true}
             navigation={true}
             className="mySwiper"
             onSlideChange={({ activeIndex }) => setActiveIndex(activeIndex)}
           >
             <SwiperSlide>
-              <GeneralStatisticsChart data={globalStats?.data || []} />
+              <OptInOutStatistics activeIndex={activeSwipIndex} />
             </SwiperSlide>
             <SwiperSlide>
-              <ChannelsStatistics activeIndex={activeSwipIndex} />
+              <GeneralStatisticsChart data={globalStats?.data || []} />
             </SwiperSlide>
             <SwiperSlide>
               <UsersStatistics activeIndex={activeSwipIndex} />
             </SwiperSlide>
             <SwiperSlide>
-              <OptInOutStatistics activeIndex={activeSwipIndex} />
+              <ChannelsStatistics activeIndex={activeSwipIndex} />
             </SwiperSlide>
           </Swiper>
         </Box>
@@ -91,3 +88,36 @@ export default function StatisticsPage() {
     </Box>
   );
 }
+
+const pageCss = `
+.swiper-pagination {
+  text-align: center;
+}
+.swiper-pagination-bullet {
+  width: 20px;
+  height: 20PX;
+  text-align: center;
+  line-height: 20px;
+  font-size: 12px;
+  color: #000;
+  opacity: 1;
+  background: gray;
+  padding: 10px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right:10px;
+  cursor:pointer;
+}
+.swiper-pagination-bullet-active {
+  color: #fff;
+  background: #007aff;
+}
+@media (max-width: 48rem) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none;
+  }
+}
+`;
