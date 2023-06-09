@@ -33,9 +33,9 @@ export default function PushNotificationService() {
   };
 
   const onMessage = (event: any) => {
-    const message = event.data;
-    console.log('Received message: ' + message);
-    const nf = new Notification('Notiboy', { body: message });
+    const data = JSON.parse(event.data);
+    console.log('Received message: ' + data);
+    const nf = new Notification('Notiboy', { body: data?.message || '' });
     console.log({ nf });
   };
 
