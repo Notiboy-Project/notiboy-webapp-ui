@@ -246,15 +246,10 @@ export default function Settings(props: any) {
           )}
         </Flex>
       </Box>
-      {Discord?.ID && (
-        <Text mt={4}>
-          Discord ID: {Discord.ID}
-        </Text>
-      )}
+      {Discord?.ID && <Text mt={4}>Discord ID: {Discord.ID}</Text>}
       <Divider mt={4} />
       <Text mt={4} fontWeight={500}>
-        Note: After verification, click the toggle button to enable or disable
-        discord notifications
+        Note: Click the toggle button to enable or disable discord notifications
       </Text>
     </Box>
   );
