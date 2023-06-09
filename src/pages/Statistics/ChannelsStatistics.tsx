@@ -54,6 +54,7 @@ export default function ChannelsStatistics({
   activeIndex: number;
 }) {
   const { user } = useContext(UserContext);
+  const [showChart, setShowChart] = useState(false);
   const [dataset, setDataSet] = useState<{
     labels: string[];
     deleted: number[];
@@ -71,23 +72,26 @@ export default function ChannelsStatistics({
   );
 
   const formatAndSetData = (channels: ChannelStatsDto[]) => {
-    if (channels.length > 0) {
-      const deleted: number[] = channels.map((c) => c.deleted);
-      const created: number[] = channels.map((c) => c.created);
-      const _date: string[] = channels.map((c) => c.date);
-
-      setDataSet({
-        labels: _date || [],
-        created: created || [],
-        deleted: deleted || []
-      });
-    } else {
+    if (channels.length < 3) {
+      setShowChart(false);
       setDataSet({
         labels: [],
         created: [],
         deleted: []
       });
+      return;
     }
+
+    const deleted: number[] = channels.map((c) => c.deleted);
+    const created: number[] = channels.map((c) => c.created);
+    const _date: string[] = channels.map((c) => c.date);
+
+    setDataSet({
+      labels: _date || [],
+      created: created || [],
+      deleted: deleted || []
+    });
+    setShowChart(true);
   };
 
   const data = {
@@ -138,12 +142,18 @@ export default function ChannelsStatistics({
         />
         <Text>Created</Text>
       </Flex>
-      <Line
-        options={options}
-        data={data}
-        updateMode="resize"
-        style={{ minHeight: '275px' }}
-      />
+
+      <Flex minHeight={300} alignItems={'center'} justifyContent={'center'}>
+        <Line
+          options={options}
+          data={data}
+          updateMode="resize"
+          style={{ minHeight: '275px' }}
+        />
+        {!showChart && (
+          <Text position={'absolute'}>Chart data not yet available !</Text>
+        )}
+      </Flex>
       <Text mt={5} fontWeight={600} textAlign={'center'}>
         Channels Statistics
       </Text>

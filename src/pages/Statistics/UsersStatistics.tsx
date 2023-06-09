@@ -62,6 +62,7 @@ export default function UsersStatistics({
     onboard: []
   });
   const { user } = useContext(UserContext);
+  const [showChart, setShowChart] = useState(false);
 
   const { data: userStats } = useSWR(
     `${user?.chain}/users/stat`,
@@ -70,23 +71,25 @@ export default function UsersStatistics({
   );
 
   const formatAndSetData = (users: UsersStatDto[]) => {
-    if (users.length > 0) {
-      const offboard: number[] = users.map((c) => c.offboard);
-      const onboard: number[] = users.map((c) => c.onboard);
-      const _date: string[] = users.map((c) => c.date);
-
-      setDataSet({
-        labels: _date || [],
-        offboard: offboard || [],
-        onboard: onboard || []
-      });
-    } else {
+    if (users.length < 3) {
+      setShowChart(false);
       setDataSet({
         labels: [],
         offboard: [],
         onboard: []
       });
+      return;
     }
+    const offboard: number[] = users.map((c) => c.offboard);
+    const onboard: number[] = users.map((c) => c.onboard);
+    const _date: string[] = users.map((c) => c.date);
+
+    setDataSet({
+      labels: _date || [],
+      offboard: offboard || [],
+      onboard: onboard || []
+    });
+    setShowChart(true);
   };
 
   const data = {
@@ -131,12 +134,21 @@ export default function UsersStatistics({
         />
         <Text>Onboard</Text>
       </Flex>
-      <Line
-        options={options}
-        data={data}
-        updateMode="resize"
-        style={{ minHeight: '275px' }}
-      />
+      <Flex
+        alignItems={'center'}
+        justifyContent={'center'}
+        position={'relative'}
+      >
+        <Line
+          options={options}
+          data={data}
+          updateMode="resize"
+          style={{ minHeight: '275px' }}
+        />
+        {!showChart && (
+          <Text position={'absolute'}>Chart data not yet available !</Text>
+        )}
+      </Flex>
       <Text mt={5} fontWeight={600} textAlign={'center'}>
         Users Statistics
       </Text>
