@@ -163,13 +163,32 @@ export default function Settings(props: any) {
         Notifications
       </Text>
       <Divider mt={4} mb={2} />
-      <Text mt={4} fontWeight={600}>
-        Email:{' '}
-      </Text>
+      <Flex
+        p="0 5px"
+        mt={4}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+      >
+        <Text fontWeight={600}>Email:</Text>
+        {Email.Verified && (
+          <Switch
+            ml={2}
+            size={{ base: 'md', md: 'lg' }}
+            disabled={isMediumUpdating}
+            isChecked={mediums.email}
+            name="email-switch"
+            onChange={({ currentTarget }) =>
+              handleUpdateMediums({
+                email: currentTarget.checked
+              })
+            }
+          />
+        )}
+      </Flex>
       <InputGroup mt={2} size="md">
         <Input
           pr="4.5rem"
-          p={'25px 25px'}
+          p={'25px'}
           borderRadius={'3xl'}
           backgroundColor={'gray.800'}
           placeholder="Enter your email id"
@@ -177,7 +196,7 @@ export default function Settings(props: any) {
           value={email || ''}
           onChange={({ currentTarget }) => setEmail(currentTarget.value)}
         />
-        <InputRightElement width="8rem" top={1.5}>
+        <InputRightElement width={'fit-content'} right={3} top={1.5}>
           {Email.Verified && email === Email.ID ? (
             <Icon as={AiFillCheckCircle} fill="blue.400" h={25} w={25} mr={2} />
           ) : (
@@ -193,25 +212,20 @@ export default function Settings(props: any) {
               Verify
             </Button>
           )}
-          <Switch
-            ml={2}
-            size="md"
-            disabled={isMediumUpdating}
-            isChecked={mediums.email}
-            name="email-switch"
-            onChange={({ currentTarget }) =>
-              handleUpdateMediums({
-                email: currentTarget.checked
-              })
-            }
-          />
         </InputRightElement>
       </InputGroup>
-      <Box mt={5} display={'flex'} alignItems={'center'}>
-        <Text as="p" fontWeight={600}>
-          Discord:
-        </Text>
+      <Divider mt={5} mb={5} />
+      <Box
+        mt={5}
+        p={'0 5px'}
+        display={'flex'}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+      >
         <Flex alignItems={'center'}>
+          <Text as="p" fontWeight={600}>
+            Discord:
+          </Text>
           <Button
             onClick={handleDiscordVerification}
             borderRadius={'3xl'}
@@ -230,26 +244,34 @@ export default function Settings(props: any) {
                 w={22}
                 ml={2}
               />
-              <Switch
-                ml={2}
-                isChecked={mediums.discord}
-                size="md"
-                name="discord-switch"
-                disabled={isMediumUpdating}
-                onChange={({ currentTarget }) =>
-                  handleUpdateMediums({
-                    discord: currentTarget.checked
-                  })
-                }
-              />
             </>
           )}
         </Flex>
+        <Box>
+          {Discord.Verified && (
+            <Switch
+              ml={2}
+              isChecked={mediums.discord}
+              size={{ base: 'md', md: 'lg' }}
+              name="discord-switch"
+              disabled={isMediumUpdating}
+              onChange={({ currentTarget }) =>
+                handleUpdateMediums({
+                  discord: currentTarget.checked
+                })
+              }
+            />
+          )}
+        </Box>
       </Box>
-      {Discord?.ID && <Text mt={4}>Discord ID: {Discord.ID}</Text>}
+      {Discord?.ID && (
+        <Text p={2} mt={2}>
+          Verified Discord ID: {Discord.ID}
+        </Text>
+      )}
       <Divider mt={4} />
       <Text mt={4} fontWeight={500}>
-        Note: Click the toggle button to enable or disable discord notifications
+        Note: Click the toggle button to enable or disable notifications
       </Text>
     </Box>
   );
