@@ -1,0 +1,16 @@
+FROM node:18.16.0 as build
+
+WORKDIR /usr/src/app
+
+COPY package.json yarn.lock ./
+RUN yarn install
+
+COPY . ./
+COPY live-ui.env .env
+RUN yarn build
+
+FROM nginx
+
+RUN mkdir /app
+COPY --from=build /usr/src/app/build /app
+COPY build/nginx.conf /etc/nginx/nginx.conf

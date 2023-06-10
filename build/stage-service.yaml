@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: notiboy-stage-ui
+  namespace: notiboy
+spec:
+  selector:
+    app: notiboy-stage-ui
+  ports:
+  - port: 11996

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notiboy-stage-ui
+  namespace: notiboy
+  labels:
+    app: notiboy-stage-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notiboy-stage-ui
+  template:
+    metadata:
+      labels:
+        app: notiboy-stage-ui
+    spec:
+      containers:
+      - name: main
+        image: localhost:32000/notiboy:stage
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 11996
+          name: http
