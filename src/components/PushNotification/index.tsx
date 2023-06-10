@@ -10,7 +10,7 @@ export default function PushNotificationService() {
     const token = getTokenFromStorage();
 
     if (!token) {
-      return;
+      return null;
     }
 
     const socket = new WebSocket(
