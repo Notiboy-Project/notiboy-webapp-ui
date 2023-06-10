@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/limit-rps: "3"
+  name: notiboy-stage-ui
+  namespace: notiboy
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: testnet.notiboy.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: notiboy-stage-ui
+            port:
+              number: 11996
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - testnet.notiboy.com
+    secretName: tls-cert

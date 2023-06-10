@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: notiboy
+  namespace: notiboy
+spec:
+  selector:
+    app: notiboy
+  ports:
+  - port: 11996
