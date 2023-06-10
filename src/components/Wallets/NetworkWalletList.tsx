@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box, Button, Icon, Image, Text } from '@chakra-ui/react';
 import { NetworkType } from '../../pages/ConnectWallet/wallet.types';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -42,7 +43,7 @@ export default function NetworkWalletLists(props: NetworkWalletListsProps) {
         </Text>
         <Box display={'grid'} placeItems={'center'} gap={3} mt={2}>
           {providers?.map((provider) => (
-            <>
+            <React.Fragment key={provider.metadata.id}>
               <Button
                 key={provider.metadata.id}
                 size={'lg'}
@@ -64,7 +65,7 @@ export default function NetworkWalletLists(props: NetworkWalletListsProps) {
                   {provider.metadata.name}: Ledger/Multisig accounts only
                 </Text>
               )}
-            </>
+            </React.Fragment>
           ))}
         </Box>
         <Text as="small" p={5}>

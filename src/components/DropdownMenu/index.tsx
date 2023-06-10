@@ -28,7 +28,7 @@ export default function DropdownMenu(props: DropdownMenuProps) {
         as={Button}
         rightIcon={<Icon as={FaCaretDown} fill="blue.400" />}
         borderRadius={'3xl'}
-        size={'lg'}        
+        size={'lg'}
         p={5}
       >
         {title}
