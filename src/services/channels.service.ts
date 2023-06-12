@@ -91,7 +91,7 @@ export const fetchOptedInChannels: Fetcher<
 };
 
 export const fetchOwnedChannels: Fetcher<
-  ChannelListsResponse,
+  ChannelsDto[],
   { chain: string; address: string }
 > = async (params) => {
   const { chain, address } = params;
@@ -99,5 +99,5 @@ export const fetchOwnedChannels: Fetcher<
   const resp = await api.get(
     apiURL.channelsByOwned(chain, address) + '?logo=true'
   );
-  return resp?.data || [];
+  return resp?.data?.data || [];
 };
