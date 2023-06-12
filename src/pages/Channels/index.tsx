@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
@@ -23,7 +23,6 @@ export default function ChannelsPage() {
   const [filter, setFilter] = useState<string>('all');
   const [editChannel, setEditChannel] = useState<ChannelsDto | null>(null);
   const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
-  const [filteredData, setFilteredData] = useState<ChannelsDto[]>([]);
   const { user } = useContext(UserContext);
 
   const { error, isLoading, data, mutate } = useSWR(
@@ -69,46 +68,26 @@ export default function ChannelsPage() {
     onOpen();
   };
 
-  const filterBytext = (channels: ChannelsDto[], text: string) => {
-    if (!channels || text?.trim()?.length === 0) return;
-
-    const str = text.trim()?.toLowerCase();
-    const fdata = channels?.filter(
-      (channel) =>
-        channel?.name?.toLowerCase()?.includes(str) ||
-        channel?.description?.toLowerCase()?.includes(str)
-    );
-    setFilteredData(fdata);
-  };
-
   const handleCloseModal = () => {
     setEditChannel(null);
     onClose();
   };
 
   const applyFiltersOnData = useCallback(
-    (searchText: string, filter: string) => {
-      let __data: ChannelsDto[] = [];
-
-      if (filter === 'all') {
-        __data = data?.data || [];
-      }
-      if (filter === 'owned') {
-        __data = ownedChannels?.data || [];
-      }
-
-      if (filter === 'optin') {
-        __data = optinChannles || [];
-      }
-
+    (__data: ChannelsDto[], searchText: string) => {
       if (__data && __data?.length > 0 && searchText?.trim()?.length > 1) {
-        filterBytext(__data || [], searchText);
+        const str = searchText.trim()?.toLowerCase();
+        const fdata = __data?.filter(
+          (channel) =>
+            channel?.name?.toLowerCase()?.includes(str) ||
+            channel?.description?.toLowerCase()?.includes(str)
+        );
+        return fdata;
       } else {
-        setFilteredData(__data || []);
+        return __data || [];
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, ownedChannels, filter, optinChannles]
+    []
   );
 
   const updateChannelList = useCallback(() => {
@@ -125,10 +104,31 @@ export default function ChannelsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
-  useEffect(() => {
-    applyFiltersOnData(searchText, filter);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText, filter, data, ownedChannels, optinChannles]);
+  // Memoized the expensive calculation to
+  // avoid  unnecessary re-calculations
+  // and re-rendering the component.
+  const filteredData = useMemo(() => {
+    let __data: ChannelsDto[] = [];
+    if (filter === 'all') {
+      __data = data?.data || [];
+    }
+    if (filter === 'owned') {
+      __data = ownedChannels || [];
+    }
+
+    if (filter === 'optin') {
+      __data = optinChannles || [];
+    }
+
+    return applyFiltersOnData(__data, searchText);
+  }, [
+    ownedChannels,
+    optinChannles,
+    data?.data,
+    filter,
+    searchText,
+    applyFiltersOnData
+  ]);
 
   if (isLoading) return <PageLoading />;
 
