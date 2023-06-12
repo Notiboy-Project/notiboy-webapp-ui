@@ -10,14 +10,10 @@ import PageLoading from '../../components/Layout/PageLoading';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { FaSyncAlt } from 'react-icons/fa';
 import { fetchOptedInChannels } from '../../services/channels.service';
-import { NotificationData } from './notification.types';
 
-export default function NotificationPage(props: any) {
+export default function NotificationPage() {
   const { user } = React.useContext(UserContext);
   const [text, setText] = React.useState('');
-  const [filteredData, setFilteredData] = React.useState<NotificationData[]>(
-    []
-  );
 
   const {
     error,
@@ -31,7 +27,7 @@ export default function NotificationPage(props: any) {
   } = useSWR(
     {
       url: `api/notifications`,
-      params: { chain: 'algorand' }
+      params: { chain: user?.chain }
     },
     fetchNotifications,
     {
@@ -48,30 +44,20 @@ export default function NotificationPage(props: any) {
     }
   );
 
-  const filterNotificationByText = React.useCallback(
-    (notifications: NotificationData[]) => {
-      const searchStr: string = text?.trim();
+  const filteredData = React.useMemo(() => {
+    let notifications = data?.data?.slice() || [];
+    const searchStr = text?.trim() || '';
 
-      if (notifications.length === 0 || searchStr?.length === 0) return;
+    if (notifications.length === 0 || searchStr?.length === 0)
+      return notifications;
 
-      const fData = notifications.filter(
-        (n) =>
-          n?.channel_name?.toLowerCase()?.includes(searchStr?.toLowerCase()) ||
-          n?.message?.toLowerCase()?.includes(searchStr?.toLowerCase())
-      );
-      setFilteredData(fData);
-    },
-    [text]
-  );
-
-  React.useEffect(() => {
-    if (data?.data?.length > 0 && text?.trim()?.length > 0) {
-      filterNotificationByText(data?.data || []);
-    } else {
-      setFilteredData(data?.data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, text]);
+    const fData = notifications.filter(
+      (n) =>
+        n?.channel_name?.toLowerCase()?.includes(searchStr?.toLowerCase()) ||
+        n?.message?.toLowerCase()?.includes(searchStr?.toLowerCase())
+    );
+    return fData;
+  }, [data?.data, text]);
 
   if (isLoading || isValidating) {
     return <PageLoading />;
