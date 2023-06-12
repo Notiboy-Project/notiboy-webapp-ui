@@ -1,3 +1,4 @@
+import React from 'react';
 import moment from 'moment';
 import { Avatar, Box, Icon, Text } from '@chakra-ui/react';
 import { NotificationData } from './notification.types';
@@ -10,7 +11,7 @@ interface NotificationCardProps {
   channels: ChannelsDto[];
 }
 
-export default function NotificationCard(props: NotificationCardProps) {
+function NotificationCard(props: NotificationCardProps) {
   const { notification, channels } = props;
 
   const handleRedirect = () => {
@@ -90,3 +91,5 @@ export default function NotificationCard(props: NotificationCardProps) {
     </CardLayout>
   );
 }
+
+export default React.memo(NotificationCard);
