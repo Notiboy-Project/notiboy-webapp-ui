@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { envs } from '../../config';
 import { getTokenFromStorage } from '../../services/storage.service';
+import { REFRESH_NOTIFICATIONS, publish } from '../../services/events.service';
 
 export default function PushNotificationService() {
   const { user } = useContext(UserContext);
@@ -34,6 +35,7 @@ export default function PushNotificationService() {
 
   const onMessage = (event: any) => {
     const data = JSON.parse(event.data);
+    publish(REFRESH_NOTIFICATIONS, {});
     console.log('Received message: ' + data);
     const nf = new Notification('Notiboy', { body: data?.message || '' });
     console.log({ nf });

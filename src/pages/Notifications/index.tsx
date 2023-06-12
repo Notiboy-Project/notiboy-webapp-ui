@@ -10,6 +10,11 @@ import PageLoading from '../../components/Layout/PageLoading';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { FaSyncAlt } from 'react-icons/fa';
 import { fetchOptedInChannels } from '../../services/channels.service';
+import {
+  REFRESH_NOTIFICATIONS,
+  subscribe,
+  unsubscribe
+} from '../../services/events.service';
 
 export default function NotificationPage() {
   const { user } = React.useContext(UserContext);
@@ -43,6 +48,22 @@ export default function NotificationPage() {
       revalidateOnFocus: false
     }
   );
+
+  const onMessageRecieved = () => {
+    // Mutate and update the notification lists
+    console.log('Calling refresh notifications');
+    mutate();
+  };
+
+  React.useEffect(() => {
+    subscribe(REFRESH_NOTIFICATIONS, onMessageRecieved);
+
+    return () => {
+      console.log('Unsubscribe refresh notifications');
+      unsubscribe(REFRESH_NOTIFICATIONS, onMessageRecieved);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredData = React.useMemo(() => {
     let notifications = data?.data?.slice() || [];
