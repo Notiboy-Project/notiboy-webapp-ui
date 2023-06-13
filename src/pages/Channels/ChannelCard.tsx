@@ -213,7 +213,7 @@ function ChannelCard(props: ChannelListsProps) {
               <Icon as={ImUsers} h={18} w={18} />
             </Button>
             <Button
-              onClick={() => handleEditChannel(channel)}              
+              onClick={() => handleEditChannel(channel)}
               backgroundColor={'blue.400'}
               borderRadius={'3xl'}
               size="sm"
@@ -221,7 +221,7 @@ function ChannelCard(props: ChannelListsProps) {
               <Icon as={MdEdit} h={18} w={18} />
             </Button>
             <Button
-              onClick={() => handleDeleteChannel(channel?.app_id)}              
+              onClick={() => handleDeleteChannel(channel?.app_id)}
               backgroundColor={'red.400'}
               borderRadius={'3xl'}
               size="sm"

@@ -21,18 +21,20 @@ import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { UserContext } from '../../Context/userContext';
 import DropdownMenu from '../../components/DropdownMenu';
 
+const page_size = 50
+
 const getKey = (pageIndex: number, previousPageData: any) => {
   console.log('pageIndex', pageIndex);
   console.log('previousPageData', previousPageData);
   // reached the end
-  if (previousPageData && !previousPageData?.pagination_meta_data?.next)
+  if (previousPageData?.pagination_meta_data && !previousPageData?.pagination_meta_data?.next)
     return null;
 
   // first page, we don't have `previousPageData`
-  if (pageIndex === 0) return `?page_size=5&logo=true`;
+  if (pageIndex === 0) return `?page_size=${page_size}&logo=true`;
 
   // add the cursor to the API endpoint
-  return `?page_state=${previousPageData?.pagination_meta_data?.next}&page_size=5&logo=true`;
+  return `?page_state=${previousPageData?.pagination_meta_data?.next}&page_size=${page_size}&logo=true`;
 };
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -42,12 +44,13 @@ export default function ChannelsPage() {
   const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
   const { user } = useContext(UserContext);
 
-  const { data, mutate, size, setSize, isLoading, error } = useSWRInfinite(
+  const { data, mutate, size, setSize, isLoading, error, isValidating } = useSWRInfinite(
     getKey,
     fetchChannelLists,
     {
       revalidateOnFocus: false,
-      revalidateOnReconnect: false
+      revalidateOnReconnect: false,
+      revalidateFirstPage: false
     }
   );
 
@@ -108,6 +111,25 @@ export default function ChannelsPage() {
     },
     []
   );
+
+  const renderLoadMoreButton = () => {
+
+    if (filter !== 'all')
+      return null
+
+    const lastData = data?.[data?.length - 1]
+
+    if (!lastData || !lastData?.pagination_meta_data?.next) return null
+
+    return (
+      <Flex mt={5} alignItems={'center'} justifyContent={'center'}>
+        <Button
+          isLoading={isValidating}
+          onClick={() => setSize(size + 1)}
+        >Load more</Button>
+      </Flex>
+    )
+  }
 
   const updateChannelList = useCallback(() => {
     if (filter === 'all') {
@@ -216,7 +238,7 @@ export default function ChannelsPage() {
             handleDeleteChannel={setDeleteAppId}
           />
         ))}
-        <Button onClick={() => setSize(size + 1)}>Load more</Button>
+        {renderLoadMoreButton()}
       </Box>
       <CreateChannelModal
         channel={editChannel}

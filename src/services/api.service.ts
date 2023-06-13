@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { envs, routes } from '../config';
-import {  
+import {
   getTokenFromStorage,
   getWalletAddressFromStorage
 } from './storage.service';
@@ -47,7 +47,7 @@ api.interceptors.response.use(
   },
   (err) => {
     const { data } = err?.response;
-    if (data?.status_code === 401) {      
+    if (data?.status_code === 401) {
       window.location.href = routes.logout;
     }
     return Promise.reject(err);
