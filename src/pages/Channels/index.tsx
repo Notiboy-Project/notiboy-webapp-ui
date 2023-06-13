@@ -1,5 +1,6 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
 import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
@@ -11,12 +12,28 @@ import {
   fetchOwnedChannels
 } from '../../services/channels.service';
 import PageLoading from '../../components/Layout/PageLoading';
-import { ChannelsDto } from '../../services/services.types';
+import {
+  ChannelListsResponse,
+  ChannelsDto
+} from '../../services/services.types';
 import DeleteChannelModal from './DeleteChannelModal';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { UserContext } from '../../Context/userContext';
 import DropdownMenu from '../../components/DropdownMenu';
 
+const getKey = (pageIndex: number, previousPageData: any) => {
+  console.log('pageIndex', pageIndex);
+  console.log('previousPageData', previousPageData);
+  // reached the end
+  if (previousPageData && !previousPageData?.pagination_meta_data?.next)
+    return null;
+
+  // first page, we don't have `previousPageData`
+  if (pageIndex === 0) return `?page_size=5&logo=true`;
+
+  // add the cursor to the API endpoint
+  return `?page_state=${previousPageData?.pagination_meta_data?.next}&page_size=5&logo=true`;
+};
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchText, setSearchText] = useState('');
@@ -25,8 +42,8 @@ export default function ChannelsPage() {
   const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
   const { user } = useContext(UserContext);
 
-  const { error, isLoading, data, mutate } = useSWR(
-    filter === 'all' ? `api/channels/${user?.chain}` : null,
+  const { data, mutate, size, setSize, isLoading, error } = useSWRInfinite(
+    getKey,
     fetchChannelLists,
     {
       revalidateOnFocus: false,
@@ -62,6 +79,8 @@ export default function ChannelsPage() {
       revalidateOnFocus: false
     }
   );
+
+  console.log('All data ==>', data);
 
   const handleEditChannel = (channel: ChannelsDto) => {
     setEditChannel(channel);
@@ -110,7 +129,10 @@ export default function ChannelsPage() {
   const filteredData = useMemo(() => {
     let __data: ChannelsDto[] = [];
     if (filter === 'all') {
-      __data = data?.data || [];
+      __data =
+        data?.reduce((acc: ChannelsDto[], data: ChannelListsResponse) => {
+          return acc.concat(data?.data || []);
+        }, []) || [];
     }
     if (filter === 'owned') {
       __data = ownedChannels || [];
@@ -124,7 +146,7 @@ export default function ChannelsPage() {
   }, [
     ownedChannels,
     optinChannles,
-    data?.data,
+    data,
     filter,
     searchText,
     applyFiltersOnData
@@ -194,6 +216,7 @@ export default function ChannelsPage() {
             handleDeleteChannel={setDeleteAppId}
           />
         ))}
+        <Button onClick={() => setSize(size + 1)}>Load more</Button>
       </Box>
       <CreateChannelModal
         channel={editChannel}

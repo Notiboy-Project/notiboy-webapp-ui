@@ -84,8 +84,8 @@ export const apiURL = {
 
   createChannelURL: (chain: string) => `${baseURL}/chains/${chain}/channels`, // POST
 
-  channelListsURL: (chain: string) =>
-    `${baseURL}/chains/${chain}/channels?logo=true&limit=5000`, // GET
+  channelListsURL: (chain: string, params: string) =>
+    `${baseURL}/chains/${chain}/channels${params}`, // GET
 
   channelsByUsersURL: (chain: string, address: string) =>
     `${baseURL}/chains/${chain}/channels/users/${address}/owned`, // GET

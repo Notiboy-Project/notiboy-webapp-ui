@@ -7,6 +7,12 @@ export interface ChannelListsResponse {
   status_code: number;
   data: ChannelsDto[]
   message: string
+  pagination_meta_data: {
+    next: string
+    page_size: number
+    prev: string
+    size: number    
+  }
 }
 
 export interface ChannelsDto {
