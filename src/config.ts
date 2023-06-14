@@ -24,3 +24,8 @@ export const envs = Object.freeze({
   discordAuthUrl: process.env.REACT_APP_DISCORD_AUTH_URL,
   websocketUrl: process.env.REACT_APP_WEB_SOCKET_URL
 });
+
+export const pageSize = Object.freeze({
+  notifications: 200,
+  channels: 50
+});

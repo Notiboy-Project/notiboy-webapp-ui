@@ -74,8 +74,8 @@ export const apiURL = {
 
   //NOTIFICATIONS URL
 
-  fetchnotificationUrl: (chain: string) =>
-    `${baseURL}/chains/${chain}/notifications`, // GET
+  fetchnotificationUrl: (chain: string, params: string) =>
+    `${baseURL}/chains/${chain}/notifications${params}`, // GET
 
   sendNotificationUrl: (chain: string, appId: string, kind: string) =>
     `${baseURL}/chains/${chain}/channels/${appId}/notifications/${kind}`, // POST
