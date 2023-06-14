@@ -1,5 +1,6 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
 import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
@@ -11,12 +12,30 @@ import {
   fetchOwnedChannels
 } from '../../services/channels.service';
 import PageLoading from '../../components/Layout/PageLoading';
-import { ChannelsDto } from '../../services/services.types';
+import {
+  ChannelListsResponse,
+  ChannelsDto
+} from '../../services/services.types';
 import DeleteChannelModal from './DeleteChannelModal';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { UserContext } from '../../Context/userContext';
 import DropdownMenu from '../../components/DropdownMenu';
 
+const page_size = 50
+
+const getKey = (pageIndex: number, previousPageData: any) => {
+  console.log('pageIndex', pageIndex);
+  console.log('previousPageData', previousPageData);
+  // reached the end
+  if (previousPageData?.pagination_meta_data && !previousPageData?.pagination_meta_data?.next)
+    return null;
+
+  // first page, we don't have `previousPageData`
+  if (pageIndex === 0) return `?page_size=${page_size}&logo=true`;
+
+  // add the cursor to the API endpoint
+  return `?page_state=${previousPageData?.pagination_meta_data?.next}&page_size=${page_size}&logo=true`;
+};
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchText, setSearchText] = useState('');
@@ -25,12 +44,13 @@ export default function ChannelsPage() {
   const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
   const { user } = useContext(UserContext);
 
-  const { error, isLoading, data, mutate } = useSWR(
-    filter === 'all' ? `api/channels/${user?.chain}` : null,
+  const { data, mutate, size, setSize, isLoading, error, isValidating } = useSWRInfinite(
+    getKey,
     fetchChannelLists,
     {
       revalidateOnFocus: false,
-      revalidateOnReconnect: false
+      revalidateOnReconnect: false,
+      revalidateFirstPage: false
     }
   );
 
@@ -63,6 +83,8 @@ export default function ChannelsPage() {
     }
   );
 
+  console.log('All data ==>', data);
+
   const handleEditChannel = (channel: ChannelsDto) => {
     setEditChannel(channel);
     onOpen();
@@ -90,6 +112,25 @@ export default function ChannelsPage() {
     []
   );
 
+  const renderLoadMoreButton = () => {
+
+    if (filter !== 'all')
+      return null
+
+    const lastData = data?.[data?.length - 1]
+
+    if (!lastData || !lastData?.pagination_meta_data?.next) return null
+
+    return (
+      <Flex mt={5} alignItems={'center'} justifyContent={'center'}>
+        <Button
+          isLoading={isValidating}
+          onClick={() => setSize(size + 1)}
+        >Load more</Button>
+      </Flex>
+    )
+  }
+
   const updateChannelList = useCallback(() => {
     if (filter === 'all') {
       mutate();
@@ -110,7 +151,10 @@ export default function ChannelsPage() {
   const filteredData = useMemo(() => {
     let __data: ChannelsDto[] = [];
     if (filter === 'all') {
-      __data = data?.data || [];
+      __data =
+        data?.reduce((acc: ChannelsDto[], data: ChannelListsResponse) => {
+          return acc.concat(data?.data || []);
+        }, []) || [];
     }
     if (filter === 'owned') {
       __data = ownedChannels || [];
@@ -124,7 +168,7 @@ export default function ChannelsPage() {
   }, [
     ownedChannels,
     optinChannles,
-    data?.data,
+    data,
     filter,
     searchText,
     applyFiltersOnData
@@ -194,6 +238,7 @@ export default function ChannelsPage() {
             handleDeleteChannel={setDeleteAppId}
           />
         ))}
+        {renderLoadMoreButton()}
       </Box>
       <CreateChannelModal
         channel={editChannel}

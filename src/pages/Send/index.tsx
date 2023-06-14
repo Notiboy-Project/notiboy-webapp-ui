@@ -143,7 +143,7 @@ export default function SendPage() {
         });
         if (response?.status_code === 200) {
           toast({
-            description: `public notification has been sent out`,
+            description: `Public notification has been sent out`,
             duration: 3000,
             isClosable: true,
             position: 'top',
