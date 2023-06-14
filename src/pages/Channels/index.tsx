@@ -88,8 +88,6 @@ export default function ChannelsPage() {
     }
   );
 
-  console.log('All data ==>', data);
-
   const handleEditChannel = (channel: ChannelsDto) => {
     setEditChannel(channel);
     onOpen();
