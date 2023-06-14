@@ -6,10 +6,12 @@ import {
   createChannelParams
 } from './services.types';
 
-export const fetchChannelLists: Fetcher<ChannelListsResponse, string> = async (
-  param
-) => {
-  const resp = await api.get(apiURL.channelListsURL('algorand', param));
+export const fetchChannelLists: Fetcher<
+  ChannelListsResponse,
+  { chain: string; param: string }
+> = async (args) => {
+  const { chain, param } = args
+  const resp = await api.get(apiURL.channelListsURL(chain, param));
   const { data, status_code, message, pagination_meta_data } = resp?.data;
   // const verified = data?.filter((d: any) => d.verified === true);
   // const notVerified = data?.filter((d: any) => d.verified === false);
