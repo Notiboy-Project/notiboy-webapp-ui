@@ -1,33 +1,31 @@
-
-import { NotificationData } from "../pages/Notifications/notification.types";
-
+import { NotificationData } from '../pages/Notifications/notification.types';
 
 ///*********** Channels APIs types ****/
 export interface ChannelListsResponse {
   status_code: number;
-  data: ChannelsDto[]
-  message: string
+  data: ChannelsDto[];
+  message: string;
   pagination_meta_data: {
-    next: string
-    page_size: number
-    prev: string
-    size: number    
-  }
+    next: string;
+    page_size: number;
+    prev: string;
+    size: number;
+  };
 }
 
 export interface ChannelsDto {
-  app_id: string
-  description: string
-  name: string
-  logo: string
-  owner: string
-  verified: boolean
+  app_id: string;
+  description: string;
+  name: string;
+  logo: string;
+  owner: string;
+  verified: boolean;
 }
 
 export interface createChannelParams {
   name: string;
   description: string;
-  logo?: string | null
+  logo?: string | null;
 }
 
 ///********End Channels APIs types */
@@ -35,12 +33,18 @@ export interface createChannelParams {
 ///*********** Notifications APIs types ****/
 
 export interface NotificationFetcher {
-  data: NotificationData[],
-  status_code: string,
-  message: string
+  data: NotificationData[];
+  status_code: string;
+  message: string;
+  pagination_meta_data: {
+    next: string;
+    page_size: number;
+    prev: string;
+    size: number;
+  };
 }
 
-export type KindType = 'public' | 'private'
+export type KindType = 'public' | 'private';
 
 export interface sendNotificationPaylod {
   receivers?: string[];
@@ -49,20 +53,19 @@ export interface sendNotificationPaylod {
 }
 
 export interface sendNotificaitonArgs {
-  chain: string,
-  appId: string,
-  kind: 'public' | 'private',
-  address: string
-  payload: sendNotificationPaylod
+  chain: string;
+  appId: string;
+  kind: 'public' | 'private';
+  address: string;
+  payload: sendNotificationPaylod;
 }
-
 
 ///*********** END Notifications APIs types ****/
 
 ////********* USERS profile API types */
 
 export interface updateMediumPayload {
-  allowed_mediums: string[]
+  allowed_mediums: string[];
 }
 
 ///******** */
