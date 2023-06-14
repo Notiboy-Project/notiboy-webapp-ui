@@ -27,5 +27,5 @@ export const envs = Object.freeze({
 
 export const pageSize = Object.freeze({
   notifications: 200,
-  channels: 50
+  channels: 20
 });
