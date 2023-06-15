@@ -132,6 +132,7 @@ export default function NotificationPage() {
           onClick={() => mutate()}
           borderRadius={'full'}
           ml={2}
+          isLoading={isValidating}
           bgColor={'blue.400'}
         >
           <Icon as={FaSyncAlt} fill={'#fff'} />
