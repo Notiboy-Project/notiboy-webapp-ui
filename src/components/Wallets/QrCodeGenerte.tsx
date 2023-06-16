@@ -46,7 +46,7 @@ export default function QRCodeGenerator(props: QRCodeGeneratorProps) {
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent borderRadius={'3xl'} p={5}>
         <ModalCloseButton />
         <ModalBody>
           <Flex
