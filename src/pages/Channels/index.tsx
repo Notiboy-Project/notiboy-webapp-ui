@@ -146,12 +146,15 @@ export default function ChannelsPage() {
     );
   };
 
-  const debounceSearch = _debounce(setSearchText, 600);
+  const debounceRequests = _debounce(setSearchText, 600);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouceCallback = useCallback(debounceRequests, []);
 
   const handleSetText = (event: React.FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
+    debouceCallback(value);
     setText(value);
-    debounceSearch(value);
   };
 
   const updateChannelList = useCallback(() => {
