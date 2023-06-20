@@ -210,8 +210,7 @@ export default function ChannelsPage() {
   return (
     <Box>
       <Box
-        display={{ base: 'grid', md: 'flex' }}
-        justifyContent={'center'}
+        display={{ base: 'grid', md: 'flex' }}        
         alignItems={'center'}
         gap={4}
       >
@@ -220,28 +219,30 @@ export default function ChannelsPage() {
           onChange={handleSetText}
           placeholder="Search channels here.."
         />
-        <DropdownMenu
-          menus={[
-            { title: 'All', value: 'all' },
-            { title: 'Owned', value: 'owned' },
-            { title: 'Opted In', value: 'optin' }
-          ]}
-          onSelectMenu={setFilter}
-          defaultTitle="All"
-        />
-        <Button
-          h={38}
-          minW={'13rem'}
-          backgroundColor="blue.400"
-          size="lg"
-          p={'1.4rem 2.2rem'}
-          fontWeight={600}
-          borderRadius={'full'}
-          onClick={onOpen}
-        >
-          <Icon h={8} w={8} as={BsPlus} fill={'#fff'} fontWeight={600} />
-          Create Channel
-        </Button>
+        <Flex gap={4}>
+          <DropdownMenu
+            menus={[
+              { title: 'All', value: 'all' },
+              { title: 'Owned', value: 'owned' },
+              { title: 'Opted In', value: 'optin' }
+            ]}
+            onSelectMenu={setFilter}
+            defaultTitle="All"
+          />
+          <Button
+            h={38}
+            minW={'13rem'}
+            backgroundColor="blue.400"
+            size="lg"
+            p={'1.4rem 2.2rem'}
+            fontWeight={600}
+            borderRadius={'full'}
+            onClick={onOpen}
+          >
+            <Icon h={8} w={8} as={BsPlus} fill={'#fff'} fontWeight={600} />
+            Create Channel
+          </Button>
+        </Flex>
       </Box>
       <Box mt={4}>
         {(ownedLoading || optinLoading || isLoading) && <PageLoading />}
