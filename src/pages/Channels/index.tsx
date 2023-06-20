@@ -1,5 +1,6 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import useSWR from 'swr';
+import _debounce from 'lodash.debounce';
 import useSWRInfinite from 'swr/infinite';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
@@ -24,6 +25,7 @@ import { pageSize } from '../../config';
 
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [text, setText] = useState('');
   const [searchText, setSearchText] = useState('');
   const [filter, setFilter] = useState<string>('all');
   const [editChannel, setEditChannel] = useState<ChannelsDto | null>(null);
@@ -38,17 +40,26 @@ export default function ChannelsPage() {
     )
       return null;
 
+    const params = new URLSearchParams();
+    params.set('page_size', pageSize.channels.toString());
+    params.set('logo', 'true');
+
+    if (searchText.trim().length > 1 && filter === 'all') {
+      params.set('name', searchText);
+    }
+
     // first page, we don't have `previousPageData`
     if (pageIndex === 0)
       return {
-        param: `?page_size=${pageSize.channels}&logo=true`,
+        param: `?${params.toString()}`,
         chain: user?.chain
       };
 
+    params.set('page_state', previousPageData?.pagination_meta_data?.next);
     // add the cursor to the API endpoint
     return {
       chain: user?.chain,
-      param: `?page_state=${previousPageData?.pagination_meta_data?.next}&page_size=${pageSize.channels}&logo=true`
+      param: `?${params.toString()}`
     };
   };
 
@@ -100,6 +111,10 @@ export default function ChannelsPage() {
 
   const applyFiltersOnData = useCallback(
     (__data: ChannelsDto[], searchText: string) => {
+      if (filter === 'all') {
+        return __data || [];
+      }
+
       if (__data && __data?.length > 0 && searchText?.trim()?.length > 1) {
         const str = searchText.trim()?.toLowerCase();
         const fdata = __data?.filter(
@@ -112,7 +127,7 @@ export default function ChannelsPage() {
         return __data || [];
       }
     },
-    []
+    [filter]
   );
 
   const renderLoadMoreButton = () => {
@@ -129,6 +144,17 @@ export default function ChannelsPage() {
         </Button>
       </Flex>
     );
+  };
+
+  const debounceRequests = _debounce(setSearchText, 600);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouceCallback = useCallback(debounceRequests, []);
+
+  const handleSetText = (event: React.FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    debouceCallback(value);
+    setText(value);
   };
 
   const updateChannelList = useCallback(() => {
@@ -174,7 +200,7 @@ export default function ChannelsPage() {
     applyFiltersOnData
   ]);
 
-  if (isLoading) return <PageLoading />;
+  // if (isLoading) return <PageLoading />;
 
   if (!isLoading && error) {
     console.log('Error loading channels', error);
@@ -190,8 +216,8 @@ export default function ChannelsPage() {
         gap={4}
       >
         <SearchInput
-          value={searchText}
-          onChange={({ currentTarget }) => setSearchText(currentTarget.value)}
+          value={text}
+          onChange={handleSetText}
           placeholder="Search channels here.."
         />
         <DropdownMenu
@@ -218,7 +244,7 @@ export default function ChannelsPage() {
         </Button>
       </Box>
       <Box mt={4}>
-        {(ownedLoading || optinLoading) && <PageLoading />}
+        {(ownedLoading || optinLoading || isLoading) && <PageLoading />}
         {filteredData?.length === 0 && (
           <Flex
             mt={20}
