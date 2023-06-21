@@ -99,16 +99,7 @@ export default function PushNotificationService() {
   useEffect(() => {
     // const socket = handleWebsocketConnection();
     registerNotificationServiceWorker();
-
-    const socket = null;
-
-    return () => {
-      if (socket) {
-        console.log('socket closing...', socket);
-        // socket?.close();
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <p />;

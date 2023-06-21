@@ -5,9 +5,27 @@ const data = new URL(location).searchParams.get('data');
 
 const config = JSON.parse(data) || null;
 
+self.addEventListener('install', (event) => {
+  console.log('Service worker installed::');
+  self.skipWaiting();
+});
+
+function connectSocket() {
+  const websocketUrl = `${config.socketUrl}?chain=${config?.chain}&address=${config?.address}&token=${config.accessToken}`;
+  const socket = new WebSocket(websocketUrl);
+
+  socket.onmessage = onMessage;
+  socket.onerror = onError;
+  socket.onclose = onClose;
+
+  socket.addEventListener('open', function (event) {
+    console.log('WebSocket connection established.');
+  });
+}
+
 self.addEventListener('activate', async () => {
   // This will be called only once when the service worker is activated.
-  console.log('service worker activate');
+  console.log('service worker activated:');
   try {
     // handle websocket connectino over here.
 
@@ -17,17 +35,8 @@ self.addEventListener('activate', async () => {
       );
       return null;
     }
-
-    const websocketUrl = `${config.socketUrl}?chain=${config?.chain}&address=${config?.address}&token=${config.accessToken}`;
-    const socket = new WebSocket(websocketUrl);
-
-    socket.onmessage = onMessage;
-    socket.onerror = onError;
-    socket.onclose = onClose;
-
-    socket.addEventListener('open', function (event) {
-      console.log('WebSocket connection established.');
-    });
+    connectSocket();
+    
   } catch (serviceWorkerError) {
     console.log('Occured exception during service worker:', serviceWorkerError);
   }
@@ -36,16 +45,19 @@ self.addEventListener('activate', async () => {
 function onMessage(event) {
   const data = JSON.parse(event.data);
   // publish(REFRESH_NOTIFICATIONS, {});
-  console.log('Received message: ' + data);
+  console.log('Received message: ', data);
   dispalyNotification(data);
 }
 
 function onError(event) {
-  console.log('WebSocket connection failed.==>>', event);
+  console.log('WebSocket connection failed.==>>', event);  
 }
 
 function onClose(event) {
   console.log('WebSocket connection closed. ==>', event);
+  setTimeout(() => {
+    connectSocket();
+  }, 1000)
 }
 
 function dispalyNotification(data) {
@@ -60,7 +72,7 @@ function dispalyNotification(data) {
 self.addEventListener('notificationclick', (e) => {
   // Close the notification popout
   e.notification.close();
-  console.log('Notification clicked')
+  console.log('Notification clicked');
   // Get all the Window clients
   e.waitUntil(
     clients.matchAll({ type: 'window' }).then((clientsArr) => {

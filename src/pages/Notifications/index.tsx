@@ -43,9 +43,7 @@ export default function NotificationPage() {
       },
       fetchNotifications,
       {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        revalidateFirstPage: false
+        revalidateOnFocus: false
       }
     );
 
