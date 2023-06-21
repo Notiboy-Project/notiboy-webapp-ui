@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { envs } from '../../config';
 import { getTokenFromStorage } from '../../services/storage.service';
+import { REFRESH_NOTIFICATIONS, publish } from '../../services/events.service';
 // import { REFRESH_NOTIFICATIONS, publish } from '../../services/events.service';
 
 export default function PushNotificationService() {
@@ -32,21 +33,36 @@ export default function PushNotificationService() {
     }
   };
 
+  const initBroadcast = () => {
+    const broadcast = new BroadcastChannel('refresh-notifications');
+
+    broadcast.onmessage = handleMessage;
+  };
+
+  const handleMessage = (event: MessageEvent) => {
+    console.log(
+      'PushNotiificatoin.js:: Recieved message from serviceWorker::',
+      event.data
+    );
+    publish(REFRESH_NOTIFICATIONS);
+  };
+
   const registerNotificationServiceWorker = async () => {
-    check();    
+    check();
     await requestNotificationPermission();
     const config = {
       chain: user?.chain,
       address: user?.address,
       accessToken: getTokenFromStorage(),
       socketUrl: envs.websocketUrl
-    }
+    };
 
-  
     navigator.serviceWorker
       .register(`service-nf.js?data=${JSON.stringify(config)}`)
       .then((serviceWorker) => {
-        console.log('Service worker registered', serviceWorker);
+        serviceWorker.addEventListener('message', function (event) {
+          console.log('Got reply from service worker: ', event);
+        });
       })
       .catch((error) => {
         console.log('Service worker failed to register', error);
@@ -98,8 +114,9 @@ export default function PushNotificationService() {
 
   useEffect(() => {
     // const socket = handleWebsocketConnection();
+    initBroadcast();
     registerNotificationServiceWorker();
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <p />;

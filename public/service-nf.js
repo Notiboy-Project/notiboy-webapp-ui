@@ -5,6 +5,15 @@ const data = new URL(location).searchParams.get('data');
 
 const config = JSON.parse(data) || null;
 
+const broadcast = new BroadcastChannel('refresh-notifications');
+
+let socket;
+
+broadcast.onmessage = (event) => {
+  console.log("ServiceWorker:: Recieved message from broadcast::", event.data)
+};
+
+
 self.addEventListener('install', (event) => {
   console.log('Service worker installed::');
   self.skipWaiting();
@@ -12,7 +21,7 @@ self.addEventListener('install', (event) => {
 
 function connectSocket() {
   const websocketUrl = `${config.socketUrl}?chain=${config?.chain}&address=${config?.address}&token=${config.accessToken}`;
-  const socket = new WebSocket(websocketUrl);
+  socket = new WebSocket(websocketUrl);
 
   socket.onmessage = onMessage;
   socket.onerror = onError;
@@ -36,7 +45,6 @@ self.addEventListener('activate', async () => {
       return null;
     }
     connectSocket();
-    
   } catch (serviceWorkerError) {
     console.log('Occured exception during service worker:', serviceWorkerError);
   }
@@ -45,19 +53,21 @@ self.addEventListener('activate', async () => {
 function onMessage(event) {
   const data = JSON.parse(event.data);
   // publish(REFRESH_NOTIFICATIONS, {});
-  console.log('Received message: ', data);
+  console.log('Received message: ', data?.channel_name || 'N/A');
   dispalyNotification(data);
+  broadcast.postMessage({ shouldRefreshNotifications: true });  
 }
 
 function onError(event) {
-  console.log('WebSocket connection failed.==>>', event);  
+  console.log('WebSocket connection failed.==>>', event);
+  socket?.close()
 }
 
 function onClose(event) {
   console.log('WebSocket connection closed. ==>', event);
   setTimeout(() => {
     connectSocket();
-  }, 1000)
+  }, 1000);
 }
 
 function dispalyNotification(data) {
@@ -77,11 +87,13 @@ self.addEventListener('notificationclick', (e) => {
   e.waitUntil(
     clients.matchAll({ type: 'window' }).then((clientsArr) => {
       // If a Window tab matching the targeted URL already exists, focus that;
-      const hadWindowToFocus = clientsArr.some((windowClient) =>
-        windowClient.url === e.notification.data.url
-          ? (windowClient.focus(), true)
-          : false
-      );
+      const hadWindowToFocus = clientsArr.some((windowClient) => {
+        if (windowClient.url === e.notification.data.url) {                    
+          windowClient.focus();
+          return true;
+        }
+        return false;
+      });
       // Otherwise, open a new tab to the applicable URL and focus it.
       if (!hadWindowToFocus)
         clients
