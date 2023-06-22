@@ -19,7 +19,7 @@ export const FAQS_DATA: SupportDto[] = [
   {
     id: 4,
     question: ' Can I get notifications via email and discord ?',
-    answer: ` Yes, you can start getting notifications via discord by verifying via settings page. Email notifications coming soon.`
+    answer: ` Yes, you can start getting notifications via discord & email by verifying via settings page.`
   },
   {
     id: 5,
