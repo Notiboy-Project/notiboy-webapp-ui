@@ -2,10 +2,10 @@ import { useContext, useEffect } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { envs } from '../../config';
 import { getTokenFromStorage } from '../../services/storage.service';
-import { REFRESH_NOTIFICATIONS, publish } from '../../services/events.service';
-// import { REFRESH_NOTIFICATIONS, publish } from '../../services/events.service';
+import { REFRESH_NOTIFICATIONS } from '../../services/events.service';
 
 let retry = 0;
+let broadcast: BroadcastChannel | null = null;
 
 export default function PushNotificationService() {
   const { user } = useContext(UserContext);
@@ -35,19 +35,9 @@ export default function PushNotificationService() {
     }
   };
 
-  // const initBroadcast = () => {
-  //   const broadcast = new BroadcastChannel('refresh-notifications');
-
-  //   broadcast.onmessage = handleMessage;
-  // };
-
-  // const handleMessage = (event: MessageEvent) => {
-  //   console.log(
-  //     'PushNotiificatoin.js:: Recieved message from serviceWorker::',
-  //     event.data
-  //   );
-  //   publish(REFRESH_NOTIFICATIONS);
-  // };
+  const initBroadcast = () => {
+    broadcast = new BroadcastChannel('refresh-notifications');
+  };
 
   // const registerNotificationServiceWorker = async () => {
   //   check();
@@ -107,12 +97,15 @@ export default function PushNotificationService() {
 
   const onMessage = (event: any) => {
     const data = JSON.parse(event.data);
-    publish(REFRESH_NOTIFICATIONS, {});
+    // publish(REFRESH_NOTIFICATIONS, {});  
     console.log('Received message: ' + data);
     const nf = new Notification('Notiboy', {
       body: data?.message || '',
       icon: 'notiboy.png'
     });
+    if(broadcast) {
+      broadcast.postMessage(REFRESH_NOTIFICATIONS)
+    }
     console.log({ nf });
     nf.onclick = (event) => {
       console.log("Notification clicked")
@@ -131,12 +124,16 @@ export default function PushNotificationService() {
   useEffect(() => {
     console.log('Calling push useEffect::');
     const socket = handleWebsocketConnection();
-    // initBroadcast();
+    initBroadcast();
     // registerNotificationServiceWorker();
     return () => {
       if (socket?.close) {
         console.log('Closing current socket connection::');
         socket.close();
+      }
+      if(broadcast?.close) {
+        console.log('Closing Broadcase channel::`refresh-notifications`');
+        broadcast.close();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
