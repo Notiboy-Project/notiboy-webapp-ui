@@ -1,5 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import useSWR from 'swr';
+import _debounce from 'lodash.debounce';
+import useSWRInfinite from 'swr/infinite';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
@@ -11,29 +13,62 @@ import {
   fetchOwnedChannels
 } from '../../services/channels.service';
 import PageLoading from '../../components/Layout/PageLoading';
-import { ChannelsDto } from '../../services/services.types';
+import {
+  ChannelListsResponse,
+  ChannelsDto
+} from '../../services/services.types';
 import DeleteChannelModal from './DeleteChannelModal';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { UserContext } from '../../Context/userContext';
 import DropdownMenu from '../../components/DropdownMenu';
+import { pageSize } from '../../config';
 
 export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [text, setText] = useState('');
   const [searchText, setSearchText] = useState('');
   const [filter, setFilter] = useState<string>('all');
   const [editChannel, setEditChannel] = useState<ChannelsDto | null>(null);
   const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
-  const [filteredData, setFilteredData] = useState<ChannelsDto[]>([]);
   const { user } = useContext(UserContext);
 
-  const { error, isLoading, data, mutate } = useSWR(
-    filter === 'all' ? `api/channels/${user?.chain}` : null,
-    fetchChannelLists,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
+  const getKey = (pageIndex: number, previousPageData: any) => {
+    // reached the end
+    if (
+      previousPageData?.pagination_meta_data &&
+      !previousPageData?.pagination_meta_data?.next
+    )
+      return null;
+
+    const params = new URLSearchParams();
+    params.set('page_size', pageSize.channels.toString());
+    params.set('logo', 'true');
+
+    if (searchText.trim().length > 1 && filter === 'all') {
+      params.set('name', searchText);
     }
-  );
+
+    // first page, we don't have `previousPageData`
+    if (pageIndex === 0)
+      return {
+        param: `?${params.toString()}`,
+        chain: user?.chain
+      };
+
+    params.set('page_state', previousPageData?.pagination_meta_data?.next);
+    // add the cursor to the API endpoint
+    return {
+      chain: user?.chain,
+      param: `?${params.toString()}`
+    };
+  };
+
+  const { data, mutate, size, setSize, isLoading, error, isValidating } =
+    useSWRInfinite(getKey, fetchChannelLists, {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateFirstPage: false
+    });
 
   const {
     data: ownedChannels,
@@ -69,47 +104,58 @@ export default function ChannelsPage() {
     onOpen();
   };
 
-  const filterBytext = (channels: ChannelsDto[], text: string) => {
-    if (!channels || text?.trim()?.length === 0) return;
-
-    const str = text.trim()?.toLowerCase();
-    const fdata = channels?.filter(
-      (channel) =>
-        channel?.name?.toLowerCase()?.includes(str) ||
-        channel?.description?.toLowerCase()?.includes(str)
-    );
-    setFilteredData(fdata);
-  };
-
   const handleCloseModal = () => {
     setEditChannel(null);
     onClose();
   };
 
   const applyFiltersOnData = useCallback(
-    (searchText: string, filter: string) => {
-      let __data: ChannelsDto[] = [];
-
+    (__data: ChannelsDto[], searchText: string) => {
       if (filter === 'all') {
-        __data = data?.data || [];
-      }
-      if (filter === 'owned') {
-        __data = ownedChannels?.data || [];
-      }
-
-      if (filter === 'optin') {
-        __data = optinChannles || [];
+        return __data || [];
       }
 
       if (__data && __data?.length > 0 && searchText?.trim()?.length > 1) {
-        filterBytext(__data || [], searchText);
+        const str = searchText.trim()?.toLowerCase();
+        const fdata = __data?.filter(
+          (channel) =>
+            channel?.name?.toLowerCase()?.includes(str) ||
+            channel?.description?.toLowerCase()?.includes(str)
+        );
+        return fdata;
       } else {
-        setFilteredData(__data || []);
+        return __data || [];
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, ownedChannels, filter, optinChannles]
+    [filter]
   );
+
+  const renderLoadMoreButton = () => {
+    if (filter !== 'all') return null;
+
+    const lastData = data?.[data?.length - 1];
+
+    if (!lastData || !lastData?.pagination_meta_data?.next) return null;
+
+    return (
+      <Flex mt={5} alignItems={'center'} justifyContent={'center'}>
+        <Button isLoading={isValidating} onClick={() => setSize(size + 1)}>
+          Load more
+        </Button>
+      </Flex>
+    );
+  };
+
+  const debounceRequests = _debounce(setSearchText, 600);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouceCallback = useCallback(debounceRequests, []);
+
+  const handleSetText = (event: React.FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    debouceCallback(value);
+    setText(value);
+  };
 
   const updateChannelList = useCallback(() => {
     if (filter === 'all') {
@@ -125,12 +171,36 @@ export default function ChannelsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
-  useEffect(() => {
-    applyFiltersOnData(searchText, filter);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText, filter, data, ownedChannels, optinChannles]);
+  // Memoized the expensive calculation to
+  // avoid  unnecessary re-calculations
+  // and re-rendering the component.
+  const filteredData = useMemo(() => {
+    let __data: ChannelsDto[] = [];
+    if (filter === 'all') {
+      __data =
+        data?.reduce((acc: ChannelsDto[], data: ChannelListsResponse) => {
+          return acc.concat(data?.data || []);
+        }, []) || [];
+    }
+    if (filter === 'owned') {
+      __data = ownedChannels || [];
+    }
 
-  if (isLoading) return <PageLoading />;
+    if (filter === 'optin') {
+      __data = optinChannles || [];
+    }
+
+    return applyFiltersOnData(__data, searchText);
+  }, [
+    ownedChannels,
+    optinChannles,
+    data,
+    filter,
+    searchText,
+    applyFiltersOnData
+  ]);
+
+  // if (isLoading) return <PageLoading />;
 
   if (!isLoading && error) {
     console.log('Error loading channels', error);
@@ -140,41 +210,42 @@ export default function ChannelsPage() {
   return (
     <Box>
       <Box
-        display={{ base: 'grid', md: 'flex' }}
-        justifyContent={'center'}
+        display={{ base: 'grid', md: 'flex' }}        
         alignItems={'center'}
         gap={4}
       >
         <SearchInput
-          value={searchText}
-          onChange={({ currentTarget }) => setSearchText(currentTarget.value)}
+          value={text}
+          onChange={handleSetText}
           placeholder="Search channels here.."
         />
-        <DropdownMenu
-          menus={[
-            { title: 'All', value: 'all' },
-            { title: 'Owned', value: 'owned' },
-            { title: 'Opted In', value: 'optin' }
-          ]}
-          onSelectMenu={setFilter}
-          defaultTitle="All"
-        />
-        <Button
-          h={38}
-          minW={'13rem'}
-          backgroundColor="blue.400"
-          size="lg"
-          p={'1.4rem 2.2rem'}
-          fontWeight={600}
-          borderRadius={'full'}
-          onClick={onOpen}
-        >
-          <Icon h={8} w={8} as={BsPlus} fill={'#fff'} fontWeight={600} />
-          Create Channel
-        </Button>
+        <Flex gap={4}>
+          <DropdownMenu
+            menus={[
+              { title: 'All', value: 'all' },
+              { title: 'Owned', value: 'owned' },
+              { title: 'Opted In', value: 'optin' }
+            ]}
+            onSelectMenu={setFilter}
+            defaultTitle="All"
+          />
+          <Button
+            h={38}
+            minW={'13rem'}
+            backgroundColor="blue.400"
+            size="lg"
+            p={'1.4rem 2.2rem'}
+            fontWeight={600}
+            borderRadius={'full'}
+            onClick={onOpen}
+          >
+            <Icon h={8} w={8} as={BsPlus} fill={'#fff'} fontWeight={600} />
+            Create Channel
+          </Button>
+        </Flex>
       </Box>
       <Box mt={4}>
-        {(ownedLoading || optinLoading) && <PageLoading />}
+        {(ownedLoading || optinLoading || isLoading) && <PageLoading />}
         {filteredData?.length === 0 && (
           <Flex
             mt={20}
@@ -194,6 +265,7 @@ export default function ChannelsPage() {
             handleDeleteChannel={setDeleteAppId}
           />
         ))}
+        {renderLoadMoreButton()}
       </Box>
       <CreateChannelModal
         channel={editChannel}

@@ -51,8 +51,13 @@ const optin_out_colors = {
   optin: 'rgba(53, 162, 235, 0.5)'
 };
 
-export default function OptInOutStatistics({ activeIndex }: { activeIndex: number }) {
+export default function OptInOutStatistics({
+  activeIndex
+}: {
+  activeIndex: number;
+}) {
   const { user } = useContext(UserContext);
+  const [showChart, setShowChart] = useState(false);
   const [currentChannel, setCurrentChannel] = useState('');
   const [dataset, setDataSet] = useState<{
     labels: string[];
@@ -71,23 +76,25 @@ export default function OptInOutStatistics({ activeIndex }: { activeIndex: numbe
   );
 
   const formatAndSetData = (optinOut: optinOutStatsDto[]) => {
-    if (optinOut.length > 0) {
-      const optout: number[] = optinOut.map((c) => c.optout);
-      const optin: number[] = optinOut.map((c) => c.optin);
-      const _date: string[] = optinOut.map((c) => c.date);
-
-      setDataSet({
-        labels: _date || [],
-        optin: optin || [],
-        optout: optout || []
-      });
-    } else {
+    if (optinOut.length < 3) {
+      setShowChart(false);
       setDataSet({
         labels: [],
         optin: [],
         optout: []
       });
+      return;
     }
+
+    const optout: number[] = optinOut.map((c) => c.optout);
+    const optin: number[] = optinOut.map((c) => c.optin);
+    const _date: string[] = optinOut.map((c) => c.date);
+
+    setDataSet({
+      labels: _date || [],
+      optin: optin || [],
+      optout: optout || []
+    });
   };
 
   const data = {
@@ -135,13 +142,18 @@ export default function OptInOutStatistics({ activeIndex }: { activeIndex: numbe
         />
         <Text>Opted-out</Text>
       </Flex>
-      <Line
-        options={options}
-        data={data}
-        updateMode="resize"
-        style={{ minHeight: '275px' }}
-      />
-      <Text mt={5} fontWeight={600} textAlign={'center'}>
+      <Flex minHeight={300} alignItems={'center'} justifyContent={'center'}>
+        <Line
+          options={options}
+          data={data}
+          updateMode="resize"
+          style={{ minHeight: '275px' }}
+        />
+        {!showChart && (
+          <Text position={'absolute'}>Chart data not yet available !</Text>
+        )}
+      </Flex>
+      <Text mt={2} fontWeight={600} textAlign={'center'}>
         User Opt-in Opt-out Statistics
       </Text>
     </Box>

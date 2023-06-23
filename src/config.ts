@@ -12,7 +12,8 @@ export const routes = Object.freeze({
   statistics: '/statistics',
   support: '/support',
   send: '/send',
-  home: '/'
+  home: '/',
+  logout: '/logout'
 });
 
 export const envs = Object.freeze({
@@ -22,4 +23,9 @@ export const envs = Object.freeze({
   discordRedirectUrl: process.env.REACT_APP_DISCORD_REDIRECT_URL,
   discordAuthUrl: process.env.REACT_APP_DISCORD_AUTH_URL,
   websocketUrl: process.env.REACT_APP_WEB_SOCKET_URL
+});
+
+export const pageSize = Object.freeze({
+  notifications: 200,
+  channels: 20
 });

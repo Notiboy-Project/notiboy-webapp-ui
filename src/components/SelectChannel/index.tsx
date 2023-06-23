@@ -8,7 +8,7 @@ import {
   MenuList,
   Text
 } from '@chakra-ui/react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { FaCaretDown } from 'react-icons/fa';
 import { UserContext } from '../../Context/userContext';
 import { fetchChannelsByUser } from '../../services/channels.service';
@@ -28,6 +28,15 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
       revalidateOnFocus: false
     }
   );
+
+  useEffect(() => {
+    if (data && data?.length > 0) {
+      const channel = data[0];
+      setSelectedChannel(channel.name);
+      onChannelSelect(channel.app_id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
     <Menu>

@@ -2,11 +2,11 @@ import api, { apiURL } from './api.service';
 import { Fetcher } from 'swr';
 import { NotificationFetcher, sendNotificaitonArgs } from './services.types';
 
-export const fetchNotifications: Fetcher<NotificationFetcher> = async (
-  args: any
+export const fetchNotifications: Fetcher<NotificationFetcher, { chain: string, params: string }> = async (
+  args
 ) => {
-  const { params } = args;
-  const resp = await api.get(apiURL.fetchnotificationUrl(params.chain));
+  const { params, chain } = args;
+  const resp = await api.get(apiURL.fetchnotificationUrl(chain, params));
   return resp.data;
 };
 

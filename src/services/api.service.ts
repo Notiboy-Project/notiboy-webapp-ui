@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { envs, routes } from '../config';
 import {
-  clearLocalStorage,
   getTokenFromStorage,
   getWalletAddressFromStorage
 } from './storage.service';
@@ -49,8 +48,7 @@ api.interceptors.response.use(
   (err) => {
     const { data } = err?.response;
     if (data?.status_code === 401) {
-      clearLocalStorage();
-      window.location.href = routes.connectWallet;
+      window.location.href = routes.logout;
     }
     return Promise.reject(err);
   }
@@ -76,8 +74,8 @@ export const apiURL = {
 
   //NOTIFICATIONS URL
 
-  fetchnotificationUrl: (chain: string) =>
-    `${baseURL}/chains/${chain}/notifications`, // GET
+  fetchnotificationUrl: (chain: string, params: string) =>
+    `${baseURL}/chains/${chain}/notifications${params}`, // GET
 
   sendNotificationUrl: (chain: string, appId: string, kind: string) =>
     `${baseURL}/chains/${chain}/channels/${appId}/notifications/${kind}`, // POST
@@ -86,8 +84,8 @@ export const apiURL = {
 
   createChannelURL: (chain: string) => `${baseURL}/chains/${chain}/channels`, // POST
 
-  channelListsURL: (chain: string) =>
-    `${baseURL}/chains/${chain}/channels?logo=true&limit=5000`, // GET
+  channelListsURL: (chain: string, params: string) =>
+    `${baseURL}/chains/${chain}/channels${params}`, // GET
 
   channelsByUsersURL: (chain: string, address: string) =>
     `${baseURL}/chains/${chain}/channels/users/${address}/owned`, // GET

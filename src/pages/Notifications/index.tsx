@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Box, Button, Icon, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Text } from '@chakra-ui/react';
 import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import SearchInput from '../../components/SearchInput';
 import NotificationCard from './NotificationCard';
 import { fetchNotifications } from '../../services/notification.service';
@@ -10,35 +11,39 @@ import PageLoading from '../../components/Layout/PageLoading';
 import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { FaSyncAlt } from 'react-icons/fa';
 import { fetchOptedInChannels } from '../../services/channels.service';
+import {
+  REFRESH_NOTIFICATIONS  
+} from '../../services/events.service';
 import { NotificationData } from './notification.types';
+import { pageSize } from '../../config';
 
-export default function NotificationPage(props: any) {
+export default function NotificationPage() {
   const { user } = React.useContext(UserContext);
   const [text, setText] = React.useState('');
-  const [filteredData, setFilteredData] = React.useState<NotificationData[]>(
-    []
-  );
 
-  const {
-    error,
-    isLoading,
-    isValidating,
-    data = {
-      status_code: 200,
-      data: []
-    },
-    mutate
-  } = useSWR(
-    {
-      url: `api/notifications`,
-      params: { chain: 'algorand' }
-    },
-    fetchNotifications,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
-    }
-  );
+  const { error, isLoading, isValidating, size, setSize, data, mutate } =
+    useSWRInfinite(
+      (pageIndex: number, previousPageData: any) => {
+        if (previousPageData && !previousPageData?.pagination_meta_data?.next)
+          return null;
+
+        // first page, we don't have `previousPageData`
+        if (pageIndex === 0)
+          return {
+            chain: user?.chain,
+            params: `?page_size=${pageSize.notifications}`
+          };
+
+        return {
+          params: `?page_state=${previousPageData?.pagination_meta_data?.next}&page_size=${pageSize.notifications}`,
+          chain: user?.chain
+        };
+      },
+      fetchNotifications,
+      {
+        revalidateOnFocus: false
+      }
+    );
 
   const { data: channels = [] } = useSWR(
     { chain: user?.chain, address: user?.address, logo: true },
@@ -48,32 +53,62 @@ export default function NotificationPage(props: any) {
     }
   );
 
-  const filterNotificationByText = React.useCallback(
-    (notifications: NotificationData[]) => {
-      const searchStr: string = text?.trim();
+  const renderLoadMoreButton = () => {
+    const lastData = data?.[data?.length - 1];
 
-      if (notifications.length === 0 || searchStr?.length === 0) return;
+    if (!lastData || !lastData?.pagination_meta_data?.next) return null;
 
-      const fData = notifications.filter(
-        (n) =>
-          n?.channel_name?.toLowerCase()?.includes(searchStr?.toLowerCase()) ||
-          n?.message?.toLowerCase()?.includes(searchStr?.toLowerCase())
-      );
-      setFilteredData(fData);
-    },
-    [text]
-  );
+    return (
+      <Flex mt={5} alignItems={'center'} justifyContent={'center'}>
+        <Button isLoading={isValidating} onClick={() => setSize(size + 1)}>
+          Load more
+        </Button>
+      </Flex>
+    );
+  };
+
+  const onMessageRecieved = () => {
+    // Mutate and update the notification lists
+    console.log('Calling refresh notifications');
+    mutate();
+  };
 
   React.useEffect(() => {
-    if (data?.data?.length > 0 && text?.trim()?.length > 0) {
-      filterNotificationByText(data?.data || []);
-    } else {
-      setFilteredData(data?.data);
+    
+    const broadcast = new BroadcastChannel('refresh-notifications');
+
+    broadcast.onmessage = (event: MessageEvent) => {
+      console.log("Broadcase Message recieved: ", event.data);
+      if(event.data === REFRESH_NOTIFICATIONS) {
+        onMessageRecieved()
+      }           
     }
+    return () => {
+      console.log('Unsubscribe refresh notifications');      
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const filteredData = React.useMemo(() => {
+    let notifications =
+      data?.reduce((acc: NotificationData[], notifi) => {
+        return acc.concat(notifi?.data || []);
+      }, []) || [];
+
+    const searchStr = text?.trim() || '';
+
+    if (notifications.length === 0 || searchStr?.length === 0)
+      return notifications;
+
+    const fData = notifications.filter(
+      (n) =>
+        n?.channel_name?.toLowerCase()?.includes(searchStr?.toLowerCase()) ||
+        n?.message?.toLowerCase()?.includes(searchStr?.toLowerCase())
+    );
+    return fData;
   }, [data, text]);
 
-  if (isLoading || isValidating) {
+  if (isLoading) {
     return <PageLoading />;
   }
 
@@ -99,6 +134,7 @@ export default function NotificationPage(props: any) {
           onClick={() => mutate()}
           borderRadius={'full'}
           ml={2}
+          isLoading={isValidating}
           bgColor={'blue.400'}
         >
           <Icon as={FaSyncAlt} fill={'#fff'} />
@@ -125,6 +161,7 @@ export default function NotificationPage(props: any) {
             channels={channels}
           />
         ))}
+        {renderLoadMoreButton()}
       </Box>
     </Box>
   );

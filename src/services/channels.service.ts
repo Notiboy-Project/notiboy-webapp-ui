@@ -6,18 +6,20 @@ import {
   createChannelParams
 } from './services.types';
 
-export const fetchChannelLists: Fetcher<ChannelListsResponse> = async (
-  args: string
-) => {
-  const chain = args.split('/')[2];
-  const resp = await api.get(apiURL.channelListsURL(chain));
-  const { data, status_code, message } = resp?.data;
-  const verified = data?.filter((d: any) => d.verified === true);
-  const notVerified = data?.filter((d: any) => d.verified === false);
+export const fetchChannelLists: Fetcher<
+  ChannelListsResponse,
+  { chain: string; param: string }
+> = async (args) => {
+  const { chain, param } = args
+  const resp = await api.get(apiURL.channelListsURL(chain, param));
+  const { data, status_code, message, pagination_meta_data } = resp?.data;
+  // const verified = data?.filter((d: any) => d.verified === true);
+  // const notVerified = data?.filter((d: any) => d.verified === false);
   return {
-    data: [...verified, ...notVerified],
+    data,
     status_code,
-    message
+    message,
+    pagination_meta_data
   };
 };
 
@@ -91,7 +93,7 @@ export const fetchOptedInChannels: Fetcher<
 };
 
 export const fetchOwnedChannels: Fetcher<
-  ChannelListsResponse,
+  ChannelsDto[],
   { chain: string; address: string }
 > = async (params) => {
   const { chain, address } = params;
@@ -99,5 +101,5 @@ export const fetchOwnedChannels: Fetcher<
   const resp = await api.get(
     apiURL.channelsByOwned(chain, address) + '?logo=true'
   );
-  return resp?.data || [];
+  return resp?.data?.data || [];
 };
