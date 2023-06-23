@@ -6,21 +6,26 @@ import GooglePlayImg from '../../assets/images/Google-Play-Store-Button.png';
 import AppleStoreImg from '../../assets/images/apple_store.png';
 import ImageLogo from '../../assets/images/notiboy_nam.png';
 
-
 const NAV_MENUS: { title: string; name: string; url: string }[] = [
   { title: 'Notifications', name: 'notifications', url: routes.notifications },
   { title: 'Channels', name: 'channels', url: routes.channels },
   { title: 'Send', name: 'send', url: routes.send },
   { title: 'Statistics', name: 'statistics', url: routes.statistics },
-  { title: 'Support', name: 'support', url: routes.support }
+  { title: 'Support', name: 'support', url: routes.support },
+  { title: 'Advanced', name: 'advanced', url: routes.advanced }
 ];
 
 export default function SidebarLayout(props: any) {
-
   return (
     <Box>
       <Image src={ImageLogo} alt="logo" height={55} margin={'15px auto'} />
-      <Box mt={10} display={'grid'} placeItems={'center'} textAlign={'center'} fontSize={'xl'}>
+      <Box
+        mt={10}
+        display={'grid'}
+        placeItems={'center'}
+        textAlign={'center'}
+        fontSize={'xl'}
+      >
         {NAV_MENUS.map((menu) => (
           <Box p={1} mb={4} w={'100%'} key={menu.name}>
             <NavLink to={menu.url}>
