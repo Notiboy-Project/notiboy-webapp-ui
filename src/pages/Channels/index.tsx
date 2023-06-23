@@ -179,7 +179,10 @@ export default function ChannelsPage() {
     if (filter === 'all') {
       __data =
         data?.reduce((acc: ChannelsDto[], data: ChannelListsResponse) => {
-          return acc.concat(data?.data || []);
+          const verified = data?.data?.filter((c) => c.verified === true);
+          const unverified = data?.data?.filter((c) => c.verified === false);
+          const records = [...verified, ...unverified];
+          return acc.concat(records || []);
         }, []) || [];
     }
     if (filter === 'owned') {
@@ -209,11 +212,7 @@ export default function ChannelsPage() {
 
   return (
     <Box>
-      <Box
-        display={{ base: 'grid', md: 'flex' }}        
-        alignItems={'center'}
-        gap={4}
-      >
+      <Box display={{ base: 'grid', md: 'flex' }} alignItems={'center'} gap={4}>
         <SearchInput
           value={text}
           onChange={handleSetText}
