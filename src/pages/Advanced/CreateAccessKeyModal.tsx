@@ -74,8 +74,9 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
         setLoading(false);
         refreshAccessKeys();
       }
-    } catch (e) {
+    } catch (e) {      
       setLoading(false);
+
     }
   };
 

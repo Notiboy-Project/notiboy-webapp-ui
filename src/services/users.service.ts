@@ -36,6 +36,15 @@ export const createAccesskey = async (
   return resp?.data;
 };
 
+export const revokeAccessKey = async (
+  chain: string,
+  address: string,
+  keyId: string
+) => {
+  const resp = await api.delete(apiURL.deletePatURL(chain, address, keyId));
+  return resp?.data;
+};
+
 export const fetchAccessKeyPat: Fetcher<
   UsersPatFetcher,
   { chain: string; address: string }

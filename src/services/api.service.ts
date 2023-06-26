@@ -77,7 +77,10 @@ export const apiURL = {
     `${baseURL}/chains/${chain}/users/${address}/pat`, // GET
 
   createPat: (chain: string, address: string, name: string) =>
-    `${baseURL}/chains/${chain}/users/${address}/pat/${name}`,
+    `${baseURL}/chains/${chain}/users/${address}/pat/${name}`, // POST
+
+  deletePatURL:(chain: string, address: string, uuid: string) => 
+  `${baseURL}/chains/${chain}/users/${address}/pat/${uuid}`, // DELETE
 
   //NOTIFICATIONS URL
 

@@ -18,14 +18,16 @@ import {
 } from '@chakra-ui/react';
 import { FaKey } from 'react-icons/fa';
 import CreateAccessKeyModal from '../CreateAccessKeyModal';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../../Context/userContext';
 import { fetchAccessKeyPat } from '../../../services/users.service';
 import moment from 'moment';
+import RevokeAccessKeyModal from './RevokeAccessKeyModal';
 
 export default function APIAccessPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useContext(UserContext);
+  const [revokeKey, setRevokeKey] = useState('');
 
   const {
     isLoading,
@@ -51,12 +53,13 @@ export default function APIAccessPage() {
       </Flex>
       <Box m="3rem auto">
         <TableContainer margin={'0 auto'}>
-          <Table variant="simple" align='center'>
+          <Table variant="simple" align="center">
             <Thead>
               <Tr>
                 <Th>Name</Th>
                 <Th>Issued date</Th>
                 <Th>Permissions</Th>
+                <Th />
               </Tr>
             </Thead>
             <Tbody>
@@ -79,6 +82,18 @@ export default function APIAccessPage() {
                   <Td>{ak.name}</Td>
                   <Td>{moment(ak.created).format('LL')}</Td>
                   <Td>Admin</Td>
+                  <Td>
+                    <Button
+                      size={'sm'}
+                      borderRadius={'full'}
+                      bgColor={'red.400'}
+                      color={'white'}
+                      colorScheme="red"
+                      onClick={() => setRevokeKey(ak.uuid)}
+                    >
+                      Revoke
+                    </Button>
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
@@ -89,6 +104,12 @@ export default function APIAccessPage() {
         refreshAccessKeys={refreshAccessKeys}
         isOpen={isOpen}
         onClose={onClose}
+      />
+      <RevokeAccessKeyModal
+        onRevokeSucceed={refreshAccessKeys}
+        accessKeyID={revokeKey}
+        isOpen={!!revokeKey}
+        onClose={() => setRevokeKey('')}
       />
     </Box>
   );
