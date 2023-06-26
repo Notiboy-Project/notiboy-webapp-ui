@@ -64,7 +64,6 @@ export default function APIAccessPage() {
                 <Th>Name</Th>
                 <Th>Issued date</Th>
                 <Th>Permissions</Th>
-                <Th />
               </Tr>
             </Thead>
             <Tbody>
