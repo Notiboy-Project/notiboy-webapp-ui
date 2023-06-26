@@ -68,4 +68,16 @@ export interface updateMediumPayload {
   allowed_mediums: string[];
 }
 
+export interface PatDTO {
+  name: string;
+  uuid: string;
+  created: string;
+}
+
+export interface UsersPatFetcher {
+  status_code: number;
+  data: PatDTO[];
+  message: string;
+}
+
 ///******** */
