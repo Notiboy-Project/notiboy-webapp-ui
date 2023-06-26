@@ -4,6 +4,7 @@ import {
   Flex,
   Icon,
   Spinner,
+  Text,
   useDisclosure
 } from '@chakra-ui/react';
 import useSWR from 'swr';
@@ -40,8 +41,8 @@ export default function APIAccessPage() {
   );
 
   return (
-    <Box width={'100%'}>
-      <Flex justifyContent={'flex-end'} w={{ xl: '90%' }}>
+    <Box width={'100%'} p={[0, 1, 2, 5]}>
+      <Flex justifyContent={'flex-start'} w={'100%'}>
         <Button
           onClick={onOpen}
           borderRadius={'3xl'}
@@ -51,15 +52,17 @@ export default function APIAccessPage() {
           New key
         </Button>
       </Flex>
-      <Box m="3rem auto">
-        <TableContainer margin={'0 auto'}>
+      <Box m="2rem auto">
+        <TableContainer margin={'0 auto'} whiteSpace={'break-spaces'}>
+          <Text p={2} fontWeight={600} mb={5}>
+            Access Keys
+          </Text>
           <Table variant="simple" align="center">
             <Thead>
               <Tr>
                 <Th>Name</Th>
                 <Th>Issued date</Th>
                 <Th>Permissions</Th>
-                <Th />
               </Tr>
             </Thead>
             <Tbody>
@@ -81,10 +84,10 @@ export default function APIAccessPage() {
                 <Tr key={ak.uuid}>
                   <Td>{ak.name}</Td>
                   <Td>{moment(ak.created).format('LL')}</Td>
-                  <Td>Admin</Td>
                   <Td>
+                    Admin&nbsp;&nbsp;
                     <Button
-                      size={'sm'}
+                      size={'xs'}
                       borderRadius={'full'}
                       bgColor={'red.400'}
                       color={'white'}
