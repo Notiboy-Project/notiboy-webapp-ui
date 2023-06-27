@@ -75,7 +75,7 @@ export default function RevokeAccessKeyModal(props: RevokeAccessKeyModalProps) {
         <ModalHeader>Revoke access Key</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          Are you sure you want to revoke this access token?
+          Are you sure you want to remove this access token?
         </ModalBody>
         <ModalFooter justifyContent={'center'}>
           <Button
@@ -83,6 +83,7 @@ export default function RevokeAccessKeyModal(props: RevokeAccessKeyModalProps) {
             onClick={onClose}
             borderRadius={'2xl'}
             variant={'ghost'}
+            size='sm'
             background={'transparent'}
           >
             Close
@@ -91,6 +92,7 @@ export default function RevokeAccessKeyModal(props: RevokeAccessKeyModalProps) {
             mr={3}
             isLoading={loading}
             bgColor={'red.400'}
+            size='sm'
             onClick={handleRevokeAccess}
             borderRadius={'2xl'}
             variant={'red'}

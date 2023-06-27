@@ -24,6 +24,7 @@ import { UserContext } from '../../../Context/userContext';
 import { fetchAccessKeyPat } from '../../../services/users.service';
 import moment from 'moment';
 import RevokeAccessKeyModal from './RevokeAccessKeyModal';
+import { BiTrash } from 'react-icons/bi';
 
 export default function APIAccessPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -85,16 +86,16 @@ export default function APIAccessPage() {
                   <Td>{ak.name}</Td>
                   <Td>{moment(ak.created).format('LL')}</Td>
                   <Td>
-                    Admin&nbsp;&nbsp;
-                    <Button
-                      size={'xs'}
-                      borderRadius={'full'}
+                    Full Access&nbsp;&nbsp;
+                    <Button                      
+                      borderRadius={'xl'}
                       bgColor={'red.400'}
                       color={'white'}
+                      size='sm'
                       colorScheme="red"
                       onClick={() => setRevokeKey(ak.uuid)}
                     >
-                      Revoke
+                      <Icon as={BiTrash} />
                     </Button>
                   </Td>
                 </Tr>

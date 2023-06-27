@@ -40,17 +40,17 @@ export const NAV_MENUS: {
     icon: StatisticsIcon
   },
   {
-    title: 'Support',
-    name: 'support',
-    url: routes.support,
-    icon: MessgeQuestionIcon
-  },
-  {
     title: 'Advanced',
     name: 'advanced',
     url: routes.advanced,
     icon: ShuffleIcon
-  }
+  },
+  {
+    title: 'Support',
+    name: 'support',
+    url: routes.support,
+    icon: MessgeQuestionIcon
+  }, 
 ];
 
 export default function SidebarLayout(props: any) {
