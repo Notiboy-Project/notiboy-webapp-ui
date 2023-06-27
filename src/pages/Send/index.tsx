@@ -230,6 +230,7 @@ export default function SendPage() {
       >
         <Box width={{ base: '100%', md: 'fit-content' }}>
           <NTabs
+            isResponsive={true}
             activeTab={tab}
             tabs={[
               { name: MessageType.PUBLIC, title: 'Public Message' },

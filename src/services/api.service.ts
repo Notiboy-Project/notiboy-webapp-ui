@@ -72,6 +72,16 @@ export const apiURL = {
   logoutUserUrl: (chain: string, address: string) =>
     `${baseURL}/chains/${chain}/users/${address}/logout`, // DELETE
 
+  // Users API key
+  getPat: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}/pat`, // GET
+
+  createPat: (chain: string, address: string, name: string) =>
+    `${baseURL}/chains/${chain}/users/${address}/pat/${name}`, // POST
+
+  deletePatURL:(chain: string, address: string, uuid: string) => 
+  `${baseURL}/chains/${chain}/users/${address}/pat/${uuid}`, // DELETE
+
   //NOTIFICATIONS URL
 
   fetchnotificationUrl: (chain: string, params: string) =>
