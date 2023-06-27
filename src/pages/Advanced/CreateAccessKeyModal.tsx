@@ -108,7 +108,7 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
     >
       <ModalOverlay />
       <ModalContent borderRadius={'3xl'}>
-        <ModalHeader>Access API Key</ModalHeader>
+        <ModalHeader>Access Key</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {accessKey ? (
@@ -127,7 +127,7 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
                 mt={2}
                 textAlign={'center'}
               >
-                Note: The API key will be unaccessible once you leave this popup
+                Note: The API key will be inaccessible once you leave this popup.
               </Text>
             </Box>
           ) : (
@@ -135,7 +135,7 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
               value={keyname}
               onChange={({ currentTarget }) => setKeyname(currentTarget.value)}
               type="text"
-              placeholder="API key name"
+              placeholder="Access key name"
               borderRadius={'2xl'}
             />
           )}
@@ -159,7 +159,7 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
               onClick={handleCreateAPI}
               borderRadius={'2xl'}
             >
-              Create API
+              Create
             </Button>
           )}
         </ModalFooter>
