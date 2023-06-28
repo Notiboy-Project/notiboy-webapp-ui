@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {  
+import algosdk from 'algosdk';
+import {
   useInitializeProviders,
   WalletProvider,
   PROVIDER_ID
@@ -9,13 +10,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import PageLoading from './components/Layout/PageLoading';
 import UserContextProvider from './Context/userContext';
-import { routes } from './config';
+import { envs, routes } from './config';
 import NotFound404 from './components/Layout/NotFound404';
 import { DeflyWalletConnect } from '@blockshake/defly-connect';
 import { PeraWalletConnect } from '@perawallet/connect';
 import { DaffiWalletConnect } from '@daffiwallet/connect';
-// import { WalletConnectModalSign } from '@walletconnect/modal-sign-html';
-import algosdk from 'algosdk';
+import { WalletConnectModalSign } from '@walletconnect/modal-sign-html';
 
 const ConnectWallet = React.lazy(() => import('./pages/ConnectWallet'));
 const NotificationPage = React.lazy(() => import('./pages/Notifications'));
@@ -59,7 +59,19 @@ export const App = () => {
       { id: PROVIDER_ID.DEFLY, clientStatic: DeflyWalletConnect },
       { id: PROVIDER_ID.PERA, clientStatic: PeraWalletConnect },
       { id: PROVIDER_ID.DAFFI, clientStatic: DaffiWalletConnect },
-      // { id: PROVIDER_ID.WALLETCONNECT, clientStatic: WalletConnectModalSign },
+      {
+        id: PROVIDER_ID.WALLETCONNECT,
+        clientStatic: WalletConnectModalSign,
+        clientOptions: {
+          projectId: envs.walletConnectProjectId || '',          
+          metadata: {
+            name: 'Notiboy',
+            description: 'Notiboy Dapp',
+            url: '#',
+            icons: []
+          }
+        }
+      },
       { id: PROVIDER_ID.EXODUS }
     ],
     algosdkStatic: algosdk,
