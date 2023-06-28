@@ -5,7 +5,15 @@ import useSWRInfinite from 'swr/infinite';
 import SearchInput from '../../components/SearchInput';
 import ChannelCard from './ChannelCard';
 import CreateChannelModal from './CreateChannelModal';
-import { Box, Button, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Switch,
+  Text,
+  useDisclosure
+} from '@chakra-ui/react';
 import { BsPlus } from 'react-icons/bs';
 import {
   fetchChannelLists,
@@ -27,6 +35,7 @@ export default function ChannelsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [text, setText] = useState('');
   const [searchText, setSearchText] = useState('');
+  const [isVerified, setIsverified] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [editChannel, setEditChannel] = useState<ChannelsDto | null>(null);
   const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
@@ -43,6 +52,10 @@ export default function ChannelsPage() {
     const params = new URLSearchParams();
     params.set('page_size', pageSize.channels.toString());
     params.set('logo', 'true');
+
+    if (filter === 'all') {
+      params.set('verified', isVerified.toString());
+    }
 
     if (searchText.trim().length > 1 && filter === 'all') {
       params.set('name', searchText);
@@ -203,8 +216,6 @@ export default function ChannelsPage() {
     applyFiltersOnData
   ]);
 
-  // if (isLoading) return <PageLoading />;
-
   if (!isLoading && error) {
     console.log('Error loading channels', error);
     return <ResourcesUnavailable />;
@@ -218,22 +229,42 @@ export default function ChannelsPage() {
           onChange={handleSetText}
           placeholder="Search channels here.."
         />
-        <Flex gap={4}>
-          <DropdownMenu
-            menus={[
-              { title: 'All', value: 'all' },
-              { title: 'Owned', value: 'owned' },
-              { title: 'Opted In', value: 'optin' }
-            ]}
-            onSelectMenu={setFilter}
-            defaultTitle="All"
-          />
+        <DropdownMenu
+          menus={[
+            { title: 'All', value: 'all' },
+            { title: 'Owned', value: 'owned' },
+            { title: 'Opted In', value: 'optin' }
+          ]}
+          onSelectMenu={setFilter}
+          defaultTitle="All"
+        />
+        <Flex gap={4} alignItems={'center'}>
+          {filter === 'all' && (
+            <Flex
+              border={'1px solid gray'}
+              py={2}
+              px={4}
+              borderRadius={'full'}
+              alignItems={'center'}
+              gap={2}
+            >
+              <Text fontWeight={600}>Verified</Text>
+              <Switch
+                isChecked={isVerified}
+                onChange={({ currentTarget }) =>
+                  setIsverified(currentTarget.checked)
+                }
+                size="lg"
+              />
+            </Flex>
+          )}
           <Button
             h={38}
-            minW={'13rem'}
             backgroundColor="blue.400"
             size="lg"
-            p={'1.4rem 2.2rem'}
+            minW={'12rem'}
+            width={{ base: '100%', xs: '100%', md: 'fit-content' }}
+            p={'1.4rem 2rem'}
             fontWeight={600}
             borderRadius={'full'}
             onClick={onOpen}

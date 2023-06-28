@@ -13,7 +13,8 @@ export const routes = Object.freeze({
   support: '/support',
   send: '/send',
   home: '/',
-  logout: '/logout'
+  logout: '/logout',
+  advanced: '/advanced',
 });
 
 export const envs = Object.freeze({

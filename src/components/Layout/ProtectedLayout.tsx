@@ -1,7 +1,6 @@
 import { Box, Hide, Show } from '@chakra-ui/react';
-import SidebarLayout from './SideBar';
+import SidebarLayout, { MobileMenuBar } from './SideBar';
 import PrivateHeader from '../PrivateHeader';
-import MobileMenuBar from './MobileMenuBar';
 import PushNotificationService from '../PushNotification';
 
 export default function ProtectedLayout(props: any) {
