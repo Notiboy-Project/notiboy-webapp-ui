@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {
-  reconnectProviders,
-  initializeProviders,
+import {  
+  useInitializeProviders,
   WalletProvider,
   PROVIDER_ID
 } from '@txnlab/use-wallet';
@@ -12,6 +11,11 @@ import PageLoading from './components/Layout/PageLoading';
 import UserContextProvider from './Context/userContext';
 import { routes } from './config';
 import NotFound404 from './components/Layout/NotFound404';
+import { DeflyWalletConnect } from '@blockshake/defly-connect';
+import { PeraWalletConnect } from '@perawallet/connect';
+import { DaffiWalletConnect } from '@daffiwallet/connect';
+// import { WalletConnectModalSign } from '@walletconnect/modal-sign-html';
+import algosdk from 'algosdk';
 
 const ConnectWallet = React.lazy(() => import('./pages/ConnectWallet'));
 const NotificationPage = React.lazy(() => import('./pages/Notifications'));
@@ -23,14 +27,6 @@ const SettingsPage = React.lazy(() => import('./pages/Settings'));
 const LogoutPage = React.lazy(() => import('./pages/Logout'));
 const AdvancePage = React.lazy(() => import('./pages/Advanced'));
 
-const walletProvider = initializeProviders([
-  PROVIDER_ID.DEFLY,
-  PROVIDER_ID.PERA,
-  PROVIDER_ID.DAFFI,
-  PROVIDER_ID.WALLETCONNECT,
-  PROVIDER_ID.MYALGO
-]);
-
 const theme = extendTheme({
   config: {
     initialColorMode: 'dark'
@@ -38,26 +34,42 @@ const theme = extendTheme({
 });
 
 export type PrivateRoutesType = {
-  name: string,
-  path: string,
-  component: React.LazyExoticComponent<(props: any) => JSX.Element>
-}
+  name: string;
+  path: string;
+  component: React.LazyExoticComponent<(props: any) => JSX.Element>;
+};
 
 const PRIVATE_ROUTES: PrivateRoutesType[] = [
   { name: 'channels', path: routes.channels, component: ChannelsPage },
-  { name: 'notifications', path: routes.notifications, component: NotificationPage },
+  {
+    name: 'notifications',
+    path: routes.notifications,
+    component: NotificationPage
+  },
   { name: 'send', path: routes.send, component: SendPage },
   { name: 'statistics', path: routes.statistics, component: StatisticsPage },
   { name: 'settings', path: routes.settings, component: SettingsPage },
   { name: 'support', path: routes.support, component: SupportPage },
-  { name: 'advance_api_access', path: routes.advanced, component: AdvancePage },
-]
+  { name: 'advance_api_access', path: routes.advanced, component: AdvancePage }
+];
 
 export const App = () => {
-  React.useEffect(() => {
-    // Reconnect the session when the user returns to the dApp
-    reconnectProviders(walletProvider);
-  }, []);
+  const walletProvider = useInitializeProviders({
+    providers: [
+      { id: PROVIDER_ID.DEFLY, clientStatic: DeflyWalletConnect },
+      { id: PROVIDER_ID.PERA, clientStatic: PeraWalletConnect },
+      { id: PROVIDER_ID.DAFFI, clientStatic: DaffiWalletConnect },
+      // { id: PROVIDER_ID.WALLETCONNECT, clientStatic: WalletConnectModalSign },
+      { id: PROVIDER_ID.EXODUS }
+    ],
+    algosdkStatic: algosdk,
+    debug: true
+  });
+
+  // React.useEffect(() => {
+  //   // Reconnect the session when the user returns to the dApp
+  //   reconnectProviders(walletProvider);
+  // }, [walletProvider]);
 
   return (
     <WalletProvider value={walletProvider}>
@@ -99,7 +111,7 @@ export const App = () => {
                   />
                 ))}
               </Route>
-              <Route path='*' element={<NotFound404 />} />
+              <Route path="*" element={<NotFound404 />} />
             </Routes>
           </BrowserRouter>
         </ChakraProvider>
