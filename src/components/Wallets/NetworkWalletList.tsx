@@ -11,10 +11,9 @@ interface NetworkWalletListsProps {
 }
 
 export default function NetworkWalletLists(props: NetworkWalletListsProps) {
-  const { networkType, onBackClick } = props;
+  const { onBackClick } = props;
   const { providers } = useWallet();
-  console.log({ networkType });
-
+  
   const getBg = (name: string) => {
     switch (name) {
       case 'MyAlgo':
