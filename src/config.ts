@@ -23,7 +23,8 @@ export const envs = Object.freeze({
   discordClientId: process.env.REACT_APP_DISCORD_CLIENT_ID,
   discordRedirectUrl: process.env.REACT_APP_DISCORD_REDIRECT_URL,
   discordAuthUrl: process.env.REACT_APP_DISCORD_AUTH_URL,
-  websocketUrl: process.env.REACT_APP_WEB_SOCKET_URL
+  websocketUrl: process.env.REACT_APP_WEB_SOCKET_URL,
+  walletConnectProjectId: process.env.REACT_APP_WC_PROJECT_ID
 });
 
 export const pageSize = Object.freeze({
