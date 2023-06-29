@@ -63,7 +63,7 @@ export const App = () => {
         id: PROVIDER_ID.WALLETCONNECT,
         clientStatic: WalletConnectModalSign,
         clientOptions: {
-          projectId: envs.walletConnectProjectId || '',          
+          projectId: envs.walletConnectProjectId || '',
           metadata: {
             name: 'Notiboy',
             description: 'Notiboy Dapp',
@@ -75,7 +75,7 @@ export const App = () => {
       { id: PROVIDER_ID.EXODUS }
     ],
     algosdkStatic: algosdk,
-    debug: true
+    debug: process.env.NODE_ENV === 'production' ? false : true
   });
 
   // React.useEffect(() => {
