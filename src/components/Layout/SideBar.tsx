@@ -10,7 +10,7 @@ import {
   Notification1Icon,
   SendIcon,
   ShareIcon,
-  // ShuffleIcon,
+  ShuffleIcon,
   StatisticsIcon
 } from '../../assets/svgs';
 
@@ -39,12 +39,12 @@ export const NAV_MENUS: {
     url: routes.statistics,
     icon: StatisticsIcon
   },
-  // {
-  //   title: 'Advanced',
-  //   name: 'advanced',
-  //   url: routes.advanced,
-  //   icon: ShuffleIcon
-  // },
+  {
+    title: 'Advanced',
+    name: 'advanced',
+    url: routes.advanced,
+    icon: ShuffleIcon
+  },
   { 
     title: 'Support',
     name: 'support',
