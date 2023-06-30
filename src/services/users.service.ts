@@ -1,6 +1,10 @@
 import { Fetcher } from 'swr';
 import api, { apiURL } from './api.service';
-import { UsersPatFetcher, updateMediumPayload } from './services.types';
+import {
+  UserBillingResponse,
+  UsersPatFetcher,
+  updateMediumPayload
+} from './services.types';
 
 export const fetchUserInfo = async (chain: string, address: string) => {
   const resp = await api.get(apiURL.getUserInfoUrl(chain, address));
@@ -51,5 +55,14 @@ export const fetchAccessKeyPat: Fetcher<
 > = async (args) => {
   const { chain, address } = args;
   const resp = await api.get(apiURL.getPat(chain, address));
+  return resp?.data;
+};
+
+export const fetchBillingInfo: Fetcher<
+  UserBillingResponse,
+  { chain: string; user: string }
+> = async (args) => {
+  const { chain, user } = args;
+  const resp = await api.get(apiURL.getBillingInfoURL(chain, user));
   return resp?.data;
 };

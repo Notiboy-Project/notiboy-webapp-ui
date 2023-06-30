@@ -153,7 +153,10 @@ export const apiURL = {
     kind: string,
     uuid: string
   ) =>
-    `${baseURL}/chains/${chain}/stats/channels/${channel}/users/${address}/notification/${kind}/uuid/${uuid}?time`
+    `${baseURL}/chains/${chain}/stats/channels/${channel}/users/${address}/notification/${kind}/uuid/${uuid}?time`,
+
+    // Biling API URL
+    getBillingInfoURL: (chain: string, user: string) => `${baseURL}/chains/${chain}/users/${user}/billing`
 };
 
 export default api;
