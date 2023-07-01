@@ -15,7 +15,6 @@ export default function CurrentPlanCard(props: CurrentPlanCardProps) {
   const { balance, currentPlan, expiryDate, notificationRemaining } = props;
 
   const expiry = moment(expiryDate);
-  console.log(`Expiry ==> `, expiry);
   const formattedDate = expiry.isValid() ? expiry.format('LL') : '--';
 
   return (
@@ -42,7 +41,9 @@ export default function CurrentPlanCard(props: CurrentPlanCardProps) {
         </Box>
         <Box display={'flex'} flexDirection={'column'} placeItems={'center'}>
           <Text fontSize={'md'}>Estimated balance exhausion date</Text>
-          <Text fontSize={'3xl'}>{formattedDate}</Text>
+          <Text fontSize={'3xl'}>
+            {currentPlan?.key === 'free' ? 'N/A' : formattedDate}
+          </Text>
         </Box>
         <Box display={'flex'} flexDirection={'column'} placeItems={'center'}>
           <Text fontSize={'md'}>Notification remaining</Text>

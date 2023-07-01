@@ -23,11 +23,12 @@ export default function Billings() {
   const { data: billing } = data || {};
 
   if (isLoading || !billing) {
-    return <PageLoading />;
+    return (
+      <Flex justifyContent={'center'} w={'100%'}>
+        <PageLoading />
+      </Flex>
+    );
   }
-
-  console.log('data ==> billing ==>', billing);
-  console.log('data ==> isLoading ==>', isLoading);
 
   const currentPlan = getPlanByKey(billing.membership);
 

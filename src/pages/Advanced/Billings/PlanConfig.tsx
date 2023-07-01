@@ -27,7 +27,7 @@ export default function PlanConfig(props: PlanConfigProps) {
           {isActive ? (
             <Text color={'green.400'} fontWeight={600}>Active</Text>
           ) : (
-            <Button colorScheme='facebook' variant={'outline'} size="xs" borderRadius={'full'}>
+            <Button colorScheme='teal' variant={'outline'} size="xs" borderRadius={'full'}>
               Purcahse
             </Button>
           )}
