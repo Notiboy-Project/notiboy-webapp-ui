@@ -1,12 +1,13 @@
 import useSWR from 'swr';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import CurrentPlanCard from './CurrentPlanCard';
-import { PLAN_CONFIG } from '../../../plan-config';
+import { PLAN_CONFIG, getPlanByKey } from '../../../plan-config';
 import PlanConfig from './PlanConfig';
 import PaymentHistory from './PaymentHistory';
 import { fetchBillingInfo } from '../../../services/users.service';
 import { useContext } from 'react';
 import { UserContext } from '../../../Context/userContext';
+import PageLoading from '../../../components/Layout/PageLoading';
 
 export default function Billings() {
   const { user } = useContext(UserContext);
@@ -19,13 +20,26 @@ export default function Billings() {
     }
   );
 
-  console.log('data ==> billing ==>', data);
+  const { data: billing } = data || {};
+
+  if (isLoading || !billing) {
+    return <PageLoading />;
+  }
+
+  console.log('data ==> billing ==>', billing);
   console.log('data ==> isLoading ==>', isLoading);
+
+  const currentPlan = getPlanByKey(billing.membership);
 
   return (
     <Box width={'100%'}>
       <Box width={{ base: '100%', md: '100%', xl: '75%' }} mx={'auto'}>
-        <CurrentPlanCard />
+        <CurrentPlanCard
+          balance={billing.balance || 0}
+          currentPlan={currentPlan}
+          expiryDate={billing.expiry}
+          notificationRemaining={billing.remaining_notifications}
+        />
       </Box>
       <Text fontWeight={600} textAlign={'center'} fontSize={'2xl'} my={5}>
         Plans
@@ -37,11 +51,15 @@ export default function Billings() {
         justifyContent={'center'}
       >
         {PLAN_CONFIG.map((plan) => (
-          <PlanConfig plan={plan} key={plan.key} />
+          <PlanConfig
+            isActive={plan?.key === currentPlan?.key}
+            plan={plan}
+            key={plan.key}
+          />
         ))}
       </Flex>
       <Box mt={5}>
-        <PaymentHistory />
+        <PaymentHistory data={billing?.billing_records || []} />
       </Box>
     </Box>
   );

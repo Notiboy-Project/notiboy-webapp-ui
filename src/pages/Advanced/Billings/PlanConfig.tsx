@@ -5,10 +5,11 @@ import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 
 interface PlanConfigProps {
   plan: PlanConfigDto;
+  isActive: boolean;
 }
 
 export default function PlanConfig(props: PlanConfigProps) {
-  const { plan } = props;
+  const { plan, isActive } = props;
   return (
     <CardLayout p={4} minWidth={'280px'}>
       <Box width={'100%'}>
@@ -23,9 +24,13 @@ export default function PlanConfig(props: PlanConfigProps) {
             </Text>
             <Text fontSize={'md'}>${plan?.price} per month</Text>
           </Box>
-          <Button size="xs" borderRadius={'full'}>
-            Purcahse
-          </Button>
+          {isActive ? (
+            <Text color={'green.400'} fontWeight={600}>Active</Text>
+          ) : (
+            <Button colorScheme='facebook' variant={'outline'} size="xs" borderRadius={'full'}>
+              Purcahse
+            </Button>
+          )}
         </Flex>
         <Box mt={4} lineHeight={2.2}>
           <Text display={'flex'} justifyContent={'space-between'}>

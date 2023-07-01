@@ -10,8 +10,14 @@ import {
   Flex,
   Text
 } from '@chakra-ui/react';
+import { PaymentHistoryDto } from '../../../services/services.types';
+import moment from 'moment';
 
-export default function PaymentHistory() {
+interface PaymentHistoryProps {
+  data: PaymentHistoryDto[];
+}
+
+export default function PaymentHistory({ data }: PaymentHistoryProps) {
   return (
     <Flex flexDirection={'column'}>
       <Text my={5} fontSize={'xl'} fontWeight={600} textAlign={'center'}>
@@ -28,21 +34,18 @@ export default function PaymentHistory() {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>June 20, 2023</Td>
-                <Td>Sflf2xx5f7x78sf44uiuis5</Td>
-                <Td isNumeric>$25.4</Td>
-              </Tr>       
-              <Tr>
-                <Td>June 24, 2023</Td>
-                <Td>Sflf2xx5f7x78sf44uiuis5</Td>
-                <Td isNumeric>$25.4</Td>
-              </Tr>       
-              <Tr>
-                <Td>June 28, 2023</Td>
-                <Td>Sflf2xx5f7x78sf44uiuis5</Td>
-                <Td isNumeric>$25.4</Td>
-              </Tr>             
+              {data.length === 0 && (
+                <Tr>
+                  <Td colSpan={3} textAlign={'center'}>No records found</Td>
+                </Tr>
+              )}
+              {data.map((ph) => (
+                <Tr>
+                  <Td>{moment(ph.paid_time).format('LL')}</Td>
+                  <Td>--</Td>
+                  <Td isNumeric>${ph.paid_amount}</Td>
+                </Tr>
+              ))}
             </Tbody>
           </Table>
         </TableContainer>

@@ -81,26 +81,26 @@ export interface UsersPatFetcher {
 }
 
 export interface UserBillingResponse {
-  status_code: number,
-  message: string
-  data: UserBillingDto
+  status_code: number;
+  message: string;
+  data: UserBillingDto;
 }
 
 export interface UserBillingDto {
-  address: string,
-  chain: string,
-  expiry: string,
-  last_updated: string,
-  membership: string,
-  balance: number,
-  remaining_notifications: number,
-  billing_records: [
-      {
-          paid_amount: number,
-          paid_time: string
-      }
-  ],
-  blocked_channels: string[]
+  address: string;
+  chain: string;
+  expiry: string;
+  last_updated: string;
+  membership: string;
+  balance: number;
+  remaining_notifications: number;
+  billing_records: [];
+  blocked_channels: string[];
+}
+
+export interface PaymentHistoryDto {
+  paid_amount: number;
+  paid_time: string;
 }
 
 ///******** */

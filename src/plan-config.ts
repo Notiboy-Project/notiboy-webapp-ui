@@ -10,6 +10,8 @@ export interface PlanConfigDto {
   };
 }
 
+export const getPlanByKey = (key: string) => PLAN_CONFIG.find(plan => plan.key === key) || null;
+
 export const PLAN_CONFIG: PlanConfigDto[] = [
   {
     key: 'free',
