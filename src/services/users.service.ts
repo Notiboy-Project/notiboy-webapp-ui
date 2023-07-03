@@ -37,7 +37,9 @@ export const createAccesskey = async (
   address: string,
   name: string
 ) => {
-  const resp = await api.post(apiURL.createPat(chain, address, name));
+  const resp = await api.post(apiURL.createPat(chain, address, name), {
+    description: 'Normal key access API.'
+  });
   return resp?.data;
 };
 
@@ -69,11 +71,17 @@ export const fetchBillingInfo: Fetcher<
 };
 
 export const fetchPlansDetails: Fetcher<MembershipDataResonse> = async () => {
-  const resp = await api.get(apiURL.getPlansDetailsURL())
+  const resp = await api.get(apiURL.getPlansDetailsURL());
   return resp?.data;
-} 
+};
 
-export const switchPlan = async (chain: string, address: string, plan: string) => {
-  const resp = await api.put(apiURL.changeMembership(chain, address), { membership: plan })
-  return resp?.data
-} 
+export const switchPlan = async (
+  chain: string,
+  address: string,
+  plan: string
+) => {
+  const resp = await api.put(apiURL.changeMembership(chain, address), {
+    membership: plan
+  });
+  return resp?.data;
+};
