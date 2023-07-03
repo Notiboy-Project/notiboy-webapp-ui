@@ -10,7 +10,8 @@ export interface PlanConfigDto {
   };
 }
 
-export const getPlanByKey = (key: string) => PLAN_CONFIG.find(plan => plan.key === key) || null;
+export const getPlanByKey = (key: string) =>
+  PLAN_CONFIG.find((plan) => plan.key === key) || null;
 
 export const PLAN_CONFIG: PlanConfigDto[] = [
   {
@@ -21,16 +22,16 @@ export const PLAN_CONFIG: PlanConfigDto[] = [
       notification_days_retentions: 7,
       notification_per_month: 1000,
       notification_characters: 120,
-      analytics: false
+      analytics: true
     }
   },
   {
     key: 'silver',
     price: 9,
     features: {
-      channels: 1,
-      notification_days_retentions: 7,
-      notification_per_month: 1000,
+      channels: 3,
+      notification_days_retentions: 15,
+      notification_per_month: 30000,
       notification_characters: 200,
       analytics: true
     }
@@ -40,7 +41,7 @@ export const PLAN_CONFIG: PlanConfigDto[] = [
     price: 29,
     features: {
       channels: 10,
-      notification_days_retentions: 60,
+      notification_days_retentions: 30,
       notification_per_month: 100000,
       notification_characters: 500,
       analytics: true

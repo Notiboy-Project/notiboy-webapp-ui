@@ -34,13 +34,13 @@ export default function PlanConfig(props: PlanConfigProps) {
         </Flex>
         <Box mt={4} lineHeight={2.2}>
           <Text display={'flex'} justifyContent={'space-between'}>
-            <span>Channel</span>
+            <span>{plan.features.channels > 1 ? 'Channels': 'Channel'}</span>
             <span>{plan.features.channels}</span>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>Notification retention</span>
-            <span>{plan?.features?.notification_days_retentions}d</span>
+            <span>{plan?.features?.notification_days_retentions} days</span>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
