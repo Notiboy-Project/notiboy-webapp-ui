@@ -3,6 +3,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import CurrentPlanCard from './CurrentPlanCard';
 import {
   PLAN_CONFIG,
+  PlanKey,
   getPlanByKey,
   updateConfigsWithServer
 } from '../../../plan-config';
@@ -12,13 +13,25 @@ import {
   fetchBillingInfo,
   fetchPlansDetails
 } from '../../../services/users.service';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { UserContext } from '../../../Context/userContext';
 import PageLoading from '../../../components/Layout/PageLoading';
+import SwitchPlanModal from './SwitchPlanModal';
 
 export default function Billings() {
   const { user } = useContext(UserContext);
-  const { isLoading, data } = useSWR(
+  const [switchPlan, setSwitchPlan] = useState<{
+    isOpen: boolean;
+    newPlan: PlanKey;
+  }>({
+    isOpen: false,
+    newPlan: 'free'
+  });
+  const {
+    isLoading,
+    data,
+    mutate: syncBillingInfo
+  } = useSWR(
     { chain: user?.chain || '', user: user?.address || '' },
     fetchBillingInfo,
     {
@@ -31,7 +44,12 @@ export default function Billings() {
     revalidateOnFocus: false
   });
 
-  console.log('plansData: ', plansData);
+  const handleSwitchPlan = (plan: PlanKey) => {
+    setSwitchPlan({
+      newPlan: plan,
+      isOpen: true
+    });
+  };
 
   const plansConfig = useMemo(() => {
     if (plansData?.data) {
@@ -77,12 +95,20 @@ export default function Billings() {
             isActive={plan?.key === currentPlan?.key}
             plan={plan}
             key={plan.key}
+            onSwitchPlan={handleSwitchPlan}
           />
         ))}
       </Flex>
       <Box mt={5}>
         <PaymentHistory data={billing?.billing_records || []} />
       </Box>
+      <SwitchPlanModal
+        onPlanSwitchSuccess={syncBillingInfo}
+        onClose={() => {
+          setSwitchPlan({ isOpen: false, newPlan: 'free' });
+        }}
+        {...switchPlan}
+      />
     </Box>
   );
 }

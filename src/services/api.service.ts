@@ -158,7 +158,9 @@ export const apiURL = {
     // Biling API URL
     getBillingInfoURL: (chain: string, user: string) => `${baseURL}/chains/${chain}/users/${user}/billing`,
 
-    getPlansDetailsURL: () =>   `${baseURL}/billing`
-};
+    getPlansDetailsURL: () =>   `${baseURL}/billing`,
+
+    changeMembership: (chain: string, address: string) =>   `${baseURL}/chains/${chain}/users/${address}/billing/membership`
+  };
 
 export default api;

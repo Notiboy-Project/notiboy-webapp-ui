@@ -1,15 +1,16 @@
 import { Box, Button, Divider, Flex, Icon, Text } from '@chakra-ui/react';
 import { CardLayout } from '../../../components/Layout/CardLayout';
-import { PlanConfigDto } from '../../../plan-config';
+import { PlanConfigDto, PlanKey } from '../../../plan-config';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 
 interface PlanConfigProps {
   plan: PlanConfigDto;
   isActive: boolean;
+  onSwitchPlan: (newPlan: PlanKey) => void;
 }
 
 export default function PlanConfig(props: PlanConfigProps) {
-  const { plan, isActive } = props;
+  const { plan, isActive, onSwitchPlan } = props;
   return (
     <CardLayout p={4} minWidth={'280px'}>
       <Box width={'100%'}>
@@ -25,22 +26,30 @@ export default function PlanConfig(props: PlanConfigProps) {
             <Text fontSize={'md'}>${plan?.price} per month</Text>
           </Box>
           {isActive ? (
-            <Text color={'green.400'} fontWeight={600}>Active</Text>
+            <Text color={'green.400'} fontWeight={600}>
+              Active
+            </Text>
           ) : (
-            <Button colorScheme='teal' variant={'outline'} size="xs" borderRadius={'full'}>
+            <Button
+              onClick={() => onSwitchPlan(plan?.key)}
+              colorScheme="teal"
+              variant={'outline'}
+              size="xs"
+              borderRadius={'full'}
+            >
               Purcahse
             </Button>
           )}
         </Flex>
         <Box mt={4} lineHeight={2.2}>
           <Text display={'flex'} justifyContent={'space-between'}>
-            <span>{plan.features.channels > 1 ? 'Channels': 'Channel'}</span>
+            <span>{plan.features.channels > 1 ? 'Channels' : 'Channel'}</span>
             <span>{plan.features.channels}</span>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>Notification retention</span>
-            <span>{plan?.features?.notification_days_retentions} days</span>
+            <span>{plan?.features?.notification_days_retentions} d</span>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>

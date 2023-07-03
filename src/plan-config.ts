@@ -1,5 +1,5 @@
 export interface PlanConfigDto {
-  key: 'free' | 'silver' | 'gold';
+  key: PlanKey;
   price: number;
   features: {
     channels: number;
@@ -10,10 +10,10 @@ export interface PlanConfigDto {
   };
 }
 
+export type PlanKey = 'free' | 'silver' | 'gold';
+
 export const updateConfigsWithServer = (data?: any): PlanConfigDto[] => {
   if (!data) return PLAN_CONFIG;
-
-  console.log(`plans data`, data);
 
   return [
     {

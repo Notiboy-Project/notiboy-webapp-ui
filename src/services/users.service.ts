@@ -72,3 +72,8 @@ export const fetchPlansDetails: Fetcher<MembershipDataResonse> = async () => {
   const resp = await api.get(apiURL.getPlansDetailsURL())
   return resp?.data;
 } 
+
+export const switchPlan = async (chain: string, address: string, plan: string) => {
+  const resp = await api.put(apiURL.changeMembership(chain, address), { membership: plan })
+  return resp?.data
+} 
