@@ -1,6 +1,7 @@
 import { Fetcher } from 'swr';
 import api, { apiURL } from './api.service';
 import {
+  MembershipDataResonse,
   UserBillingResponse,
   UsersPatFetcher,
   updateMediumPayload
@@ -66,3 +67,8 @@ export const fetchBillingInfo: Fetcher<
   const resp = await api.get(apiURL.getBillingInfoURL(chain, user));
   return resp?.data;
 };
+
+export const fetchPlansDetails: Fetcher<MembershipDataResonse> = async () => {
+  const resp = await api.get(apiURL.getPlansDetailsURL())
+  return resp?.data;
+} 

@@ -10,6 +10,49 @@ export interface PlanConfigDto {
   };
 }
 
+export const updateConfigsWithServer = (data?: any): PlanConfigDto[] => {
+  if (!data) return PLAN_CONFIG;
+
+  console.log(`plans data`, data);
+
+  return [
+    {
+      key: 'free',
+      price: data?.charge?.free,
+      features: {
+        channels: data?.channel_count?.free || 1,
+        notification_days_retentions: data?.notification_retention?.free || 7,
+        notification_per_month: data?.notification_count?.free || 1000,
+        notification_characters: data?.notification_char_count?.free || 120,
+        analytics: data?.optin_optout_analytics?.free || true
+      }
+    },
+    {
+      key: 'silver',
+      price: data?.charge.silver || 9,
+      features: {
+        channels: data?.channel_count?.silver || 3,
+        notification_days_retentions:
+          data?.notification_retention?.silver || 15,
+        notification_per_month: data?.notification_count?.silver || 30000,
+        notification_characters: data?.notification_char_count?.silver || 200,
+        analytics: data?.optin_optout_analytics?.silver || true
+      }
+    },
+    {
+      key: 'gold',
+      price: data?.charge.gold || 29,
+      features: {
+        channels: data?.channel_count?.gold || 10,
+        notification_days_retentions: data?.notification_retention?.gold || 30,
+        notification_per_month: data?.notification_count?.gold || 100000,
+        notification_characters: data?.notification_char_count?.gold || 500,
+        analytics: data?.optin_optout_analytics?.gold || true
+      }
+    }
+  ];
+};
+
 export const getPlanByKey = (key: string) =>
   PLAN_CONFIG.find((plan) => plan.key === key) || null;
 

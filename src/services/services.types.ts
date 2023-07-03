@@ -103,4 +103,33 @@ export interface PaymentHistoryDto {
   paid_time: string;
 }
 
+export enum PlansConfig {
+  CHANNEL_COUNT = 'channel_count',
+  CHARGE = 'charge',
+  NOTIFICATION_CHAT_COUNT = 'notification_char_count',
+  NOTIFICATION_COUNT = 'notification_count'
+}
+
+export interface MembershipDataResonse {
+  data: PlanCountsDto;
+  message: string;
+  status_code: number;
+}
+
+export interface PlandConfigDto {
+  channel_count: PlanCountsDto;
+  charge: PlanCountsDto;
+  notification_char_count: PlanCountsDto;
+  notification_count: PlanCountsDto;
+  notification_retention: PlanCountsDto;
+  optin_optout_analytics: PlanCountsDto;
+}
+
+export interface PlanCountsDto {
+  bronze: number | boolean;
+  free: number | boolean;
+  gold: number | boolean;
+  silver: number | boolean;
+}
+
 ///******** */

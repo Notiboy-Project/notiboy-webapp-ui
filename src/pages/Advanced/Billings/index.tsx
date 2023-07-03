@@ -1,11 +1,18 @@
 import useSWR from 'swr';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import CurrentPlanCard from './CurrentPlanCard';
-import { PLAN_CONFIG, getPlanByKey } from '../../../plan-config';
+import {
+  PLAN_CONFIG,
+  getPlanByKey,
+  updateConfigsWithServer
+} from '../../../plan-config';
 import PlanConfig from './PlanConfig';
 import PaymentHistory from './PaymentHistory';
-import { fetchBillingInfo } from '../../../services/users.service';
-import { useContext } from 'react';
+import {
+  fetchBillingInfo,
+  fetchPlansDetails
+} from '../../../services/users.service';
+import { useContext, useMemo } from 'react';
 import { UserContext } from '../../../Context/userContext';
 import PageLoading from '../../../components/Layout/PageLoading';
 
@@ -19,6 +26,20 @@ export default function Billings() {
       errorRetryCount: 4
     }
   );
+
+  const { data: plansData } = useSWR('/billing', fetchPlansDetails, {
+    revalidateOnFocus: false
+  });
+
+  console.log('plansData: ', plansData);
+
+  const plansConfig = useMemo(() => {
+    if (plansData?.data) {
+      return updateConfigsWithServer(plansData?.data);
+    } else {
+      return PLAN_CONFIG;
+    }
+  }, [plansData]);
 
   const { data: billing } = data || {};
 
@@ -51,7 +72,7 @@ export default function Billings() {
         gap={5}
         justifyContent={'center'}
       >
-        {PLAN_CONFIG.map((plan) => (
+        {plansConfig.map((plan) => (
           <PlanConfig
             isActive={plan?.key === currentPlan?.key}
             plan={plan}
