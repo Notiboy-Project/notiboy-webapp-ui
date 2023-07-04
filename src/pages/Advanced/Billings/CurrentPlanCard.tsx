@@ -62,7 +62,7 @@ export default function CurrentPlanCard(props: CurrentPlanCardProps) {
       >
         <Box display={'flex'} flexDirection={'column'} placeItems={'center'}>
           <Text fontSize={'md'}>Balance</Text>
-          <Text fontSize={'3xl'}>${balance.toFixed(2)}</Text>
+          <Text fontSize={'3xl'}>${Number(balance || 0).toFixed(2)}</Text>
         </Box>
         <Box display={'flex'} flexDirection={'column'} placeItems={'center'}>
           <Text fontSize={'md'}>Estimated balance exhausion date</Text>
