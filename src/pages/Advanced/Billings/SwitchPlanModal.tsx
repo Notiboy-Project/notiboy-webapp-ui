@@ -37,7 +37,7 @@ export default function SwitchPlanModal(props: SwitchPlanModalProps) {
         user?.address || '',
         plan
       );
-      const { status_code, message } = resp?.data;
+      const { status_code, message } = resp;
       if (status_code === 200) {
         //TOAST: success message
         toast({

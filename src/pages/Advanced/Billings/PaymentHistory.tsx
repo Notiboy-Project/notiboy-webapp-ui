@@ -36,13 +36,22 @@ export default function PaymentHistory({ data }: PaymentHistoryProps) {
             <Tbody>
               {data.length === 0 && (
                 <Tr>
-                  <Td colSpan={3} textAlign={'center'}>No records found</Td>
+                  <Td colSpan={3} textAlign={'center'}>
+                    No records found
+                  </Td>
                 </Tr>
               )}
-              {data.map((ph) => (
-                <Tr>
+              {data.map((ph, index) => (
+                <Tr key={ph.txn_id}>
                   <Td>{moment(ph.paid_time).format('LL')}</Td>
-                  <Td>--</Td>
+                  <Td
+                    textOverflow={'ellipsis'}
+                    whiteSpace={'nowrap'}
+                    overflow={'hidden'}
+                    maxW={'150px'}
+                  >
+                    {ph.txn_id}
+                  </Td>
                   <Td isNumeric>${ph.paid_amount}</Td>
                 </Tr>
               ))}

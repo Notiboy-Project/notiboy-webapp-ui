@@ -101,6 +101,7 @@ export interface UserBillingDto {
 export interface PaymentHistoryDto {
   paid_amount: number;
   paid_time: string;
+  txn_id: string;
 }
 
 export enum PlansConfig {

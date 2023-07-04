@@ -77,7 +77,8 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
         user?.address || '',
         base64Str || ''
       );
-      const { status_code, message } = resp?.data;
+      console.log('resp ==>', resp);
+      const { status_code, message } = resp;
       console.log('status_code: ' + status_code);
       console.log('message: ' + message);
       toast({
@@ -88,7 +89,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
         status: 'success'
       });
       onAddBalanceSucceeded();
-      onClose();
+      handleClose();
     } catch (err: any) {
       const { data } = err?.response || {};
       console.log('Error while adding funds: ', err);
