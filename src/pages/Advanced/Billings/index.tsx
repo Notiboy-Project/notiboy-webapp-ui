@@ -75,6 +75,7 @@ export default function Billings() {
     <Box width={'100%'}>
       <Box width={{ base: '100%', md: '100%', xl: '75%' }} mx={'auto'}>
         <CurrentPlanCard
+          syncBillingInfo={syncBillingInfo}
           balance={billing.balance || 0}
           currentPlan={currentPlan}
           expiryDate={billing.expiry}

@@ -65,7 +65,7 @@ export default function SidebarLayout(props: any) {
         fontSize={'xl'}
       >
         {NAV_MENUS.map((menu) => (
-          <Box p={1} mb={4} w={'100%'} key={menu.name}>
+          <Box p={1} w={'100%'} key={menu.name}>
             <NavLink to={menu.url}>
               {({ isActive, isPending }) => (
                 <Box

@@ -44,12 +44,18 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const handleClose = () => {
+    onClose();
+    setLoading(false);
+    setAmount('');
+  };
+
   const handleAddBalance = async () => {
     setLoading(true);
     try {
       // TODO: Signed transaction for transfering funds.
 
-      let __amount = Number(amount) * 1000000;
+      const __amount = Number(amount) * 1000000;
 
       const suggestedParams = await algodClient.getTransactionParams().do();
       const addBalanceTxn =
@@ -82,6 +88,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
         status: 'success'
       });
       onAddBalanceSucceeded();
+      onClose();
     } catch (err: any) {
       const { data } = err?.response || {};
       console.log('Error while adding funds: ', err);
@@ -102,7 +109,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
       closeOnEsc={false}
       closeOnOverlayClick={false}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
     >
       <ModalOverlay />
       <ModalContent borderRadius={'2xl'} p={3}>
@@ -119,7 +126,11 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
             <InputRightAddon children="USDC" />
           </InputGroup>
           <Flex justifyContent={'flex-end'} gap={3} mt={5}>
-            <Button onClick={onClose} borderRadius={'full'} variant={'ghost'}>
+            <Button
+              onClick={handleClose}
+              borderRadius={'full'}
+              variant={'ghost'}
+            >
               Cancel
             </Button>
             <Button

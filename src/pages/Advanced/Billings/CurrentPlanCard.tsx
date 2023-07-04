@@ -10,11 +10,18 @@ interface CurrentPlanCardProps {
   currentPlan: PlanConfigDto | null;
   expiryDate: string;
   notificationRemaining: number;
+  syncBillingInfo: () => void;
 }
 
 export default function CurrentPlanCard(props: CurrentPlanCardProps) {
-  const { balance, currentPlan, expiryDate, notificationRemaining } = props;
-  const { isOpen, onClose, onOpen } = useDisclosure()
+  const {
+    balance,
+    currentPlan,
+    expiryDate,
+    notificationRemaining,
+    syncBillingInfo = () => {}
+  } = props;
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const expiry = moment(expiryDate);
   const formattedDate = expiry.isValid() ? expiry.format('LL') : '--';
@@ -68,7 +75,11 @@ export default function CurrentPlanCard(props: CurrentPlanCardProps) {
           <Text fontSize={'3xl'}>{notificationRemaining || 0}</Text>
         </Box>
       </Box>
-      <AddBalanceModal isOpen={isOpen} onClose={onClose} />
+      <AddBalanceModal
+        onAddBalanceSucceeded={syncBillingInfo}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </CardLayout>
   );
 }
