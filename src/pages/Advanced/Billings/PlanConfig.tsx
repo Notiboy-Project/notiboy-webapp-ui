@@ -49,7 +49,7 @@ export default function PlanConfig(props: PlanConfigProps) {
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>Notification retention</span>
-            <span>{plan?.features?.notification_days_retentions} d</span>
+            <span>{plan?.features?.notification_days_retentions} days</span>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
