@@ -20,6 +20,9 @@ export interface ChannelsDto {
   logo: string;
   owner: string;
   verified: boolean;
+  status: string;
+  created_timestamp: string
+  chain: string;  
 }
 
 export interface createChannelParams {

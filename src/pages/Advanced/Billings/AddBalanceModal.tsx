@@ -10,7 +10,8 @@ import {
   useToast,
   Input,
   InputGroup,
-  InputRightAddon
+  InputRightAddon,
+  InputLeftAddon
 } from '@chakra-ui/react';
 import algosdk from 'algosdk';
 import { useContext, useState } from 'react';
@@ -51,10 +52,19 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
   };
 
   const handleAddBalance = async () => {
-    setLoading(true);
+    if (!amount || Number(amount || 0) <= 0) {
+      toast({
+        description: 'Please enter valid amount.',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+        status: 'error'
+      });
+      return;
+    }
     try {
       // TODO: Signed transaction for transfering funds.
-
+      setLoading(true);
       const __amount = Number(amount) * 1000000;
 
       const suggestedParams = await algodClient.getTransactionParams().do();
@@ -77,7 +87,6 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
         user?.address || '',
         base64Str || ''
       );
-      console.log('resp ==>', resp);
       const { status_code, message } = resp;
       console.log('status_code: ' + status_code);
       console.log('message: ' + message);
@@ -95,7 +104,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
       console.log('Error while adding funds: ', err);
       toast({
         description:
-          data?.message || 'Service looks down ! please try agian later.',
+          data?.error || 'Service looks down ! please try agian later.',
         duration: 3000,
         isClosable: true,
         position: 'top',
@@ -118,6 +127,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
         <ModalCloseButton />
         <ModalBody>
           <InputGroup size="md" borderRadius={'2xl'}>
+            <InputLeftAddon children="$" />
             <Input
               value={amount}
               type="number"

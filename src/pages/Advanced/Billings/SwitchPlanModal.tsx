@@ -28,6 +28,11 @@ export default function SwitchPlanModal(props: SwitchPlanModalProps) {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const handleClose = () => {
+    setLoading(false);
+    onClose();
+  };
+
   const handleSwitchPlan = async (plan: string) => {
     setLoading(true);
     try {
@@ -48,7 +53,7 @@ export default function SwitchPlanModal(props: SwitchPlanModalProps) {
           position: 'top'
         });
         onPlanSwitchSuccess();
-        onClose();
+        handleClose();
       } else {
         toast({
           description: message || 'Service looks down! try again later.',
@@ -72,7 +77,7 @@ export default function SwitchPlanModal(props: SwitchPlanModalProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent borderRadius={'2xl'}>
         <ModalHeader>Switching plan</ModalHeader>
@@ -86,8 +91,12 @@ export default function SwitchPlanModal(props: SwitchPlanModalProps) {
             ?
           </Text>
           <Flex my={5} justifyContent={'flex-end'} gap={5}>
-            <Button onClick={onClose} borderRadius={'full'} variant={'ghost'}>
-              cancel
+            <Button
+              onClick={handleClose}
+              borderRadius={'full'}
+              variant={'ghost'}
+            >
+              Cancel
             </Button>
             <Button
               onClick={() => handleSwitchPlan(newPlan)}
