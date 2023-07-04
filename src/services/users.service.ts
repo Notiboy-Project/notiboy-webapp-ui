@@ -85,3 +85,14 @@ export const switchPlan = async (
   });
   return resp?.data;
 };
+
+export const addBalance = async (
+  chain: string,
+  address: string,
+  signed_txn: string
+) => {
+  const resp = await api.post(apiURL.addFundURL(chain, address), {
+    signed_txn
+  });
+  return resp?.data;
+};

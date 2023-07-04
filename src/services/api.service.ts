@@ -165,12 +165,15 @@ export const apiURL = {
 
   // Biling API URL
   getBillingInfoURL: (chain: string, user: string) =>
-    `${baseURL}/chains/${chain}/users/${user}/billing`,
+    `${baseURL}/chains/${chain}/users/${user}/billing`, // GET
 
-  getPlansDetailsURL: () => `${baseURL}/billing`,
+  getPlansDetailsURL: () => `${baseURL}/billing`, // GET
 
   changeMembership: (chain: string, address: string) =>
-    `${baseURL}/chains/${chain}/users/${address}/billing/membership`
+    `${baseURL}/chains/${chain}/users/${address}/billing/membership`, // PUT
+
+  addFundURL: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}/billing/fund` // POST
 };
 
 export default api;

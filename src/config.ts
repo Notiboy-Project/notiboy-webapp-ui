@@ -14,7 +14,7 @@ export const routes = Object.freeze({
   send: '/send',
   home: '/',
   logout: '/logout',
-  advanced: '/advanced',
+  advanced: '/advanced'
 });
 
 export const envs = Object.freeze({
@@ -24,7 +24,10 @@ export const envs = Object.freeze({
   discordRedirectUrl: process.env.REACT_APP_DISCORD_REDIRECT_URL,
   discordAuthUrl: process.env.REACT_APP_DISCORD_AUTH_URL,
   websocketUrl: process.env.REACT_APP_WEB_SOCKET_URL,
-  walletConnectProjectId: process.env.REACT_APP_WC_PROJECT_ID
+  walletConnectProjectId: process.env.REACT_APP_WC_PROJECT_ID,
+  algorandNodeUrl: process.env.REACT_APP_ALGORAND_NODE_URL,
+  algorandAssetIndex: process.env.REACT_APP_ALGORAND_ASSET_INDEX,
+  destinationAddress: process.env.REACT_APP_DESTINATION_ADDRESS
 });
 
 export const pageSize = Object.freeze({

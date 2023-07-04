@@ -13,12 +13,11 @@ import ImageLogo from '../../assets/images/notiboy_nam.png';
 import LogoNameImage from '../../assets/images/notiboy.png';
 import algosdk, { Transaction } from 'algosdk';
 import {
-  useWallet,
-  DEFAULT_NODE_BASEURL,
+  useWallet,  
   DEFAULT_NODE_TOKEN,
   DEFAULT_NODE_PORT
 } from '@txnlab/use-wallet';
-import { routes } from '../../config';
+import { envs, routes } from '../../config';
 import NetworkLists from './NetworkList';
 import { AlgorandIcon } from '../../assets/svgs';
 import { NetworkType } from './wallet.types';
@@ -33,7 +32,7 @@ import AuthenticateSignedTransaction from './AuthenticateModal';
 
 const algodClient = new algosdk.Algodv2(
   DEFAULT_NODE_TOKEN,
-  DEFAULT_NODE_BASEURL,
+  envs.algorandNodeUrl || 'https://testnet-api.algonode.cloud',
   DEFAULT_NODE_PORT
 );
 
