@@ -58,7 +58,7 @@ export default function PaymentHistory({ data }: PaymentHistoryProps) {
                     size="sm"
                     borderRadius={'full'}
                   >
-                    <Tooltip hasArrow label="Copy txn_id">
+                    <Tooltip hasArrow label="Copy Txn-id">
                       <Icon as={CopyIcon} />
                     </Tooltip>
                   </Button>
