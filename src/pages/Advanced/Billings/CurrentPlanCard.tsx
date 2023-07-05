@@ -71,7 +71,7 @@ export default function CurrentPlanCard(props: CurrentPlanCardProps) {
           </Text>
         </Box>
         <Box display={'flex'} flexDirection={'column'} placeItems={'center'}>
-          <Text fontSize={'md'}>Notification remaining</Text>
+          <Text fontSize={'md'}>Notifications remaining</Text>
           <Text fontSize={'3xl'}>{notificationRemaining || 0}</Text>
         </Box>
       </Box>

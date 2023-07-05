@@ -18,7 +18,7 @@ export default function AdvancePage() {
         <NTabs
           isResponsive={false}
           tabs={[
-            { title: 'Billings', name: PageType.BILLING },
+            { title: 'Billing', name: PageType.BILLING },
             { title: 'API Access', name: PageType.API_ACCESS }
           ]}
           activeTab={activeTab}

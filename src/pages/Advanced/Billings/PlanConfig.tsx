@@ -37,7 +37,7 @@ export default function PlanConfig(props: PlanConfigProps) {
               size="xs"
               borderRadius={'full'}
             >
-              Purcahse
+              Subscribe
             </Button>
           )}
         </Flex>
@@ -53,13 +53,13 @@ export default function PlanConfig(props: PlanConfigProps) {
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
-            <span>Per month Notification</span>
+            <span>Monthly Notification Limit</span>
             <span>{plan?.features?.notification_per_month}</span>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>Notification length</span>
-            <span>{plan?.features?.notification_characters}</span>
+            <span>{plan?.features?.notification_characters} characters</span>
           </Text>
           <Divider />
           <Text
@@ -69,9 +69,9 @@ export default function PlanConfig(props: PlanConfigProps) {
           >
             <span>Analytics</span>
             <Icon
-              fill={plan?.features?.analytics ? 'green.400' : 'red.400'}
+              fill={plan?.features?.optin_optout_analytics ? 'green.400' : 'red.400'}
               as={
-                plan?.features?.analytics
+                plan?.features?.optin_optout_analytics
                   ? AiFillCheckCircle
                   : AiFillCloseCircle
               }

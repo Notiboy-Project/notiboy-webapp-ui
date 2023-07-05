@@ -1,63 +1,76 @@
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
   Box,
   Flex,
-  Text
+  Text,
+  Icon,
+  Button,
+  Tooltip,
+  useToast
 } from '@chakra-ui/react';
 import { PaymentHistoryDto } from '../../../services/services.types';
 import moment from 'moment';
+import { CopyIcon } from '../../../assets/svgs';
+import { CardLayout } from '../../../components/Layout/CardLayout';
 
 interface PaymentHistoryProps {
   data: PaymentHistoryDto[];
 }
 
 export default function PaymentHistory({ data }: PaymentHistoryProps) {
+  const toast = useToast();
+
+  const handleCopy = (txnId: string) => {
+    window?.navigator?.clipboard?.writeText(txnId);
+    toast({
+      description: 'TxnID Copied to clipboard.',
+      duration: 3000,
+      isClosable: true,
+      position: 'top',
+      status: 'success'
+    });
+  };
+
   return (
     <Flex flexDirection={'column'}>
       <Text my={5} fontSize={'xl'} fontWeight={600} textAlign={'center'}>
         Payment History
       </Text>
       <Box w={{ base: '100%', xl: '70%' }} margin={'0 auto'}>
-        <TableContainer>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th>Date</Th>
-                <Th>Txn ID</Th>
-                <Th isNumeric>Amount</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {data.length === 0 && (
-                <Tr>
-                  <Td colSpan={3} textAlign={'center'}>
-                    No records found
-                  </Td>
-                </Tr>
-              )}
-              {data.map((ph, index) => (
-                <Tr key={ph.txn_id}>
-                  <Td>{moment(ph.paid_time).format('LL')}</Td>
-                  <Td
-                    textOverflow={'ellipsis'}
-                    whiteSpace={'nowrap'}
-                    overflow={'hidden'}
-                    maxW={'150px'}
+        {data.map((ph) => (
+          <CardLayout key={ph.txn_id} my={2}>
+            <Flex
+              justifyContent={'space-between'}
+              alignItems={'center'}
+              gap={2}
+            >
+              <Flex maxWidth={'90%'} flexDirection={'column'}>
+                <Text>{moment(ph.paid_time).format('LL')}</Text>
+                <Text
+                  textOverflow={'ellipsis'}
+                  whiteSpace={'nowrap'}
+                  overflow={'hidden'}
+                  fontSize={'xs'}
+                  as="small"
+                >
+                  <Button
+                    onClick={() => handleCopy(ph.txn_id)}
+                    variant={'ghost'}
+                    size="sm"
+                    borderRadius={'full'}
                   >
-                    {ph.txn_id}
-                  </Td>
-                  <Td isNumeric>${ph.paid_amount}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
+                    <Tooltip hasArrow label="Copy txn_id">
+                      <Icon as={CopyIcon} />
+                    </Tooltip>
+                  </Button>
+                  {ph.txn_id}
+                </Text>
+              </Flex>
+              <Text fontWeight={600} color={'green.400'} fontSize={'xl'}>
+                ${ph.paid_amount}
+              </Text>
+            </Flex>
+          </CardLayout>
+        ))}
       </Box>
     </Flex>
   );
