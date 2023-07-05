@@ -73,14 +73,22 @@ export const apiURL = {
     `${baseURL}/chains/${chain}/users/${address}/logout`, // DELETE
 
   // Users API key
-  getPat: (chain: string, address: string) =>
-    `${baseURL}/chains/${chain}/users/${address}/pat`, // GET
+  getPat: (chain: string, address: string, kind: string = 'normal') =>
+    `${baseURL}/chains/${chain}/users/${address}/pat/kind/${kind}`, // GET
 
-  createPat: (chain: string, address: string, name: string) =>
-    `${baseURL}/chains/${chain}/users/${address}/pat/${name}`, // POST
+  createPat: (
+    chain: string,
+    address: string,
+    name: string,
+    kind: string = 'normal'
+  ) => `${baseURL}/chains/${chain}/users/${address}/pat/kind/${kind}/${name}`, // POST
 
-  deletePatURL:(chain: string, address: string, uuid: string) => 
-  `${baseURL}/chains/${chain}/users/${address}/pat/${uuid}`, // DELETE
+  deletePatURL: (
+    chain: string,
+    address: string,
+    uuid: string,
+    kind: string = 'normal'
+  ) => `${baseURL}/chains/${chain}/users/${address}/pat/kind/${kind}/${uuid}`, // DELETE
 
   //NOTIFICATIONS URL
 
@@ -153,7 +161,19 @@ export const apiURL = {
     kind: string,
     uuid: string
   ) =>
-    `${baseURL}/chains/${chain}/stats/channels/${channel}/users/${address}/notification/${kind}/uuid/${uuid}?time`
+    `${baseURL}/chains/${chain}/stats/channels/${channel}/users/${address}/notification/${kind}/uuid/${uuid}?time`,
+
+  // Biling API URL
+  getBillingInfoURL: (chain: string, user: string) =>
+    `${baseURL}/chains/${chain}/users/${user}/billing`, // GET
+
+  getPlansDetailsURL: () => `${baseURL}/billing`, // GET
+
+  changeMembership: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}/billing/membership`, // PUT
+
+  addFundURL: (chain: string, address: string) =>
+    `${baseURL}/chains/${chain}/users/${address}/billing/fund` // POST
 };
 
 export default api;

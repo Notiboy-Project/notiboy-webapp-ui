@@ -8,7 +8,7 @@ export default function CurveAbsoluteLayout() {
 
   return (
     <Box
-      height={110}
+      height={94}
       width={65}
       backgroundColor={'gray.700'}
       position={'relative'}

@@ -10,7 +10,7 @@ enum PageType {
 }
 
 export default function AdvancePage() {
-  const [activeTab, setActiveTab] = useState<PageType>(PageType.API_ACCESS);
+  const [activeTab, setActiveTab] = useState<PageType>(PageType.BILLING);
 
   return (
     <Box>
@@ -18,16 +18,16 @@ export default function AdvancePage() {
         <NTabs
           isResponsive={false}
           tabs={[
-            { title: 'API Access', name: PageType.API_ACCESS },
-            { title: 'Billings', name: PageType.BILLING }
+            { title: 'Billings', name: PageType.BILLING },
+            { title: 'API Access', name: PageType.API_ACCESS }
           ]}
           activeTab={activeTab}
           onTabSelected={(tab) => setActiveTab(tab)}
         />
       </Flex>
       <Flex mt={5}>
-      {activeTab === PageType.API_ACCESS ? <APIAccessPage /> : <Billings />}
-      </Flex>      
+        {activeTab === PageType.API_ACCESS ? <APIAccessPage /> : <Billings />}
+      </Flex>
     </Box>
   );
 }

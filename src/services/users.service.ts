@@ -1,6 +1,11 @@
 import { Fetcher } from 'swr';
 import api, { apiURL } from './api.service';
-import { UsersPatFetcher, updateMediumPayload } from './services.types';
+import {
+  MembershipDataResonse,
+  UserBillingResponse,
+  UsersPatFetcher,
+  updateMediumPayload
+} from './services.types';
 
 export const fetchUserInfo = async (chain: string, address: string) => {
   const resp = await api.get(apiURL.getUserInfoUrl(chain, address));
@@ -32,7 +37,9 @@ export const createAccesskey = async (
   address: string,
   name: string
 ) => {
-  const resp = await api.post(apiURL.createPat(chain, address, name));
+  const resp = await api.post(apiURL.createPat(chain, address, name), {
+    description: 'Normal key access API.'
+  });
   return resp?.data;
 };
 
@@ -51,5 +58,41 @@ export const fetchAccessKeyPat: Fetcher<
 > = async (args) => {
   const { chain, address } = args;
   const resp = await api.get(apiURL.getPat(chain, address));
+  return resp?.data;
+};
+
+export const fetchBillingInfo: Fetcher<
+  UserBillingResponse,
+  { chain: string; user: string }
+> = async (args) => {
+  const { chain, user } = args;
+  const resp = await api.get(apiURL.getBillingInfoURL(chain, user));
+  return resp?.data;
+};
+
+export const fetchPlansDetails: Fetcher<MembershipDataResonse> = async () => {
+  const resp = await api.get(apiURL.getPlansDetailsURL());
+  return resp?.data;
+};
+
+export const switchPlan = async (
+  chain: string,
+  address: string,
+  plan: string
+) => {
+  const resp = await api.put(apiURL.changeMembership(chain, address), {
+    membership: plan
+  });
+  return resp?.data;
+};
+
+export const addBalance = async (
+  chain: string,
+  address: string,
+  signed_txn: string
+) => {
+  const resp = await api.post(apiURL.addFundURL(chain, address), {
+    signed_txn
+  });
   return resp?.data;
 };

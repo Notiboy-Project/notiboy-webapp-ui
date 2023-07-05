@@ -4,6 +4,7 @@ import {
   Flex,
   Icon,
   Spinner,
+  TableCaption,
   Text,
   useDisclosure
 } from '@chakra-ui/react';
@@ -43,27 +44,30 @@ export default function APIAccessPage() {
 
   return (
     <Box width={'100%'} p={[0, 1, 2, 5]}>
-      <Flex justifyContent={'flex-start'} w={'100%'}>
-        <Button
-          onClick={onOpen}
-          borderRadius={'3xl'}
-          leftIcon={<Icon as={FaKey} />}
-          px={8}
-        >
-          New key
-        </Button>
-      </Flex>
+      <Flex justifyContent={'flex-start'} w={'100%'}></Flex>
       <Box m="2rem auto">
         <TableContainer margin={'0 auto'} whiteSpace={'break-spaces'}>
-          <Text p={2} fontWeight={600} mb={5}>
-            Access Keys
-          </Text>
           <Table variant="simple" align="center">
+            <TableCaption textAlign={'left'} placement="top">
+              <Flex justifyContent={'space-between'} alignItems={'center'}>
+                <Text py={2} fontSize={'2xl'} fontWeight={600}>
+                  Access Keys
+                </Text>
+                <Button
+                  onClick={onOpen}
+                  borderRadius={'3xl'}
+                  leftIcon={<Icon as={FaKey} />}
+                  px={8}
+                >
+                  New key
+                </Button>
+              </Flex>
+            </TableCaption>
             <Thead>
               <Tr>
                 <Th>Name</Th>
                 <Th>Issued date</Th>
-                <Th>Permissions</Th>
+                <Th isNumeric>Permissions</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -85,13 +89,13 @@ export default function APIAccessPage() {
                 <Tr key={ak.uuid}>
                   <Td>{ak.name}</Td>
                   <Td>{moment(ak.created).format('LL')}</Td>
-                  <Td>
+                  <Td isNumeric>
                     Full Access&nbsp;&nbsp;
-                    <Button                      
+                    <Button
                       borderRadius={'xl'}
                       bgColor={'red.400'}
                       color={'white'}
-                      size='sm'
+                      size="sm"
                       colorScheme="red"
                       onClick={() => setRevokeKey(ak.uuid)}
                     >
