@@ -45,12 +45,12 @@ export const NAV_MENUS: {
     url: routes.advanced,
     icon: ShuffleIcon
   },
-  { 
+  {
     title: 'Support',
     name: 'support',
     url: routes.support,
     icon: MessgeQuestionIcon
-  }, 
+  }
 ];
 
 export default function SidebarLayout(props: any) {
@@ -69,7 +69,7 @@ export default function SidebarLayout(props: any) {
             <NavLink to={menu.url}>
               {({ isActive, isPending }) => (
                 <Box
-                  p={6}
+                  p={4}
                   borderRadius={[25, 35]}
                   backgroundColor={isActive ? 'gray.700' : 'transparent'}
                   position={'relative'}
@@ -79,7 +79,7 @@ export default function SidebarLayout(props: any) {
                       <CurveAbsoluteLayout />
                     </Box>
                   )}
-                  <Text fontWeight={600}>{menu.title}</Text>
+                  <Text fontWeight={isActive ? 600 : 500}>{menu.title}</Text>
                 </Box>
               )}
             </NavLink>
