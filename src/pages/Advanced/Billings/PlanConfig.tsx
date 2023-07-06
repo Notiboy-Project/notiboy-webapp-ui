@@ -12,7 +12,7 @@ interface PlanConfigProps {
 export default function PlanConfig(props: PlanConfigProps) {
   const { plan, isActive, onSwitchPlan } = props;
   return (
-    <CardLayout p={4} minWidth={'280px'}>
+    <CardLayout p={4} minWidth={'310px'}>
       <Box width={'100%'}>
         <Flex justifyContent={'space-between'} alignItems={'center'}>
           <Box>
@@ -45,22 +45,26 @@ export default function PlanConfig(props: PlanConfigProps) {
         <Box mt={4} lineHeight={2.2}>
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>{plan.features.channels > 1 ? 'Channels' : 'Channel'}</span>
-            <span>{plan.features.channels}</span>
+            <Text fontWeight={600} as="span" color="green.400">
+              {plan.features.channels}
+            </Text>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>Notification Retention</span>
-            <span>{plan?.features?.notification_days_retentions} days</span>
+            <Text fontWeight={600} as="span" color="green.400">
+              {plan?.features?.notification_days_retentions} days
+            </Text>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>Monthly Notification Limit</span>
-            <span>{plan?.features?.notification_per_month}</span>
+            <Text fontWeight={600} as="span" color="green.400">{plan?.features?.notification_per_month}</Text>
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
             <span>Notification Length</span>
-            <span>{plan?.features?.notification_characters} characters</span>
+            <Text fontWeight={600} as="span" color="green.400">{plan?.features?.notification_characters} characters</Text>
           </Text>
           <Divider />
           <Text

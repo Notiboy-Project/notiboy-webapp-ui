@@ -36,6 +36,11 @@ export default function PaymentHistory({ data }: PaymentHistoryProps) {
         Payment History
       </Text>
       <Box w={{ base: '100%', xl: '70%' }} margin={'0 auto'}>
+        {data.length === 0 && (
+          <CardLayout my={5}>
+            <Text textAlign={'center'}>No history found</Text>
+          </CardLayout>
+        )}
         {data.map((ph) => (
           <CardLayout key={ph.txn_id} my={2}>
             <Flex
