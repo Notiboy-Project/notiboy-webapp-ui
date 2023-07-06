@@ -65,13 +65,13 @@ export default function CurrentPlanCard(props: CurrentPlanCardProps) {
           <Text fontSize={'3xl'}>${Number(balance || 0).toFixed(2)}</Text>
         </Box>
         <Box display={'flex'} flexDirection={'column'} placeItems={'center'}>
-          <Text fontSize={'md'}>Estimated balance exhausion date</Text>
+          <Text fontSize={'md'}>Estimated Balance Exhaustion Date</Text>
           <Text fontSize={'3xl'}>
             {currentPlan?.key === 'free' ? 'N/A' : formattedDate}
           </Text>
         </Box>
         <Box display={'flex'} flexDirection={'column'} placeItems={'center'}>
-          <Text fontSize={'md'}>Notifications remaining</Text>
+          <Text fontSize={'md'}>Notifications Remaining</Text>
           <Text fontSize={'3xl'}>{notificationRemaining || 0}</Text>
         </Box>
       </Box>
