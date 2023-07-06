@@ -8,7 +8,7 @@ export const FAQS_DATA: SupportDto[] = [
     id: 2,
     question: 'How much does it cost to send notifications ?',
     answer:
-      'Sending notifications is free of cost. But in free tire there will be restrictions in the number of notifications that can be sent.'
+      'Sending notifications is free of cost. But in free tier there will be restrictions in the number of notifications that can be sent.'
   },
   {
     id: 3,
@@ -18,13 +18,13 @@ export const FAQS_DATA: SupportDto[] = [
   },
   {
     id: 4,
-    question: ' Can I get notifications via email and discord ?',
+    question: 'Can I get notifications via email and discord ?',
     answer: ` Yes, you can start getting notifications via discord & email by verifying via settings page.`
   },
   {
     id: 5,
     question: ' Are there any premium plans ?',
-    answer: `Yes, premium plans cost USD 9 and USD 29 per month which will give access to extra features for channel creators. We are working on a subscription model which will be released soon.`
+    answer: `Yes, there are premium plans for the channel creator. Visit billing section for details.`
   }
 ];
 
