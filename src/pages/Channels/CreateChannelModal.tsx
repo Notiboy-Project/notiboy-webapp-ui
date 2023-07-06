@@ -125,7 +125,15 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
         mutate();
         handleClose();
       }
-    } catch (err) {
+    } catch (err: any) {
+      const { message = '' } = err?.response?.data || {};
+      toast({
+        description: message || 'Servie looks down ! please try again later.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top'
+      });
       console.log('Error creating channel', err);
       setSubmitting(false);
     }

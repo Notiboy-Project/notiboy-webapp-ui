@@ -10,7 +10,7 @@ import {
   Notification1Icon,
   SendIcon,
   ShareIcon,
-  // ShuffleIcon,
+  ShuffleIcon,
   StatisticsIcon
 } from '../../assets/svgs';
 
@@ -39,18 +39,18 @@ export const NAV_MENUS: {
     url: routes.statistics,
     icon: StatisticsIcon
   },
-  // {
-  //   title: 'Advanced',
-  //   name: 'advanced',
-  //   url: routes.advanced,
-  //   icon: ShuffleIcon
-  // },
-  { 
+  {
+    title: 'Advanced',
+    name: 'advanced',
+    url: routes.advanced,
+    icon: ShuffleIcon
+  },
+  {
     title: 'Support',
     name: 'support',
     url: routes.support,
     icon: MessgeQuestionIcon
-  }, 
+  }
 ];
 
 export default function SidebarLayout(props: any) {
@@ -65,11 +65,11 @@ export default function SidebarLayout(props: any) {
         fontSize={'xl'}
       >
         {NAV_MENUS.map((menu) => (
-          <Box p={1} mb={4} w={'100%'} key={menu.name}>
+          <Box p={1} w={'100%'} key={menu.name}>
             <NavLink to={menu.url}>
               {({ isActive, isPending }) => (
                 <Box
-                  p={6}
+                  p={4}
                   borderRadius={[25, 35]}
                   backgroundColor={isActive ? 'gray.700' : 'transparent'}
                   position={'relative'}
@@ -79,7 +79,7 @@ export default function SidebarLayout(props: any) {
                       <CurveAbsoluteLayout />
                     </Box>
                   )}
-                  <Text fontWeight={600}>{menu.title}</Text>
+                  <Text fontWeight={isActive ? 600 : 500}>{menu.title}</Text>
                 </Box>
               )}
             </NavLink>

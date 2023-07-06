@@ -4,14 +4,15 @@ import {
   Modal,
   ModalBody,
   ModalCloseButton,
-  ModalContent, 
+  ModalContent,
   ModalOverlay,
   Text
 } from '@chakra-ui/react';
 import QRcode from 'qrcode';
 import { useContext, useEffect, useState } from 'react';
-import { getTokenFromStorage } from '../../services/storage.service';
 import { UserContext } from '../../Context/userContext';
+import api, { apiURL } from '../../services/api.service';
+import PageLoading from '../Layout/PageLoading';
 
 interface QRCodeGeneratorProps {
   isOpen: boolean;
@@ -21,13 +22,8 @@ interface QRCodeGeneratorProps {
 export default function QRCodeGenerator(props: QRCodeGeneratorProps) {
   const { isOpen, onClose } = props;
   const [qrcode, setQRCode] = useState('');
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
-
-  const text = {
-    accessKey: getTokenFromStorage(),
-    chain: user?.chain || 'algorand',
-    address: user?.address || ''
-  };
 
   const generateQR = async (text: string) => {
     try {
@@ -38,8 +34,35 @@ export default function QRCodeGenerator(props: QRCodeGeneratorProps) {
     }
   };
 
+  const fetchTokenForMobile = async () => {
+    try {
+      setLoading(true);
+      const resp = await api.post(
+        apiURL.createPat(
+          user?.chain || '',
+          user?.address || '',
+          `mt-${user?.address}`,
+          'mobile'
+        ),
+        {
+          description: 'Mobile app access token.'
+        }
+      );
+      const { data } = resp?.data;
+      const text = {
+        accessKey: data?.token || '',
+        chain: user?.chain || 'algorand',
+        address: user?.address || ''
+      };
+      generateQR(JSON.stringify(text));
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    generateQR(JSON.stringify(text));
+    fetchTokenForMobile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -55,7 +78,11 @@ export default function QRCodeGenerator(props: QRCodeGeneratorProps) {
             alignItems={'center'}
           >
             <Text mb={4}>Scan QR to Login on mobile App</Text>
-            <Image src={qrcode} height={300} mb={2} />
+            {loading ? (
+              <PageLoading />
+            ) : (
+              <Image src={qrcode} height={300} mb={2} />
+            )}
           </Flex>
         </ModalBody>
       </ModalContent>

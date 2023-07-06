@@ -12,6 +12,7 @@ import { useState, useContext, useEffect } from 'react';
 import { FaCaretDown } from 'react-icons/fa';
 import { UserContext } from '../../Context/userContext';
 import { fetchChannelsByUser } from '../../services/channels.service';
+import { BiLockAlt } from 'react-icons/bi';
 
 interface SelectChannelProps {
   onChannelSelect: (appId: string) => void;
@@ -31,9 +32,11 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
 
   useEffect(() => {
     if (data && data?.length > 0) {
-      const channel = data[0];
-      setSelectedChannel(channel.name);
-      onChannelSelect(channel.app_id);
+      const activeChannel = data.find((c) => c.status === 'ACTIVE');
+      if (activeChannel) {
+        setSelectedChannel(activeChannel.name);
+        onChannelSelect(activeChannel.app_id);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
@@ -54,20 +57,25 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
       </MenuButton>
       <MenuList borderRadius={'3xl'} p={3}>
         {data?.length === 0 && <MenuItem disabled>No channels found!</MenuItem>}
-        {(data || []).map((channel) => (
-          <MenuItem
-            minH="48px"
-            onClick={() => {
-              setSelectedChannel(channel.name);
-              onChannelSelect(channel.app_id);
-            }}
-            key={channel.app_id}
-            p={2}
-            borderRadius={'2xl'}
-          >
-            <Text as="small">{channel.name}</Text>
-          </MenuItem>
-        ))}
+        {(data || []).map((channel) => {
+          const isDisabled = channel.status !== 'ACTIVE';
+          return (
+            <MenuItem
+              minH="48px"
+              onClick={() => {
+                setSelectedChannel(channel.name);
+                onChannelSelect(channel.app_id);
+              }}
+              isDisabled={isDisabled}
+              key={channel.app_id}
+              p={2}
+              borderRadius={'2xl'}
+            >
+              {isDisabled && <Icon as={BiLockAlt} h={15} mr={2} />}
+              <Text as="small">{channel.name}</Text>
+            </MenuItem>
+          );
+        })}
       </MenuList>
     </Menu>
   );
