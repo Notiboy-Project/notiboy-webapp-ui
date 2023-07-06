@@ -25,11 +25,12 @@ export default function PlanConfig(props: PlanConfigProps) {
             </Text>
             <Text fontSize={'md'}>${plan?.price} per month</Text>
           </Box>
-          {isActive ? (
+          {isActive && (
             <Text color={'green.400'} fontWeight={600}>
               Active
             </Text>
-          ) : (
+          )}
+          {!isActive && plan.key !== 'free' && (
             <Button
               onClick={() => onSwitchPlan(plan?.key)}
               colorScheme="teal"
@@ -48,7 +49,7 @@ export default function PlanConfig(props: PlanConfigProps) {
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
-            <span>Notification retention</span>
+            <span>Notification Retention</span>
             <span>{plan?.features?.notification_days_retentions} days</span>
           </Text>
           <Divider />
@@ -58,7 +59,7 @@ export default function PlanConfig(props: PlanConfigProps) {
           </Text>
           <Divider />
           <Text display={'flex'} justifyContent={'space-between'}>
-            <span>Notification length</span>
+            <span>Notification Length</span>
             <span>{plan?.features?.notification_characters} characters</span>
           </Text>
           <Divider />
@@ -69,7 +70,9 @@ export default function PlanConfig(props: PlanConfigProps) {
           >
             <span>Analytics</span>
             <Icon
-              fill={plan?.features?.optin_optout_analytics ? 'green.400' : 'red.400'}
+              fill={
+                plan?.features?.optin_optout_analytics ? 'green.400' : 'red.400'
+              }
               as={
                 plan?.features?.optin_optout_analytics
                   ? AiFillCheckCircle
