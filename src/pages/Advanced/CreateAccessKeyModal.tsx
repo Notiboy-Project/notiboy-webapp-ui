@@ -74,9 +74,9 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
         setLoading(false);
         refreshAccessKeys();
       }
-    } catch (e) {      
+    } catch (e) {
+      console.log('Error whilte creating access key:', e);
       setLoading(false);
-
     }
   };
 
@@ -127,7 +127,8 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
                 mt={2}
                 textAlign={'center'}
               >
-                Note: The API key will be inaccessible once you leave this popup.
+                Note: The API key will be inaccessible once you leave this
+                popup.
               </Text>
             </Box>
           ) : (
@@ -140,7 +141,7 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
             />
           )}
         </ModalBody>
-        <ModalFooter justifyContent={'center'}>
+        <ModalFooter justifyContent={'flex-end'}>
           {accessKey ? (
             <Button
               mr={3}
@@ -152,15 +153,26 @@ export default function CreateAccessKeyModal(props: CreateAccessKeyModalProps) {
               Close
             </Button>
           ) : (
-            <Button
-              background={'blue.500'}
-              mr={3}
-              isLoading={loading}
-              onClick={handleCreateAPI}
-              borderRadius={'2xl'}
-            >
-              Create
-            </Button>
+            <>
+              <Button
+                mr={3}
+                onClick={handleClose}
+                borderRadius={'2xl'}
+                variant={'ghost'}
+                background={'transparent'}
+              >
+                Close
+              </Button>
+              <Button
+                background={'blue.500'}
+                mr={3}
+                isLoading={loading}
+                onClick={handleCreateAPI}
+                borderRadius={'2xl'}
+              >
+                Create
+              </Button>
+            </>
           )}
         </ModalFooter>
       </ModalContent>
