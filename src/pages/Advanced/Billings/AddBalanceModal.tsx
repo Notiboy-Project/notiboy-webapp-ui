@@ -101,10 +101,18 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
       handleClose();
     } catch (err: any) {
       const { data } = err?.response || {};
+      const message = err
+        ?.toString()
+        ?.toLowerCase()
+        ?.includes('Transaction Request Rejected'.toLowerCase())
+        ? 'Transaction has request rejected by user.'
+        : '';
       console.log('Error while adding funds: ', err);
       toast({
         description:
-          data?.error || 'Service looks down ! please try agian later.',
+          data?.error ||
+          message ||
+          'Service looks down ! please try agian later.',
         duration: 3000,
         isClosable: true,
         position: 'top',

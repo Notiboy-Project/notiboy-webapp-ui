@@ -6,7 +6,7 @@ export interface PlanConfigDto {
     notification_days_retentions: number;
     notification_per_month: number;
     notification_characters: number;
-    analytics: boolean;
+    optin_optout_analytics: boolean;
   };
 }
 
@@ -24,7 +24,7 @@ export const updateConfigsWithServer = (data?: any): PlanConfigDto[] => {
         notification_days_retentions: data?.notification_retention?.free || 7,
         notification_per_month: data?.notification_count?.free || 1000,
         notification_characters: data?.notification_char_count?.free || 120,
-        analytics: data?.optin_optout_analytics?.free || true
+        optin_optout_analytics: data?.optin_optout_analytics?.free || true
       }
     },
     {
@@ -36,7 +36,7 @@ export const updateConfigsWithServer = (data?: any): PlanConfigDto[] => {
           data?.notification_retention?.silver || 15,
         notification_per_month: data?.notification_count?.silver || 30000,
         notification_characters: data?.notification_char_count?.silver || 200,
-        analytics: data?.optin_optout_analytics?.silver || true
+        optin_optout_analytics: data?.optin_optout_analytics?.silver || true
       }
     },
     {
@@ -47,7 +47,7 @@ export const updateConfigsWithServer = (data?: any): PlanConfigDto[] => {
         notification_days_retentions: data?.notification_retention?.gold || 30,
         notification_per_month: data?.notification_count?.gold || 100000,
         notification_characters: data?.notification_char_count?.gold || 500,
-        analytics: data?.optin_optout_analytics?.gold || true
+        optin_optout_analytics: data?.optin_optout_analytics?.gold || true
       }
     }
   ];
@@ -65,7 +65,7 @@ export const PLAN_CONFIG: PlanConfigDto[] = [
       notification_days_retentions: 7,
       notification_per_month: 1000,
       notification_characters: 120,
-      analytics: true
+      optin_optout_analytics: true
     }
   },
   {
@@ -76,7 +76,7 @@ export const PLAN_CONFIG: PlanConfigDto[] = [
       notification_days_retentions: 15,
       notification_per_month: 30000,
       notification_characters: 200,
-      analytics: true
+      optin_optout_analytics: true
     }
   },
   {
@@ -87,7 +87,7 @@ export const PLAN_CONFIG: PlanConfigDto[] = [
       notification_days_retentions: 30,
       notification_per_month: 100000,
       notification_characters: 500,
-      analytics: true
+      optin_optout_analytics: true
     }
   }
 ];
