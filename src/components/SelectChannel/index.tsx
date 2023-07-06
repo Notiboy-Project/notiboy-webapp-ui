@@ -32,9 +32,11 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
 
   useEffect(() => {
     if (data && data?.length > 0) {
-      const channel = data[0];
-      setSelectedChannel(channel.name);
-      onChannelSelect(channel.app_id);
+      const activeChannel = data.find((c) => c.status === 'ACTIVE');
+      if (activeChannel) {
+        setSelectedChannel(activeChannel.name);
+        onChannelSelect(activeChannel.app_id);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
