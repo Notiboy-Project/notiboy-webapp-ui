@@ -25,11 +25,12 @@ export default function PlanConfig(props: PlanConfigProps) {
             </Text>
             <Text fontSize={'md'}>${plan?.price} per month</Text>
           </Box>
-          {isActive ? (
+          {isActive && (
             <Text color={'green.400'} fontWeight={600}>
               Active
             </Text>
-          ) : (
+          )}
+          {!isActive && plan.key !== 'free' && (
             <Button
               onClick={() => onSwitchPlan(plan?.key)}
               colorScheme="teal"
@@ -69,7 +70,9 @@ export default function PlanConfig(props: PlanConfigProps) {
           >
             <span>Analytics</span>
             <Icon
-              fill={plan?.features?.optin_optout_analytics ? 'green.400' : 'red.400'}
+              fill={
+                plan?.features?.optin_optout_analytics ? 'green.400' : 'red.400'
+              }
               as={
                 plan?.features?.optin_optout_analytics
                   ? AiFillCheckCircle
