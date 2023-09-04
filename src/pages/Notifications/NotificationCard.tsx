@@ -20,12 +20,9 @@ function NotificationCard(props: NotificationCardProps) {
     window.open(notification.link, '_blank');
   };
 
-  const getLogo = (appId: string) => {
-    const logoBase64 = channels?.find((c) => c.app_id === appId)?.logo || '';
-
-    if (!logoBase64) return '';
-
-    return `data:image/png;base64, ${logoBase64}`;
+  const getLogo = (logo: string) => {
+    if (!logo) return '';
+    return `data:image/png;base64, ${logo}`;
   };
 
   const isChennelVerified = (appId: string) => {
@@ -43,7 +40,7 @@ function NotificationCard(props: NotificationCardProps) {
       <Box display={'flex'} alignItems={'center'}>
         <Avatar
           name={notification.channel_name}
-          src={getLogo(notification.app_id)}
+          src={getLogo(notification?.logo || '')}
           height={45}
           width={45}
         />
@@ -79,14 +76,6 @@ function NotificationCard(props: NotificationCardProps) {
         justifyContent={'flex-end'}
       >
         {moment(notification.created_time).format('LLL')}
-        {/* <Icon
-          h={6}
-          w={6}
-          as={BiCheckDouble}
-          ml={2}
-          mr={2}
-          fill={notification.seen ? 'blue.500' : 'geay.500'}
-        /> */}
       </Text>
     </CardLayout>
   );

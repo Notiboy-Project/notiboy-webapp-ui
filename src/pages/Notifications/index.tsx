@@ -12,7 +12,7 @@ import ResourcesUnavailable from '../../components/Layout/ResourceUnavailable';
 import { FaSyncAlt } from 'react-icons/fa';
 import { fetchOptedInChannels } from '../../services/channels.service';
 import {
-  REFRESH_NOTIFICATIONS  
+  REFRESH_NOTIFICATIONS
 } from '../../services/events.service';
 import { NotificationData } from './notification.types';
 import { pageSize } from '../../config';
@@ -74,17 +74,17 @@ export default function NotificationPage() {
   };
 
   React.useEffect(() => {
-    
+
     const broadcast = new BroadcastChannel('refresh-notifications');
 
     broadcast.onmessage = (event: MessageEvent) => {
       console.log("Broadcase Message recieved: ", event.data);
-      if(event.data === REFRESH_NOTIFICATIONS) {
+      if (event.data === REFRESH_NOTIFICATIONS) {
         onMessageRecieved()
-      }           
+      }
     }
     return () => {
-      console.log('Unsubscribe refresh notifications');      
+      console.log('Unsubscribe refresh notifications');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
