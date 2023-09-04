@@ -95,6 +95,7 @@ export default function OptInOutStatistics({
       optin: optin || [],
       optout: optout || []
     });
+    setShowChart(true);
   };
 
   const data = {

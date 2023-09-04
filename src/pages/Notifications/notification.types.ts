@@ -8,4 +8,5 @@ export interface NotificationData {
   uuid: string;
   kind: string;
   seen: boolean;
+  logo?: string
 }
