@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Text,
   Textarea,
   useToast
 } from '@chakra-ui/react';
@@ -37,12 +38,18 @@ export default function SendPage() {
   const [appId, setAppId] = useState('');
   const { user } = useContext(UserContext);
 
+  const allowedCharsCount = user?.privileges?.notification_char_count || 120
+
   const toast = useToast();
 
   const handleChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.currentTarget;
+
+    if (value.length > allowedCharsCount) {
+      return;
+    }
 
     setPayload({
       ...payload,
@@ -267,19 +274,25 @@ export default function SendPage() {
             {showCSVUpload && <CsvUploadInput onDataRecieved={hadleCsvData} />}
           </>
         )}
-
-        <Textarea
-          borderRadius={'xl'}
-          placeholder="Input a message *"
-          name="message"
-          mt={4}
-          value={payload?.message}
-          backgroundColor={'gray.800'}
-          rows={4}
-          onChange={handleChange}
-          p={4}
-          fontWeight={600}
-        />
+        <InputGroup>
+          <Textarea
+            borderRadius={'xl'}
+            placeholder="Input a message *"
+            name="message"
+            mt={4}
+            value={payload?.message}
+            backgroundColor={'gray.800'}
+            rows={4}
+            onChange={handleChange}
+            p={4}
+            fontWeight={600}
+          />
+          <InputRightElement top={-5} right={3}>
+            <Text fontSize={'xs'} color={'gray.400'}>
+              {`(${payload?.message?.length}/${allowedCharsCount})`}
+            </Text>
+          </InputRightElement>
+        </InputGroup>
         <InputGroup size="md">
           <Input
             placeholder="Upload a link"
