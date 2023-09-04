@@ -287,7 +287,7 @@ export default function SendPage() {
             p={4}
             fontWeight={600}
           />
-          <InputRightElement top={-5} right={3}>
+          <InputRightElement top={-3} right={3}>
             <Text fontSize={'xs'} color={'gray.400'}>
               {`(${payload?.message?.length}/${allowedCharsCount})`}
             </Text>
