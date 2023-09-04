@@ -274,28 +274,24 @@ export default function SendPage() {
             {showCSVUpload && <CsvUploadInput onDataRecieved={hadleCsvData} />}
           </>
         )}
-        <InputGroup>
-          <Textarea
-            borderRadius={'xl'}
-            placeholder="Input a message *"
-            name="message"
-            mt={4}
-            value={payload?.message}
-            backgroundColor={'gray.800'}
-            rows={4}
-            onChange={handleChange}
-            p={4}
-            fontWeight={600}
-          />
-          <InputRightElement top={-3} right={3}>
-            <Text fontSize={'xs'} color={'gray.400'}>
-              {`(${payload?.message?.length}/${allowedCharsCount})`}
-            </Text>
-          </InputRightElement>
-        </InputGroup>
+        <Textarea
+          borderRadius={'xl'}
+          placeholder="Input a message *"
+          name="message"
+          mt={4}
+          value={payload?.message}
+          backgroundColor={'gray.800'}
+          rows={4}
+          onChange={handleChange}
+          p={4}
+          fontWeight={600}
+        />
+        <Text textAlign={'right'} fontSize={'sm'} color={'gray.300'}>
+          {`${payload?.message?.length}/${allowedCharsCount}`}
+        </Text>
         <InputGroup size="md">
           <Input
-            placeholder="Upload a link"
+            placeholder="Enter a link"
             backgroundColor={'gray.800'}
             size={'lg'}
             borderRadius={'xl'}
