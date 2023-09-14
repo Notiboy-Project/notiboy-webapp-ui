@@ -27,7 +27,9 @@ export const envs = Object.freeze({
   walletConnectProjectId: process.env.REACT_APP_WC_PROJECT_ID,
   algorandNodeUrl: process.env.REACT_APP_ALGORAND_NODE_URL,
   algorandAssetIndex: process.env.REACT_APP_ALGORAND_ASSET_INDEX,
-  destinationAddress: process.env.REACT_APP_DESTINATION_ADDRESS
+  destinationAddress: process.env.REACT_APP_DESTINATION_ADDRESS,
+  xummApiKey: process.env.REACT_APP_XUMM_API_KEY,
+  xummApiSecret: process.env.REACT_APP_XUMM_API_SECRET,
 });
 
 export const pageSize = Object.freeze({

@@ -40,8 +40,8 @@ export enum ContextStatus {
 export const UserContext = React.createContext<UserContextTypes>({
   user: null,
   status: ContextStatus.INITIALIZING,
-  saveUsersData: () => {},
-  refetchUserInfo: () => {}
+  saveUsersData: () => { },
+  refetchUserInfo: () => { }
 });
 
 const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({

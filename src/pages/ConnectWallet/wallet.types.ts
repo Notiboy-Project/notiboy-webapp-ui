@@ -8,5 +8,5 @@ export interface Network {
 
 export enum NetworkType {
   ALGORAND = 'algorand',
-  ETHEREUM = 'ethereum'
+  XRPL = "xrpl",
 }
