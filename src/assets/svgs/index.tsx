@@ -24,6 +24,7 @@ export { ReactComponent as VerifyIcon } from './verify.svg'
 export { ReactComponent as StatisticsIcon } from './statistics-icon.svg'
 export { ReactComponent as ShuffleIcon } from './shuffle.svg'
 export { ReactComponent as XRPLIcon } from './xrp-icon.svg'
+export { ReactComponent as XummIcon } from './xumm-icon.svg'
 
 
 
