@@ -80,7 +80,7 @@ export default function XRPLWallets() {
       (event: any) => {
         // Return if signed or not signed (rejected)
         // setLastPayloadUpdate(JSON.stringify(event.data, null, 2))
-        console.log("event 27ln:", JSON.stringify(event.data, null, 2));
+        console.log("event 27ln:", JSON.stringify(event, null, 2));
         if (event.data.signed === true) {
           // Call the login function to get token
           loginToAppByXummWallet(event.data);
@@ -103,7 +103,8 @@ export default function XRPLWallets() {
       console.log({ transactionUrl });
 
       if (transactionUrl) {
-        setSignTransactionUrl(transactionUrl)
+        window.open(transactionUrl, "mozillaWindow", "popup")
+        // setSignTransactionUrl(transactionUrl, "mozillaWindow", "popup")
       }
 
       if (xumm.runtime.xapp) {
@@ -158,8 +159,9 @@ export default function XRPLWallets() {
       </Box>
       <Box mt={4}>
         <Button
+          size='lg'
+          width={{ base: '100%', sm: '100%', md: '50%', xl: '60%' }}
           bgColor={"blue.500"}
-          width={"80%"}
           onClick={handleAuthorizeXumm}
         >
           <Icon as={XummIcon} h={45} w={75} />
