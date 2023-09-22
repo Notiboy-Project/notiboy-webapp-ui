@@ -14,6 +14,7 @@ export const storeAddressToStorage = (addr: string) => {
 
 export const removeTokenFromStorage = () => {
   localStorage.removeItem(storageKey.ACCESS_TOKEN_KEY);
+  localStorage.removeItem(storageKey.XUMM_DATA_KEY);
 };
 
 export const removeUserAddressFromStorage = () => {
