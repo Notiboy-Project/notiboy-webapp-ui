@@ -21,7 +21,7 @@ import { AlgorandIcon } from '../../assets/svgs';
 import { NetworkType } from './wallet.types';
 import { convertJSTOBase64 } from '../../services/algorand.service';
 import { loginToApp } from '../../services/api.service';
-import { storeTokenToStorage } from '../../services/storage.service';
+import { storeAddressToStorage, storeTokenToStorage } from '../../services/storage.service';
 import { fetchUserInfo } from '../../services/users.service';
 import { UserContext } from '../../Context/userContext';
 import SectionLoading from '../../components/Layout/SectionLoading';
@@ -114,11 +114,13 @@ export default function AlgorandWallets() {
         NetworkType.ALGORAND,
         address
       );
+
       // console.log('response base64 login ==>', response);
 
       // storetoken into localstorag
       const { data } = response.data;
       if (data?.token) {
+        storeAddressToStorage(address)
         storeTokenToStorage(data.token);
         // TODO: get logged in users information
         const resp = await fetchUserInfo(NetworkType.ALGORAND || '', address);

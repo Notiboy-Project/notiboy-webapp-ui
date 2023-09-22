@@ -2,29 +2,27 @@ import { Button } from "@chakra-ui/button";
 import { Icon } from "@chakra-ui/icon";
 import { Box, Link, Text } from "@chakra-ui/layout";
 import { XRPLIcon, XummIcon } from "../../assets/svgs";
-import { Xumm } from "xumm";
-import { envs, routes } from "../../config";
+import { routes } from "../../config";
 import { useContext, useState } from "react";
 import AuthenticateSignedTransaction from "./AuthenticateModal";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { convertJSTOBase64 } from "../../services/algorand.service";
 import { loginToApp } from "../../services/api.service";
 import { NetworkType } from "./wallet.types";
-import { storeTokenToStorage } from "../../services/storage.service";
+import { storeAddressToStorage, storeTokenToStorage } from "../../services/storage.service";
 import { fetchUserInfo } from "../../services/users.service";
 import { UserContext } from "../../Context/userContext";
 import { useNavigate } from "react-router";
 import { useToast } from "@chakra-ui/toast";
 import SectionLoading from "../../components/Layout/SectionLoading";
+import xummService from "../../services/xumm.service";
 
-const xumm = new Xumm(envs.xummApiKey || "");
-
-xumm.on("ready", () => console.log("XRPL networl Ready.."));
+const { xumm } = xummService;
 
 export default function XRPLWallets() {
   const [account, setAccount] = useState<string>();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [isTransactionSigning, setIsTransactionSigning] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const [signTransactionUrl, setSignTransactionUrl] = useState("");
   const { saveUsersData } = useContext(UserContext);
   const navigate = useNavigate();
@@ -33,26 +31,40 @@ export default function XRPLWallets() {
   const handleCloseModal = () => {
     onClose();
     setSignTransactionUrl("");
-    setIsTransactionSigning(false);
+    setIsSigningIn(false);
   };
 
-  const loginToAppByXummWallet = async (transaction: any) => {
+  const getJWTTokenFromStorage = () => {
+    const localData = localStorage.getItem('XummPkceJwt')
+    try {
+      const data = JSON.parse(localData || '');
+      return data?.jwt || null
+    } catch (e) {
+      console.log("Error while parsing xumm local storage data:: ", e);
+      return null
+    }
+  }
+
+  const loginToAppByXummWallet = async () => {
     console.log("Calling loginToAppByXummWallet::");
     try {
-      const base64Str = convertJSTOBase64(transaction);
-      console.log({ base64Str });
+      onClose();
+      setIsSigningIn(true)
+      const jwtToken = getJWTTokenFromStorage()
+      const base64Str = convertJSTOBase64(jwtToken);
       const response = await loginToApp(
         base64Str,
         NetworkType.XRPL,
         account || ""
       );
-      console.log({ response });
       // storetoken into localstorag
       const { data } = response.data;
       if (data?.token) {
+        storeAddressToStorage(account || '')
         storeTokenToStorage(data.token);
         // TODO: get logged in users information
         const resp = await fetchUserInfo(NetworkType.XRPL || "", account || "");
+        console.log("resp.data::", resp.data)
         saveUsersData(resp.data);
         navigate(routes.notifications);
       } else {
@@ -65,68 +77,71 @@ export default function XRPLWallets() {
       }
     } catch (error) {
       console.log("Error while login into app:: XRPL", error);
-    }
-  };
-
-  const signTransaction = async () => {
-    onClose();
-    setIsTransactionSigning(true);
-    const payload = await xumm.payload?.createAndSubscribe(
-      {
-        TransactionType: "SignIn",
-        Destination: account,
-        Fee: String(12),
-      },
-      (event: any) => {
-        // Return if signed or not signed (rejected)
-        // setLastPayloadUpdate(JSON.stringify(event.data, null, 2))
-        console.log("event 27ln:", JSON.stringify(event, null, 2));
-        if (event.data.signed === true) {
-          // Call the login function to get token
-          loginToAppByXummWallet(event.data);
-        }
-        // Only return (websocket will live till non void)
-        if (Object.keys(event.data).indexOf("signed") > -1) {
-          return true;
-        }
-      }
-    );
-    setIsTransactionSigning(false);
-
-    console.log("Payload", payload);
-
-    if (payload) {
-      // setPayloadUuid(payload.created.uuid)
-      const transactionUrl =
-        payload?.created?.next?.no_push_msg_received || "";
-      // console.log("payload.created.uuid", payload.created.uuid);
-      console.log({ transactionUrl });
-
-      if (transactionUrl) {
-        window.open(transactionUrl, "mozillaWindow", "popup")
-        // setSignTransactionUrl(transactionUrl, "mozillaWindow", "popup")
-      }
-
-      if (xumm.runtime.xapp) {
-        xumm.xapp?.openSignRequest(payload.created);
-      } else {
-        if (
-          payload.created.pushed &&
-          payload.created.next?.no_push_msg_received
-        ) {
-          // setOpenPayloadUrl(payload.created.next.no_push_msg_received)
-          console.log(
-            "payload.created.next.no_push_msg_received",
-            payload.created.next.no_push_msg_received
-          );
-        } else {
-          window.open(payload.created.next.always);
-        }
-      }
+    } finally {
+      setIsSigningIn(false)
     }
 
-    return payload;
   };
+
+  // const signTransaction = async () => {
+  //   onClose();
+  //   setIsTransactionSigning(true);
+  //   const payload = await xumm.payload?.createAndSubscribe(
+  //     {
+  //       TransactionType: "SignIn",
+  //       Destination: account,
+  //       Fee: String(12),
+  //     },
+  //     (event: any) => {
+  //       // Return if signed or not signed (rejected)
+  //       // setLastPayloadUpdate(JSON.stringify(event.data, null, 2))
+  //       console.log("event 27ln:", JSON.stringify(event, null, 2));
+  //       if (event.data.signed === true) {
+  //         // Call the login function to get token
+  //         loginToAppByXummWallet(event.data);
+  //       }
+  //       // Only return (websocket will live till non void)
+  //       if (Object.keys(event.data).indexOf("signed") > -1) {
+  //         return true;
+  //       }
+  //     }
+  //   );
+  //   setIsTransactionSigning(false);
+
+  //   console.log("Payload", payload);
+
+  //   if (payload) {
+  //     // setPayloadUuid(payload.created.uuid)
+  //     const transactionUrl =
+  //       payload?.created?.next?.no_push_msg_received || "";
+  //     // console.log("payload.created.uuid", payload.created.uuid);
+  //     console.log({ transactionUrl });
+
+  //     if (transactionUrl) {
+  //       window.open(transactionUrl, "mozillaWindow", "popup")
+  //       // setSignTransactionUrl(transactionUrl, "mozillaWindow", "popup")
+  //     }
+
+  //     if (xumm.runtime.xapp) {
+  //       xumm.xapp?.openSignRequest(payload.created);
+  //     } else {
+  //       if (
+  //         payload.created.pushed &&
+  //         payload.created.next?.no_push_msg_received
+  //       ) {
+  //         // setOpenPayloadUrl(payload.created.next.no_push_msg_received)
+  //         console.log(
+  //           "payload.created.next.no_push_msg_received",
+  //           payload.created.next.no_push_msg_received
+  //         );
+  //       } else {
+  //         window.open(payload.created.next.always);
+  //       }
+  //     }
+  //   }
+
+  //   return payload;
+  // };
 
   const handleAuthorizeXumm = () => {
     xumm.authorize();
@@ -150,7 +165,7 @@ export default function XRPLWallets() {
 
   return (
     <Box width={"100%"} textAlign={"center"} position={'relative'}>
-      {isTransactionSigning && <SectionLoading />}
+      {isSigningIn && <SectionLoading />}
       <Box display={"grid"} placeItems={"center"}>
         <Icon mt={2} fill="blue.400" h={50} w={50} as={XRPLIcon} />
         <Text mt={2} fontWeight={500}>
@@ -180,7 +195,7 @@ export default function XRPLWallets() {
       <AuthenticateSignedTransaction
         isOpen={isOpen}
         onClose={handleCloseModal}
-        onSignedTransaction={signTransaction}
+        onSignedTransaction={loginToAppByXummWallet}
       />
     </Box>
   );
