@@ -1,11 +1,9 @@
 import { Button } from "@chakra-ui/button";
 import { Icon } from "@chakra-ui/icon";
-import { Box, Link, Text } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/layout";
 import { XRPLIcon, XummIcon } from "../../assets/svgs";
-import { routes } from "../../config";
+import { routes, storageKey } from "../../config";
 import { useContext, useState } from "react";
-import AuthenticateSignedTransaction from "./AuthenticateModal";
-import { useDisclosure } from "@chakra-ui/hooks";
 import { convertJSTOBase64 } from "../../services/algorand.service";
 import { loginToApp } from "../../services/api.service";
 import { NetworkType } from "./wallet.types";
@@ -20,22 +18,13 @@ import xummService from "../../services/xumm.service";
 const { xumm } = xummService;
 
 export default function XRPLWallets() {
-  const [account, setAccount] = useState<string>();
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [signTransactionUrl, setSignTransactionUrl] = useState("");
   const { saveUsersData } = useContext(UserContext);
   const navigate = useNavigate();
   const toast = useToast();
 
-  const handleCloseModal = () => {
-    onClose();
-    setSignTransactionUrl("");
-    setIsSigningIn(false);
-  };
-
   const getJWTTokenFromStorage = () => {
-    const localData = localStorage.getItem('XummPkceJwt')
+    const localData = localStorage.getItem(storageKey.XUMM_DATA_KEY)
     try {
       const data = JSON.parse(localData || '');
       return data?.jwt || null
@@ -45,25 +34,24 @@ export default function XRPLWallets() {
     }
   }
 
-  const loginToAppByXummWallet = async () => {
+  const loginToAppByXummWallet = async (walletAddress: string) => {
     console.log("Calling loginToAppByXummWallet::");
     try {
-      onClose();
       setIsSigningIn(true)
       const jwtToken = getJWTTokenFromStorage()
       const base64Str = convertJSTOBase64(jwtToken);
       const response = await loginToApp(
         base64Str,
         NetworkType.XRPL,
-        account || ""
+        walletAddress || ""
       );
       // storetoken into localstorag
       const { data } = response.data;
       if (data?.token) {
-        storeAddressToStorage(account || '')
+        storeAddressToStorage(walletAddress || '')
         storeTokenToStorage(data.token);
         // TODO: get logged in users information
-        const resp = await fetchUserInfo(NetworkType.XRPL || "", account || "");
+        const resp = await fetchUserInfo(NetworkType.XRPL || "", walletAddress || "");
         console.log("resp.data::", resp.data)
         saveUsersData(resp.data);
         navigate(routes.notifications);
@@ -150,8 +138,7 @@ export default function XRPLWallets() {
       console.log("XRPL authorized successfully::");
       xumm.user.account.then((account) => {
         console.log({ account });
-        setAccount(account);
-        onOpen();
+        loginToAppByXummWallet(account || '')
         // Do Login process and redirect to notifications
       });
     });
@@ -182,21 +169,11 @@ export default function XRPLWallets() {
           <Icon as={XummIcon} h={45} w={75} />
         </Button>
       </Box>
-      <Box p={2}>
-        {signTransactionUrl && (
-          <Text>
-            Please follow this link to&nbsp;
-            <Link color="teal.500" href={signTransactionUrl} target="_blank">
-              Sign transaction.
-            </Link>
-          </Text>
-        )}
-      </Box>
-      <AuthenticateSignedTransaction
+      {/* <AuthenticateSignedTransaction
         isOpen={isOpen}
         onClose={handleCloseModal}
-        onSignedTransaction={loginToAppByXummWallet}
-      />
+        onSignedTransaction={() => { }}
+      /> */}
     </Box>
   );
 }

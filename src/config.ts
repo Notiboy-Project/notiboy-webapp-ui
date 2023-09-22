@@ -31,7 +31,6 @@ export const envs = Object.freeze({
   algorandAssetIndex: process.env.REACT_APP_ALGORAND_ASSET_INDEX,
   destinationAddress: process.env.REACT_APP_DESTINATION_ADDRESS,
   xummApiKey: process.env.REACT_APP_XUMM_API_KEY,
-  xummApiSecret: process.env.REACT_APP_XUMM_API_SECRET,
 });
 
 export const pageSize = Object.freeze({
