@@ -21,11 +21,8 @@ export default function Logout() {
     removeTokenFromStorage();
     removeUserAddressFromStorage();
 
-    debugger;
-
     if (status === 'active') {
       providers?.forEach((wallet) => { wallet?.disconnect() });
-      removeTokenFromStorage();
       removeCurrentUser();
     }
 
