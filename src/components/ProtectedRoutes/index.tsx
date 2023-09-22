@@ -9,7 +9,7 @@ import { getTokenFromStorage } from '../../services/storage.service';
 const PrivateRoute: React.FC<any> = (): React.ReactElement => {
   // TODO: Check if the wallet has connected or not
   // instead of localstorage
-  const { activeAccount, status } = useWallet();
+  const { status } = useWallet();
 
   const accessToken = getTokenFromStorage();
 
@@ -22,7 +22,7 @@ const PrivateRoute: React.FC<any> = (): React.ReactElement => {
     );
   }
 
-  if (activeAccount?.address && status === 'active' && accessToken) {
+  if (accessToken?.trim()) {
     return (
       <ProtectedLayout>
         <Outlet />

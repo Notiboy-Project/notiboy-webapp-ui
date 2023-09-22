@@ -7,13 +7,11 @@ import { PROVIDER_ID, useWallet } from '@txnlab/use-wallet';
 
 interface NetworkWalletListsProps {
   networkType: NetworkType;
-  onBackClick: () => void;
 }
 
 export default function NetworkWalletLists(props: NetworkWalletListsProps) {
-  const { onBackClick } = props;
   const { providers } = useWallet();
-  
+
   const getBg = (name: string) => {
     switch (name) {
       case 'MyAlgo':
@@ -67,13 +65,6 @@ export default function NetworkWalletLists(props: NetworkWalletListsProps) {
             </React.Fragment>
           ))}
         </Box>
-        <Text as="small" p={5}>
-          By connecting the wallet, you agree to terms & conditions and privacy
-          policy.
-        </Text>
-        <Button onClick={onBackClick}>
-          <Icon as={FaArrowLeft}></Icon>
-        </Button>
       </Box>
     </>
   );

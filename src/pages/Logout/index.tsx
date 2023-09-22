@@ -5,8 +5,10 @@ import { useCallback, useEffect } from 'react';
 import { routes } from '../../config';
 import {
   removeCurrentUser,
-  removeTokenFromStorage
+  removeTokenFromStorage,
+  removeUserAddressFromStorage
 } from '../../services/storage.service';
+import xummService from '../../services/xumm.service';
 import { useNavigate } from 'react-router-dom';
 
 export default function Logout() {
@@ -15,31 +17,31 @@ export default function Logout() {
   const navigate = useNavigate();
 
   const handleLogout = useCallback(async () => {
-    if (status === 'disconnected') {
-      removeTokenFromStorage();
-      removeCurrentUser();
-      navigate(routes.connectWallet, { replace: true });
-      return;
-    }
+    removeCurrentUser();
+    removeTokenFromStorage();
+    removeUserAddressFromStorage();
+
+    debugger;
 
     if (status === 'active') {
-      const connectedWallet = providers?.find((wallet) => wallet.isConnected);
+      providers?.forEach((wallet) => { wallet?.disconnect() });
       removeTokenFromStorage();
       removeCurrentUser();
-
-      if (connectedWallet) {
-        await connectedWallet?.disconnect();
-        toast({
-          description: 'Logged out !',
-          status: 'info',
-          duration: 1500,
-          isClosable: true,
-          position: 'top',
-          id: 'logout'
-        });
-        navigate(routes.connectWallet, { replace: true });
-      }
     }
+
+    if (xummService.logout) {
+      xummService?.logout();
+    }
+
+    toast({
+      description: 'Logged out !',
+      status: 'info',
+      duration: 1500,
+      isClosable: true,
+      position: 'top',
+      id: 'logout'
+    });
+    navigate(routes.connectWallet, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [providers, status]);
 
