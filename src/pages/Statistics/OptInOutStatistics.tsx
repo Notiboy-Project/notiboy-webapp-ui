@@ -74,6 +74,10 @@ export default function OptInOutStatistics({
     fetchOptInOutStats,
     {
       revalidateOnFocus: false,
+      fallbackData: {
+        optinOut: [],
+        totalUsers: 0,
+      },
     }
   );
 
@@ -144,7 +148,9 @@ export default function OptInOutStatistics({
         />
         <Text>Opted-out</Text>
       </Flex>
-      <Text my={2} as={'p'} textAlign={'center'}>Users ({stats?.totalUsers})</Text>
+      <Text my={2} as={"p"} textAlign={"center"}>
+        Users ({stats?.totalUsers || 0})
+      </Text>
       <Flex minHeight={300} alignItems={"center"} justifyContent={"center"}>
         <Line
           options={options}
