@@ -71,7 +71,7 @@ export default function PaymentHistory({ data }: PaymentHistoryProps) {
                 </Text>
               </Flex>
               <Text fontWeight={600} color={'green.400'} fontSize={'xl'}>
-                ${ph.paid_amount}
+                ${ph?.paid_amount.toFixed(2)}
               </Text>
             </Flex>
           </CardLayout>
