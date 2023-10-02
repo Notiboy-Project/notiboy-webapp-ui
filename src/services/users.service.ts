@@ -6,6 +6,7 @@ import {
   UsersPatFetcher,
   updateMediumPayload
 } from './services.types';
+import { NetworkType } from '../pages/ConnectWallet/wallet.types';
 
 export const fetchUserInfo = async (chain: string, address: string) => {
   const resp = await api.get(apiURL.getUserInfoUrl(chain, address));
@@ -91,8 +92,16 @@ export const addBalance = async (
   address: string,
   signed_txn: string
 ) => {
+  let payload;
+  if (chain === NetworkType.XRPL) {
+    payload = { txn_id: signed_txn };
+  }
+  if (chain === NetworkType.ALGORAND) {
+    payload = { signed_txn };
+  }
+
   const resp = await api.post(apiURL.addFundURL(chain, address), {
-    signed_txn
+    ...payload,
   });
   return resp?.data;
 };
