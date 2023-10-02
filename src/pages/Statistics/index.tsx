@@ -37,54 +37,52 @@ export default function StatisticsPage() {
   };
 
   return (
-    <Box>
-      <Box mt={5}>
-        <Box width={'100%'} margin={'0 auto'} maxHeight={'550px'} css={pageCss}>
-          <Swiper
-            pagination={pagination}
-            modules={[Pagination, Navigation]}
-            loop={true}
-            navigation={true}
-            className="mySwiper"
-            onSlideChange={({ activeIndex }) => setActiveIndex(activeIndex)}
-          >
-            <SwiperSlide>
-              <OptInOutStatistics activeIndex={activeSwipIndex} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <GeneralStatisticsChart data={globalStats?.data || []} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <UsersStatistics activeIndex={activeSwipIndex} />
-            </SwiperSlide>
-            <SwiperSlide>
-              <ChannelsStatistics activeIndex={activeSwipIndex} />
-            </SwiperSlide>
-          </Swiper>
-        </Box>
-        <Flex mt={5} justifyContent={'center'} display={'none'}>
-          <>
-            <Button
-              rounded={'full'}
-              display={currentChart === ChartType.LINE_CHART ? 'none' : 'flex'}
-              onClick={() => setCurrentChart(ChartType.LINE_CHART)}
-              size={'lg'}
-              padding={'15px'}
-            >
-              <Icon as={AiOutlineLeftCircle} h={30} w={25} fill="blue.400" />
-            </Button>
-            <Button
-              rounded={'full'}
-              display={currentChart === ChartType.PIE_CHART ? 'none' : 'flex'}
-              onClick={() => setCurrentChart(ChartType.PIE_CHART)}
-              size={'lg'}
-              padding={'15px'}
-            >
-              <Icon as={AiOutlineRightCircle} h={30} w={25} fill="blue.400" />
-            </Button>
-          </>
-        </Flex>
+    <Box mt={5}>
+      <Box width={'100%'} margin={'0 auto'} height={'550px'} css={pageCss}>
+        <Swiper
+          pagination={pagination}
+          modules={[Pagination, Navigation]}
+          loop={true}
+          navigation={true}
+          className="mySwiper"
+          onSlideChange={({ activeIndex }) => setActiveIndex(activeIndex)}
+        >
+          <SwiperSlide>
+            <OptInOutStatistics activeIndex={activeSwipIndex} />
+          </SwiperSlide>
+          <SwiperSlide>
+            <GeneralStatisticsChart data={globalStats?.data || []} />
+          </SwiperSlide>
+          <SwiperSlide>
+            <UsersStatistics activeIndex={activeSwipIndex} />
+          </SwiperSlide>
+          <SwiperSlide>
+            <ChannelsStatistics activeIndex={activeSwipIndex} />
+          </SwiperSlide>
+        </Swiper>
       </Box>
+      <Flex mt={5} justifyContent={'center'} display={'none'}>
+        <>
+          <Button
+            rounded={'full'}
+            display={currentChart === ChartType.LINE_CHART ? 'none' : 'flex'}
+            onClick={() => setCurrentChart(ChartType.LINE_CHART)}
+            size={'lg'}
+            padding={'15px'}
+          >
+            <Icon as={AiOutlineLeftCircle} h={30} w={25} fill="blue.400" />
+          </Button>
+          <Button
+            rounded={'full'}
+            display={currentChart === ChartType.PIE_CHART ? 'none' : 'flex'}
+            onClick={() => setCurrentChart(ChartType.PIE_CHART)}
+            size={'lg'}
+            padding={'15px'}
+          >
+            <Icon as={AiOutlineRightCircle} h={30} w={25} fill="blue.400" />
+          </Button>
+        </>
+      </Flex>
     </Box>
   );
 }
