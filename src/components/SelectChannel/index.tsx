@@ -56,7 +56,11 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
         {selectedChannel}
       </MenuButton>
       <MenuList borderRadius={'3xl'} p={3}>
-        {data?.length === 0 && <MenuItem disabled>No channels found!</MenuItem>}
+        {data?.length === 0 && (
+          <MenuItem borderRadius={'2xl'} disabled>
+            No channels found!
+          </MenuItem>
+        )}
         {(data || []).map((channel) => {
           const isDisabled = channel.status !== 'ACTIVE';
           return (

@@ -131,6 +131,9 @@ export default function OptInOutStatistics({
       <Flex justifyContent={"end"} width={"fit-content"}>
         <SelectChannel onChannelSelect={setCurrentChannel} />
       </Flex>
+      <Text my={2} as={"p"} textAlign={"center"}>
+        Current Users: <b>{stats?.totalUsers || 0}</b>
+      </Text>
       <Flex mt={5} justifyContent={"center"} alignItems={"center"} mb={3}>
         <Box
           borderRadius={"full"}
@@ -149,15 +152,12 @@ export default function OptInOutStatistics({
         />
         <Text>Opted-out</Text>
       </Flex>
-      <Text my={2} as={"p"} textAlign={"center"}>
-        Users ({stats?.totalUsers || 0})
-      </Text>
       <Flex minHeight={300} alignItems={"center"} justifyContent={"center"}>
         <Line
           options={options}
           data={data}
           updateMode="resize"
-          style={{ minHeight: "275px" }}
+          style={{ minHeight: "275px", maxHeight: '550px' }}
         />
         {!showChart && (
           <Text position={"absolute"}>Chart data not yet available !</Text>
