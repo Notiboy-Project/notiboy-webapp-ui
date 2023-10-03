@@ -1,7 +1,9 @@
 export const storageKey = {
   ACCESS_TOKEN_KEY: 'access_token',
   WALLET_ADDRESS_KEY: 'txnlab-use-wallet',
-  USER_DATA_KEY: 'current-user'
+  USER_DATA_KEY: 'current-user',
+  XUMM_DATA_KEY: 'XummPkceJwt',
+  X_USER_ADDRESS: 'X-USER-ADDRESS'
 };
 
 export const routes = Object.freeze({
@@ -27,7 +29,9 @@ export const envs = Object.freeze({
   walletConnectProjectId: process.env.REACT_APP_WC_PROJECT_ID,
   algorandNodeUrl: process.env.REACT_APP_ALGORAND_NODE_URL,
   algorandAssetIndex: process.env.REACT_APP_ALGORAND_ASSET_INDEX,
-  destinationAddress: process.env.REACT_APP_DESTINATION_ADDRESS
+  destinationAddress: process.env.REACT_APP_DESTINATION_ADDRESS,
+  xummApiKey: process.env.REACT_APP_XUMM_API_KEY,
+  xrplDestinationAddress: process.env.REACT_APP_XRPL_DESTINATION_ADDRESS
 });
 
 export const pageSize = Object.freeze({

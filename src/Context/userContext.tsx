@@ -23,6 +23,15 @@ export type UserDto = {
     };
   }
   supported_mediums: string[];
+  privileges: {
+    channel_count: number
+    channel_read_sent_analytics: boolean
+    charge: number
+    notification_char_count: number
+    notification_count: number
+    notification_retention: number
+    optin_optout_analytics: boolean
+  }
 };
 
 export type UserContextTypes = {
@@ -40,8 +49,8 @@ export enum ContextStatus {
 export const UserContext = React.createContext<UserContextTypes>({
   user: null,
   status: ContextStatus.INITIALIZING,
-  saveUsersData: () => {},
-  refetchUserInfo: () => {}
+  saveUsersData: () => { },
+  refetchUserInfo: () => { }
 });
 
 const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({

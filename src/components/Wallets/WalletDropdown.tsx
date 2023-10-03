@@ -9,22 +9,24 @@ import {
   useDisclosure,
   useToast
 } from '@chakra-ui/react';
-import { useWallet } from '@txnlab/use-wallet';
 import { BiCopy, BiLogOut } from 'react-icons/bi';
 import { FaCaretDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../config';
 import { CgQr } from 'react-icons/cg';
 import QRCodeGenerator from './QrCodeGenerte';
+import { useContext } from 'react';
+import { UserContext } from '../../Context/userContext';
 
 export default function WalletDropdown() {
-  const { activeAccount } = useWallet();
+  const { user } = useContext(UserContext)
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const walletAddress = user?.address || ''
 
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText(activeAccount?.address || '');
+    navigator.clipboard.writeText(walletAddress || '');
     toast({
       description: 'Address copied to clipboard!',
       status: 'info',
@@ -42,8 +44,8 @@ export default function WalletDropdown() {
     onOpen();
   };
 
-  const truncatedAddress = `${activeAccount?.address.slice(0, 4)}...
-  ${activeAccount?.address?.slice(-3)}`;
+  const truncatedAddress = `${walletAddress.slice(0, 4)}...
+  ${walletAddress?.slice(-3)}`;
 
   return (
     <>
@@ -76,7 +78,7 @@ export default function WalletDropdown() {
               wordBreak={'break-all'}
               textOverflow={'ellipsis'}
             >
-              {activeAccount?.address.slice(0, 25)}...
+              {walletAddress.slice(0, 25)}...
             </Text>
             <Icon ml={2} as={BiCopy} h={6} w={6} />
           </MenuItem>
