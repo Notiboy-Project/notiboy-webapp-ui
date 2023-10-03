@@ -68,7 +68,7 @@ export default function GeneralStatisticsChart({
         />
         <Text>Channels ({totalCounts?.[2] || 0})</Text>
       </Flex>
-      <Pie data={pieData} style={{ margin: '0 auto', maxHeight: '450px' }} />
+      <Pie data={pieData} style={{ margin: '0 auto', maxHeight: '450px', minHeight: '350px' }} />
       <Text fontWeight={600} textAlign={'center'} mt={4}>
         Notiboy Traffic
       </Text>

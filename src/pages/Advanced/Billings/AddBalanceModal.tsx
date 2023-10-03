@@ -11,7 +11,8 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
-  InputLeftAddon
+  InputLeftAddon,
+  Text
 } from '@chakra-ui/react';
 import algosdk from 'algosdk';
 import { useContext, useState } from 'react';
@@ -239,6 +240,8 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
             />
             <InputRightAddon children={getCurrencyName()} />
           </InputGroup>
+          <Text as='small'><i>Min: 1 USD</i> </Text>
+
           <Flex justifyContent={'flex-end'} gap={3} mt={5}>
             <Button
               onClick={handleClose}

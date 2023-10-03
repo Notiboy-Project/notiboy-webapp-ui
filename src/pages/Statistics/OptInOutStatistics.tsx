@@ -157,7 +157,7 @@ export default function OptInOutStatistics({
           options={options}
           data={data}
           updateMode="resize"
-          style={{ minHeight: "275px", maxHeight: '550px' }}
+          style={{ maxHeight: '450px', minHeight: '350px' }}
         />
         {!showChart && (
           <Text position={"absolute"}>Chart data not yet available !</Text>
