@@ -16,9 +16,9 @@ live-tr:
 live-tbr: live-build live-tr
 
 stage-build:
-	@sudo docker build -t localhost:32000/notiboy:stage -f build/Dockerfile.stage .
+	@docker build -t localhost:32000/notiboy:stage -f build/Dockerfile.stage .
 	@echo "Built image localhost:32000/notiboy:stage"
-	@sudo docker push localhost:32000/notiboy:stage
+	@docker push localhost:32000/notiboy:stage
 	@echo "Pushed image localhost:32000/notiboy:stage"
 
 
