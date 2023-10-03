@@ -143,7 +143,7 @@ export default function UsersStatistics({
           options={options}
           data={data}
           updateMode="resize"
-          style={{ maxHeight: '500px' }}
+          style={{ maxHeight: '500px', minHeight: '350px' }}
         />
         {!showChart && (
           <Text position={'absolute'}>Chart data not yet available !</Text>
