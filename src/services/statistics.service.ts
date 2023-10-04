@@ -57,7 +57,7 @@ export const fethcChannelsStats: Fetcher<{
 };
 
 export const fetchOptInOutStats: Fetcher<{
-  optinOut: optinOutStatsDto[]; totalUsers: number;
+  optInOut: optinOutStatsDto[]; totalUsers: number;
 }> = async (args: string) => {
   const [chain, channel] = args.split('/');
   const resp = await api.get(apiURL.getOptinOutStatUrl(chain, channel));
