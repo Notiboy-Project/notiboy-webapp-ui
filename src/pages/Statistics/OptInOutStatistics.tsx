@@ -75,14 +75,14 @@ export default function OptInOutStatistics({
     {
       revalidateOnFocus: false,
       fallbackData: {
-        optinOut: [],
+        optInOut: [],
         totalUsers: 0,
       },
     }
   );
 
-  const formatAndSetData = (optinOut: optinOutStatsDto[]) => {
-    if (optinOut.length < 3) {
+  const formatAndSetData = (optInOut: optinOutStatsDto[]) => {
+    if (optInOut.length < 3) {
       setShowChart(false);
       setDataSet({
         labels: [],
@@ -92,9 +92,9 @@ export default function OptInOutStatistics({
       return;
     }
 
-    const optout: number[] = optinOut.map((c) => c.optout);
-    const optin: number[] = optinOut.map((c) => c.optin);
-    const _date: string[] = optinOut.map((c) => c.date);
+    const optout: number[] = optInOut.map((c) => c.optout);
+    const optin: number[] = optInOut.map((c) => c.optin);
+    const _date: string[] = optInOut.map((c) => c.date);
 
     setDataSet({
       labels: _date || [],
@@ -123,7 +123,7 @@ export default function OptInOutStatistics({
   };
 
   useEffect(() => {
-    formatAndSetData(stats?.optinOut || []);
+    formatAndSetData(stats?.optInOut || []);
   }, [stats, activeIndex]);
 
   return (
