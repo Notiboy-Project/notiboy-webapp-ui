@@ -17,6 +17,7 @@ import React, { useState } from 'react';
 import { createChannel, updateChannel } from '../../services/channels.service';
 import { UserContext } from '../../Context/userContext';
 import { ChannelsDto } from '../../services/services.types';
+import RenameChannelInfo from './RenameChannelInfo';
 
 interface CreateChannelModalProps {
   isOpen: boolean;
@@ -37,6 +38,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     description: channel?.description || '',
     logo: channel?.logo || null
   });
+  const [showRenameModel, setShowRenameModel] = useState(false);
   const toast = useToast();
   const { refetchUserInfo, user } = React.useContext(UserContext);
 
@@ -93,7 +95,17 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     return isValid;
   };
 
-  const handleCreateChannel = async () => {
+  const checkRenameStat = () => {
+    if (channel?.app_id && channel?.name !== payload?.name) {
+      // TODO: Show rename model
+      setShowRenameModel(true);
+      return;
+    }
+    handleUpsertChannel();
+  };
+
+  const handleUpsertChannel = async () => {
+    setShowRenameModel(false);
     // TODO: Check validation before creating a new channel
     const isValid = isPayloadValid();
     if (!isValid) {
@@ -107,7 +119,8 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
         // TODO: update channel
         resp = await updateChannel(user?.chain || '', channel?.app_id, {
           logo: payload?.logo || null,
-          description: payload?.description
+          description: payload?.description,
+          name: payload?.name
         });
       } else {
         resp = await createChannel(user?.chain || '', payload);
@@ -128,7 +141,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     } catch (err: any) {
       const { message = '' } = err?.response?.data || {};
       toast({
-        description: message || 'Servie looks down ! please try again later.',
+        description: message || 'Service looks down ! please try again later.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -180,7 +193,6 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
               mt={5}
               onChange={handleChange}
               value={payload.name}
-              disabled={!!channel}
               name="name"
               borderRadius={'2xl'}
               background={'gray.800'}
@@ -205,7 +217,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
             backgroundColor="blue.600"
             mr={3}
             isLoading={submitting}
-            onClick={handleCreateChannel}
+            onClick={checkRenameStat}
             borderRadius={'3xl'}
             size={'lg'}
           >
@@ -213,6 +225,11 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
           </Button>
         </ModalFooter>
       </ModalContent>
+      <RenameChannelInfo
+        show={showRenameModel}
+        onCancel={() => setShowRenameModel(false)}
+        onContinue={handleUpsertChannel}
+      />
     </Modal>
   );
 }

@@ -34,7 +34,7 @@ export const createChannel = async (
 export const updateChannel = async (
   chain: string,
   appId: string,
-  payload: { logo: string | null; description: string }
+  payload: { logo: string | null; description: string, name: string }
 ) => {
   const resp = await api.put(apiURL.updateChannelUrl(chain, appId), payload);
   return resp.data;
