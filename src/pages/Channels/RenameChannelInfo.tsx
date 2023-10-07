@@ -26,8 +26,8 @@ export default function RenameChannelInfo(props: RenameChannelInfoI) {
         <ModalCloseButton />
         <ModalBody>
           <Text>
-            After modifying the verified channel's name, you'll have to undergo
-            the re-verification process.
+            Renaming will change your channel status to unverified. Contact
+            support to reverify.
           </Text>
         </ModalBody>
         <ModalFooter>
