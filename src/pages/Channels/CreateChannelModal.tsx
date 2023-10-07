@@ -116,20 +116,16 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
 
       setSubmitting(true);
       const newPayload: any = {};    
-      let isPayloadChanged = false
 
       if(channel) {
         if(payload?.name !== channel?.name) {
           newPayload.name = payload?.name
-          isPayloadChanged = true;
         }  
         if(payload?.logo !== channel?.logo) {
           newPayload.logo = payload?.logo
-          isPayloadChanged = true;
         }
         if(payload?.description !== channel?.description) {
           newPayload.description = payload?.description
-          isPayloadChanged = true;
         }
       }     
 
@@ -137,8 +133,9 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
 
       if (channel?.app_id) {
         // TODO: update channel
-        if(Object.keys(newPayload).length === 0 && !isPayloadChanged) {
-          // No updates has made:
+        if(Object.keys(newPayload).length === 0) {
+          // No updates has made:          
+          setSubmitting(false);
           return;
         }
         resp = await updateChannel(user?.chain || '', channel?.app_id, {
