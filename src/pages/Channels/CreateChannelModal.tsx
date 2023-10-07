@@ -96,7 +96,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
   };
 
   const checkRenameStat = () => {
-    if (channel?.app_id && channel?.name !== payload?.name) {
+    if (channel?.verified && channel?.name !== payload?.name) {
       // TODO: Show rename model
       setShowRenameModel(true);
       return;
@@ -113,14 +113,36 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     }
     // TODO: call API to create a channel
     try {
+
       setSubmitting(true);
+      const newPayload: any = {};    
+      let isPayloadChanged = false
+
+      if(channel) {
+        if(payload?.name !== channel?.name) {
+          newPayload.name = payload?.name
+          isPayloadChanged = true;
+        }  
+        if(payload?.logo !== channel?.logo) {
+          newPayload.logo = payload?.logo
+          isPayloadChanged = true;
+        }
+        if(payload?.description !== channel?.description) {
+          newPayload.description = payload?.description
+          isPayloadChanged = true;
+        }
+      }     
+
       let resp: any;
+
       if (channel?.app_id) {
         // TODO: update channel
+        if(Object.keys(newPayload).length === 0 && !isPayloadChanged) {
+          // No updates has made:
+          return;
+        }
         resp = await updateChannel(user?.chain || '', channel?.app_id, {
-          logo: payload?.logo || null,
-          description: payload?.description,
-          name: payload?.name
+          ...newPayload
         });
       } else {
         resp = await createChannel(user?.chain || '', payload);
