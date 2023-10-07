@@ -27,7 +27,7 @@ interface CreateChannelModalProps {
 }
 
 export default function CreateChannelModal(props: CreateChannelModalProps) {
-  const { isOpen, onClose, mutate = () => {}, channel } = props;
+  const { isOpen, onClose, mutate = () => { }, channel } = props;
   const [submitting, setSubmitting] = useState(false);
   const [payload, setPayload] = useState<{
     name: string;
@@ -104,6 +104,23 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     handleUpsertChannel();
   };
 
+  const getPayloadChanges = () => {
+    const newPayload: any = {};
+
+    if (channel) {
+      if (payload?.name !== channel?.name) {
+        newPayload.name = payload?.name
+      }
+      if (payload?.logo !== channel?.logo) {
+        newPayload.logo = payload?.logo
+      }
+      if (payload?.description !== channel?.description) {
+        newPayload.description = payload?.description
+      }
+    }
+    return newPayload
+  }
+
   const handleUpsertChannel = async () => {
     setShowRenameModel(false);
     // TODO: Check validation before creating a new channel
@@ -115,25 +132,13 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
     try {
 
       setSubmitting(true);
-      const newPayload: any = {};    
 
-      if(channel) {
-        if(payload?.name !== channel?.name) {
-          newPayload.name = payload?.name
-        }  
-        if(payload?.logo !== channel?.logo) {
-          newPayload.logo = payload?.logo
-        }
-        if(payload?.description !== channel?.description) {
-          newPayload.description = payload?.description
-        }
-      }     
-
+      const newPayload = getPayloadChanges();
       let resp: any;
 
       if (channel?.app_id) {
         // TODO: update channel
-        if(Object.keys(newPayload).length === 0) {
+        if (Object.keys(newPayload).length === 0) {
           // No updates has made:          
           setSubmitting(false);
           return;
@@ -239,6 +244,7 @@ export default function CreateChannelModal(props: CreateChannelModalProps) {
             onClick={checkRenameStat}
             borderRadius={'3xl'}
             size={'lg'}
+            isDisabled={!!channel?.app_id && Object.keys(getPayloadChanges()).length === 0}
           >
             {channel?.app_id ? 'Update channel' : 'Create Channel'}
           </Button>
