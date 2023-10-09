@@ -112,6 +112,13 @@ export default function ChannelsPage() {
     }
   );
 
+  const getMutationByFilter = () => {
+    if (filter === 'owned') return updateOwnedChannels
+    if(filter === 'optin') return updateOptinChannels
+
+    return mutate
+  }
+
   const handleEditChannel = (channel: ChannelsDto) => {
     setEditChannel(channel);
     onOpen();
@@ -299,7 +306,7 @@ export default function ChannelsPage() {
       </Box>
       <CreateChannelModal
         channel={editChannel}
-        mutate={mutate}
+        mutate={getMutationByFilter()}
         isOpen={isOpen}
         onClose={handleCloseModal}
       />
