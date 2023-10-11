@@ -77,6 +77,7 @@ export default function ConnectWalletPage() {
           width={'100%'}
           alignContent={'center'}
           placeItems={'center'}
+          position={'relative'}
         >
           {selectedNetwork ? (renderWallets(selectedNetwork)) : (
             <NetworkLists
