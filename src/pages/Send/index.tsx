@@ -2,7 +2,9 @@ import { useState, useContext } from 'react';
 import {
   Box,
   Button,
+  ButtonGroup,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -12,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import NTabs from '../../components/NTabs';
 import { MessageType } from './send.types';
-import { LinkIcon } from '../../assets/svgs';
+import { ArrowDownIcon, LinkIcon } from '../../assets/svgs';
 import SelectChannel from '../../components/SelectChannel';
 import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 import { UserContext } from '../../Context/userContext';
@@ -38,7 +40,7 @@ export default function SendPage() {
   const [appId, setAppId] = useState('');
   const { user } = useContext(UserContext);
 
-  const allowedCharsCount = user?.privileges?.notification_char_count || 120
+  const allowedCharsCount = user?.privileges?.notification_char_count || 120;
 
   const toast = useToast();
 
@@ -257,9 +259,9 @@ export default function SendPage() {
       <Box mt={5}>
         {tab === MessageType.PERSONAL && (
           <Input
-            placeholder="Input address"
+            placeholder='Input address'
             backgroundColor={'gray.800'}
-            name="inputAddress"
+            name='inputAddress'
             size={'lg'}
             borderRadius={'xl'}
             p={'25px'}
@@ -276,8 +278,8 @@ export default function SendPage() {
         )}
         <Textarea
           borderRadius={'xl'}
-          placeholder="Input a message *"
-          name="message"
+          placeholder='Input a message *'
+          name='message'
           mt={4}
           value={payload?.message}
           backgroundColor={'gray.800'}
@@ -289,34 +291,45 @@ export default function SendPage() {
         <Text textAlign={'right'} fontSize={'sm'} color={'gray.300'}>
           {`${payload?.message?.length}/${allowedCharsCount}`}
         </Text>
-        <InputGroup size="md">
+        <InputGroup size='md'>
           <Input
-            placeholder="Enter a link"
+            placeholder='Enter a link'
             backgroundColor={'gray.800'}
             size={'lg'}
             borderRadius={'xl'}
             p={'25px'}
-            name="link"
+            name='link'
             value={payload?.link}
             onChange={handleChange}
             fontWeight={500}
             mt={4}
           />
-          <InputRightElement width="4.5rem" top={5}>
+          <InputRightElement width='4.5rem' top={5}>
             <Icon h={10} w={10} as={LinkIcon} />
           </InputRightElement>
         </InputGroup>
       </Box>
       <Box mt={10} display={'flex'} justifyContent={'center'}>
-        <Button
-          p={'20px 60px'}
-          borderRadius={'full'}
-          backgroundColor={'blue.600'}
-          isLoading={isProcessing}
-          onClick={handleSendNotification}
-        >
-          Send
-        </Button>
+        <ButtonGroup size='sm' isAttached>
+          <Button
+            p={'20px'}
+            borderRadius={'full'}
+            backgroundColor={'blue.600'}
+            isLoading={isProcessing}
+            onClick={handleSendNotification}
+          >
+            Send
+          </Button>
+          <IconButton
+            borderLeft={'1px'}
+            borderColor={'black'}
+            p={'20px 10px'}
+            aria-label='Send Scheudule'
+            backgroundColor={'blue.600'}
+            icon={<Icon as={ArrowDownIcon} css={`path { fill: white }`} />}
+            borderRadius={'full'}
+          />
+        </ButtonGroup>
       </Box>
     </Box>
   );

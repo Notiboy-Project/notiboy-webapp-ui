@@ -31,6 +31,7 @@ export type UserDto = {
     notification_count: number
     notification_retention: number
     optin_optout_analytics: boolean
+    notification_max_schedule: number
   }
 };
 
