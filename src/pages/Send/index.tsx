@@ -10,6 +10,7 @@ import {
   InputRightElement,
   Text,
   Textarea,
+  useDisclosure,
   useToast
 } from '@chakra-ui/react';
 import NTabs from '../../components/NTabs';
@@ -20,10 +21,21 @@ import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 import { UserContext } from '../../Context/userContext';
 import { sendNotificaiton } from '../../services/notification.service';
 import { KindType } from '../../services/services.types';
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react';
+import ScheduleSendModel from './ScheduleSendModel';
+import moment from 'moment';
+import { BsFillClockFill } from 'react-icons/bs';
+import { CgClose } from 'react-icons/cg';
 
 type PayloadParam = {
   message: string;
   link: string;
+  schedule: Date | null;
   user: string[];
 };
 
@@ -32,12 +44,15 @@ export default function SendPage() {
   const [payload, setPayload] = useState<PayloadParam>({
     message: '',
     link: '',
+    schedule: null,
     user: []
   });
   // its been used to reset csv upload after sending notification
   const [showCSVUpload, setShowCSVUpload] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [appId, setAppId] = useState('');
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   const { user } = useContext(UserContext);
 
   const allowedCharsCount = user?.privileges?.notification_char_count || 120;
@@ -108,6 +123,20 @@ export default function SendPage() {
     return isValid;
   };
 
+  const handleScheudleDate = (date: Date) => {
+    setPayload({
+      ...payload,
+      schedule: date
+    })
+  }
+
+  const clearScheduleDate = () => {
+    setPayload({
+      ...payload,
+      schedule: null
+    })
+  }
+
   const hadleCsvData = (data: string[]) => {
     const [, ...address] = data;
     setPayload({
@@ -161,6 +190,7 @@ export default function SendPage() {
           setPayload({
             link: '',
             user: [],
+            schedule: null,
             message: ''
           });
         }
@@ -209,7 +239,8 @@ export default function SendPage() {
         setPayload({
           link: '',
           user: [],
-          message: ''
+          message: '',
+          schedule: null
         });
         resetCsvUpload();
       } else {
@@ -309,6 +340,13 @@ export default function SendPage() {
           </InputRightElement>
         </InputGroup>
       </Box>
+      {payload?.schedule && (
+        <Box marginTop={2} py={2} px={1} display={'flex'} alignItems={'center'}>
+          <Icon as={BsFillClockFill} h={5} w={5} />
+          <Text ml={2}>{moment(payload?.schedule).format('LLL')}</Text>
+          <Button onClick={clearScheduleDate} size={'sm'} variant={'ghost'} marginLeft={2}><Icon as={CgClose} /></Button>
+        </Box>
+      )}
       <Box mt={10} display={'flex'} justifyContent={'center'}>
         <ButtonGroup size='sm' isAttached>
           <Button
@@ -320,17 +358,40 @@ export default function SendPage() {
           >
             Send
           </Button>
-          <IconButton
-            borderLeft={'1px'}
-            borderColor={'black'}
-            p={'20px 10px'}
-            aria-label='Send Scheudule'
-            backgroundColor={'blue.600'}
-            icon={<Icon as={ArrowDownIcon} css={`path { fill: white }`} />}
-            borderRadius={'full'}
-          />
+          <Menu>
+            <MenuButton transition='all 0.2s'>
+              <IconButton
+                borderRadius={'0 1rem 1rem 0'}
+                borderLeft={'1px'}
+                borderColor={'black'}
+                p={'20px 10px'}
+                aria-label='Send Scheudule'
+                backgroundColor={'blue.600'}
+                icon={
+                  <Icon
+                    as={ArrowDownIcon}
+                    css={`
+                      path {
+                        fill: white;
+                      }
+                    `}
+                  />
+                }
+              />
+            </MenuButton>
+            <MenuList borderRadius={'2xl'}>
+              <MenuItem px={3} borderRadius={'xl'} onClick={onOpen}>
+                Schedule Send
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </ButtonGroup>
       </Box>
+      <ScheduleSendModel
+        isOpen={isOpen}
+        onClose={onClose}
+        onDateSelecte={handleScheudleDate}
+      />
     </Box>
   );
 }
