@@ -22,7 +22,7 @@ export interface ChannelsDto {
   verified: boolean;
   status: string;
   created_timestamp: string
-  chain: string;  
+  chain: string;
 }
 
 export interface createChannelParams {
@@ -53,6 +53,7 @@ export interface sendNotificationPaylod {
   receivers?: string[];
   message: string;
   link: string;
+  schedule?: string;
 }
 
 export interface sendNotificaitonArgs {

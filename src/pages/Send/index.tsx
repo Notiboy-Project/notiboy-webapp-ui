@@ -21,12 +21,7 @@ import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 import { UserContext } from '../../Context/userContext';
 import { sendNotificaiton } from '../../services/notification.service';
 import { KindType } from '../../services/services.types';
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-} from '@chakra-ui/react';
+import { Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import ScheduleSendModel from './ScheduleSendModel';
 import moment from 'moment';
 import { BsFillClockFill } from 'react-icons/bs';
@@ -127,15 +122,15 @@ export default function SendPage() {
     setPayload({
       ...payload,
       schedule: date
-    })
-  }
+    });
+  };
 
   const clearScheduleDate = () => {
     setPayload({
       ...payload,
       schedule: null
-    })
-  }
+    });
+  };
 
   const hadleCsvData = (data: string[]) => {
     const [, ...address] = data;
@@ -176,7 +171,10 @@ export default function SendPage() {
           address: user?.address || '',
           payload: {
             link: payload?.link || '',
-            message: payload?.message || ''
+            message: payload?.message || '',
+            schedule: payload?.schedule
+              ? moment(payload?.schedule).format()
+              : undefined
           }
         });
         if (response?.status_code === 200) {
@@ -224,7 +222,10 @@ export default function SendPage() {
         payload: {
           link: payload?.link || '',
           message: payload?.message || '',
-          receivers: payload?.user
+          receivers: payload?.user,
+          schedule: payload?.schedule
+            ? moment(payload?.schedule).format()
+            : undefined
         }
       });
       console.log('Response message', response);
@@ -344,7 +345,14 @@ export default function SendPage() {
         <Box marginTop={2} py={2} px={1} display={'flex'} alignItems={'center'}>
           <Icon as={BsFillClockFill} h={5} w={5} />
           <Text ml={2}>{moment(payload?.schedule).format('LLL')}</Text>
-          <Button onClick={clearScheduleDate} size={'sm'} variant={'ghost'} marginLeft={2}><Icon as={CgClose} /></Button>
+          <Button
+            onClick={clearScheduleDate}
+            size={'sm'}
+            variant={'ghost'}
+            marginLeft={2}
+          >
+            <Icon as={CgClose} />
+          </Button>
         </Box>
       )}
       <Box mt={10} display={'flex'} justifyContent={'center'}>
@@ -359,7 +367,11 @@ export default function SendPage() {
             Send
           </Button>
           <Menu>
-            <MenuButton transition='all 0.2s'>
+            <MenuButton
+              transition='all 0.2s'
+              disabled={(user?.privileges?.notification_max_schedule || 0) < 1}
+              _disabled={{ cursor: 'not-allowed', opacity: 0.5 }}
+            >
               <IconButton
                 borderRadius={'0 1rem 1rem 0'}
                 borderLeft={'1px'}

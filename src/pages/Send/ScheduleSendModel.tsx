@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -10,6 +10,8 @@ import {
   Button,
 } from '@chakra-ui/react'
 import BasicDateTimePicker from '../../components/DateTimePicker'
+import { UserContext } from '../../Context/userContext'
+import moment from 'moment'
 
 interface ScheuduleSendPropsI {
   isOpen: boolean
@@ -20,8 +22,20 @@ interface ScheuduleSendPropsI {
 export default function ScheduleSendModel(props: ScheuduleSendPropsI) {
   const [date, setDate] = useState<Date | null>(null)
   const { isOpen, onClose } = props
+  const { user } = useContext(UserContext)
 
-  console.log({ date });
+  const handleCloseModel = () => {
+    setDate(null);
+    onClose()
+  }
+
+  const maxDate = useMemo(() => {
+    if (!user?.privileges?.notification_max_schedule) return undefined
+
+    const date = moment().add(user?.privileges?.notification_max_schedule, 'days')
+    return date.toDate()
+
+  }, [user?.privileges])
 
   const onSetDate = () => {
     if (date) {
@@ -31,16 +45,16 @@ export default function ScheduleSendModel(props: ScheuduleSendPropsI) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleCloseModel}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Schedule Date</ModalHeader>
+        <ModalHeader>Schedule Date & Time</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <BasicDateTimePicker onChange={setDate} value={date} />
+          <BasicDateTimePicker maxAllowedDate={maxDate} onChange={setDate} value={date} />
         </ModalBody>
         <ModalFooter>
-          <Button variant={'ghost'} mr={3} onClick={onClose} borderRadius={'2xl'}>
+          <Button variant={'ghost'} mr={3} onClick={handleCloseModel} borderRadius={'2xl'}>
             Close
           </Button>
           <Button colorScheme='blue' onClick={onSetDate} borderRadius={'2xl'}>Set</Button>
