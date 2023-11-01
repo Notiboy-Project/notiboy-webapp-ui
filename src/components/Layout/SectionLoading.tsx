@@ -8,17 +8,20 @@ export default function SectionLoading() {
       backgroundColor={'gray.200'}
       position={'absolute'}
       opacity={0.7}
+      top={0}
+      left={0}
       borderRadius={'2xl'}
       zIndex={2}
     >
       <Box
-        display={'grid'}
-        placeItems={'center'}
-        alignContent={'center'}
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
         height={'100%'}
+        gap={5}
       >
-        <Spinner color="blue.400" size={'lg'} />
-        <Text mt={2} fontSize={'md'} color={'blue.400'}>
+        <Spinner color="blue.400" size={'lg'} fontWeight={600} />
+        <Text mt={2} fontSize={'lg'} color={'blue.500'} fontWeight={600}>
           Processing...
         </Text>
       </Box>

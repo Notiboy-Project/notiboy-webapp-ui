@@ -35,7 +35,6 @@ export default function XRPLWallets() {
   }
 
   const loginToAppByXummWallet = async (walletAddress: string) => {
-    console.log("Calling loginToAppByXummWallet::");
     try {
       setIsSigningIn(true)
       const jwtToken = getJWTTokenFromStorage()
@@ -52,7 +51,6 @@ export default function XRPLWallets() {
         storeTokenToStorage(data.token);
         // TODO: get logged in users information
         const resp = await fetchUserInfo(NetworkType.XRPL || "", walletAddress || "");
-        console.log("resp.data::", resp.data)
         saveUsersData(resp.data);
         navigate(routes.notifications);
       } else {
@@ -109,11 +107,6 @@ export default function XRPLWallets() {
           <Icon as={XummIcon} h={45} w={75} />
         </Button>
       </Box>
-      {/* <AuthenticateSignedTransaction
-        isOpen={isOpen}
-        onClose={handleCloseModal}
-        onSignedTransaction={() => { }}
-      /> */}
     </Box>
   );
 }
