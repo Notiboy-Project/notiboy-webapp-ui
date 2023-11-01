@@ -77,6 +77,8 @@ function NotificationCard(props: NotificationCardProps) {
         color={notification.seen ? "gray.500" : "white"}
         as="p"
         textAlign={"left"}
+        lineHeight={1.3}
+        whiteSpace={'break-spaces'}
         fontSize={"md"}
         fontWeight={500}
         p={2}
