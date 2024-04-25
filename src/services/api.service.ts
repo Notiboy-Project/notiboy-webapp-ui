@@ -92,8 +92,11 @@ export const apiURL = {
 
   //NOTIFICATIONS URL
 
-  fetchnotificationUrl: (chain: string, params: string) =>
+  fetchNotificationUrl: (chain: string, params: string) =>
     `${baseURL}/chains/${chain}/notifications${params}`, // GET
+
+  fetchScheduledNotificationUrl: (chain: string, params: string) =>
+    `${baseURL}/chains/${chain}/scheduled_notifications${params}`,
 
   sendNotificationUrl: (chain: string, appId: string, kind: string) =>
     `${baseURL}/chains/${chain}/channels/${appId}/notifications/${kind}`, // POST

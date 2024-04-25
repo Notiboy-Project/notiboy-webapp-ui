@@ -1,20 +1,35 @@
 import api, { apiURL } from './api.service';
 import { Fetcher } from 'swr';
-import { NotificationFetcher, sendNotificaitonArgs } from './services.types';
+import {
+  NotificationFetcher,
+  ScheduleNotificationDto,
+  sendNotificationArgs
+} from './services.types';
 
-export const fetchNotifications: Fetcher<NotificationFetcher, { chain: string, params: string }> = async (
-  args
-) => {
+export const fetchNotifications: Fetcher<
+  NotificationFetcher,
+  { chain: string; params: string }
+> = async (args) => {
   const { params, chain } = args;
-  const resp = await api.get(apiURL.fetchnotificationUrl(chain, params));
+  const resp = await api.get(apiURL.fetchNotificationUrl(chain, params));
   return resp.data;
 };
 
-export const sendNotificaiton = async (args: sendNotificaitonArgs) => {
-  const { chain, appId, kind, payload } = args
+export const sendNotification = async (args: sendNotificationArgs) => {
+  const { chain, appId, kind, payload } = args;
   const resp = await api.post(
     apiURL.sendNotificationUrl(chain, appId, kind),
     payload
   );
   return resp?.data;
+};
+
+export const fetchScheduledNotification: Fetcher<
+  ScheduleNotificationDto[],
+  { chain: string; params: string }
+> = async ({ chain, params }) => {
+  const resp = await api.get(
+    apiURL.fetchScheduledNotificationUrl(chain, params)
+  );
+  return resp?.data?.data || [];
 };

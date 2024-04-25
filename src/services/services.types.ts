@@ -21,7 +21,7 @@ export interface ChannelsDto {
   owner: string;
   verified: boolean;
   status: string;
-  created_timestamp: string
+  created_timestamp: string;
   chain: string;
 }
 
@@ -47,6 +47,32 @@ export interface NotificationFetcher {
   };
 }
 
+export type ScheduleNotificationDto = {
+  message: string;
+  link: string;
+  schedule: string;
+  Sender: string;
+  MediumPublished: string;
+  Chain: string;
+  Channel: string;
+  Type: string;
+  Sent: number;
+  Read: number;
+  Hash: string;
+  UUID: string;
+  Status: string;
+  MediumReadCount: string;
+  Seen: string;
+  Time: string;
+  Medium: string;
+  receivers: string;
+  ReceiverMails: string;
+  UpdatedTime: string;
+  DiscordReceiverIds: string;
+  UnverifiedDiscordIDs: string;
+  SystemSupportedMediums: string;
+};
+
 export type KindType = 'public' | 'private';
 
 export interface sendNotificationPaylod {
@@ -56,7 +82,7 @@ export interface sendNotificationPaylod {
   schedule?: string;
 }
 
-export interface sendNotificaitonArgs {
+export interface sendNotificationArgs {
   chain: string;
   appId: string;
   kind: 'public' | 'private';
