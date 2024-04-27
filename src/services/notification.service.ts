@@ -2,7 +2,7 @@ import api, { apiURL } from './api.service';
 import { Fetcher } from 'swr';
 import {
   NotificationFetcher,
-  ScheduleNotificationDto,
+  ScheduledNotificationDto,
   sendNotificationArgs
 } from './services.types';
 
@@ -25,11 +25,20 @@ export const sendNotification = async (args: sendNotificationArgs) => {
 };
 
 export const fetchScheduledNotification: Fetcher<
-  ScheduleNotificationDto[],
+  ScheduledNotificationDto[],
   { chain: string; params: string }
 > = async ({ chain, params }) => {
   const resp = await api.get(
     apiURL.fetchScheduledNotificationUrl(chain, params)
   );
   return resp?.data?.data || [];
+};
+
+export const deleteScheduled = async (
+  chain: string,
+  uuid: string,
+  time: string
+) => {
+  const resp = await api.delete(apiURL.deleteScheduledUrl(chain, uuid, time));
+  return resp?.data;
 };

@@ -46,31 +46,19 @@ export interface NotificationFetcher {
     size: number;
   };
 }
-
-export type ScheduleNotificationDto = {
+export type ScheduledNotificationDto = {
   message: string;
   link: string;
   schedule: string;
-  Sender: string;
-  MediumPublished: string;
-  Chain: string;
-  Channel: string;
-  Type: string;
-  Sent: number;
-  Read: number;
-  Hash: string;
+  sender: string;
+  channel: string;
+  type: string;
   UUID: string;
-  Status: string;
-  MediumReadCount: string;
-  Seen: string;
-  Time: string;
-  Medium: string;
-  receivers: string;
-  ReceiverMails: string;
-  UpdatedTime: string;
-  DiscordReceiverIds: string;
-  UnverifiedDiscordIDs: string;
-  SystemSupportedMediums: string;
+  createdTime: string;
+  channelName: string;
+  logo: string;
+  receivers: any;
+  updatedTime: string;
 };
 
 export type KindType = 'public' | 'private';

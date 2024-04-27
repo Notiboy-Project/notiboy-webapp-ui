@@ -98,6 +98,9 @@ export const apiURL = {
   fetchScheduledNotificationUrl: (chain: string, params: string) =>
     `${baseURL}/chains/${chain}/scheduled_notifications${params}`,
 
+  deleteScheduledUrl: (chain: string, uuid: string, time: string) =>
+    `${baseURL}/chains/${chain}/scheduled_notifications/uuid/${uuid}/schedule/${time}`,
+
   sendNotificationUrl: (chain: string, appId: string, kind: string) =>
     `${baseURL}/chains/${chain}/channels/${appId}/notifications/${kind}`, // POST
 
