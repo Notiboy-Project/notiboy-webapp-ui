@@ -1,15 +1,16 @@
-import { Avatar, Box, Button, Text } from '@chakra-ui/react';
 import useSWR from 'swr';
+import PageLoading from '../../components/Layout/PageLoading';
+import moment from 'moment';
+import DeleteScheduleModal from './DeleteScheduleModal';
+import { Avatar, Box, Button, Text } from '@chakra-ui/react';
 import { fetchScheduledNotification } from '../../services/notification.service';
 import { useContext, useState } from 'react';
 import { UserContext } from '../../Context/userContext';
-import PageLoading from '../../components/Layout/PageLoading';
 import { CardLayout } from '../../components/Layout/CardLayout';
-import moment from 'moment';
-import { BiEditAlt, BiTrashAlt } from 'react-icons/bi';
+import { BiEditAlt, BiLink, BiTrashAlt } from 'react-icons/bi';
 import { renderLogoFromBase64 } from '../../utils';
-import DeleteScheduleModal from './DeleteScheduleModal';
 import { ScheduledNotificationDto } from '../../services/services.types';
+import { BsClock } from 'react-icons/bs';
 
 export default function ScheduledNotification() {
   const { user } = useContext(UserContext);
@@ -21,11 +22,8 @@ export default function ScheduledNotification() {
     mutate: refreshNotification
   } = useSWR({ chain: user?.chain, params: '' }, fetchScheduledNotification, {
     fallbackData: [],
-    revalidateOnFocus: true
+    revalidateOnMount: true
   });
-
-  console.log({ notifications: data });
-  console.log({ isLoading });
 
   return (
     <Box>
@@ -36,8 +34,11 @@ export default function ScheduledNotification() {
             No Scheduled notification found.
           </Box>
         )}
-        {!isLoading && (
+        {!isLoading && data.length > 0 && (
           <Box display={'flex'} flexDirection={'column'} gap={2}>
+            <Text fontWeight={'bold'} fontSize={'xl'}>
+              Scheduled Notifications
+            </Text>
             {data.map((sn) => (
               <CardLayout padding={5}>
                 <Box display={'flex'} justifyContent={'space-between'}>
@@ -49,24 +50,44 @@ export default function ScheduledNotification() {
                         height={45}
                         width={45}
                       />
-                      <Text>{sn.channelName}</Text>
+                      <Text>
+                        {sn.channelName}
+                        <Text
+                          as={'small'}
+                          fontSize={11}
+                          display={'flex'}
+                          alignItems={'center'}
+                          gap={1}
+                        >
+                          <BsClock />
+                          <Text textTransform={'capitalize'}>
+                            {`${moment(sn.schedule).format(
+                              'LLL'
+                            )}                
+                          (${moment(sn.schedule).fromNow(true)})`}
+                          </Text>
+                        </Text>
+                      </Text>
                     </Box>
                     <Box
                       display={'flex'}
                       flexDirection={'column'}
-                      gap={0.5}
                       marginTop={2}
                     >
                       <Text as="i" fontSize={12}>
                         {sn.message}
                       </Text>
-                      <Text as="small">{sn.link}</Text>
-                      <Text as={'small'} display={'flex'}>
-                        <Text textTransform={'capitalize'}>
-                          {`${moment(sn.schedule).format('LLL')}                
-                    (${moment(sn.schedule).fromNow(true)})`}
+                      {sn?.link && (
+                        <Text
+                          as="small"
+                          display={'flex'}
+                          gap={1}
+                          alignItems={'center'}
+                        >
+                          <BiLink />
+                          {sn.link}
                         </Text>
-                      </Text>
+                      )}
                     </Box>
                   </Box>
                   <Box display={'flex'} gap={2}>

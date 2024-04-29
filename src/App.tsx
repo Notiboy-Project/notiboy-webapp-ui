@@ -19,6 +19,9 @@ import { WalletConnectModalSign } from '@walletconnect/modal-sign-html';
 
 const ConnectWallet = React.lazy(() => import('./pages/ConnectWallet'));
 const NotificationPage = React.lazy(() => import('./pages/Notifications'));
+const ScheduledNotification = React.lazy(
+  () => import('./pages/ScheduledNotifications')
+);
 const ChannelsPage = React.lazy(() => import('./pages/Channels'));
 const SendPage = React.lazy(() => import('./pages/Send'));
 const StatisticsPage = React.lazy(() => import('./pages/Statistics'));
@@ -47,6 +50,11 @@ const PRIVATE_ROUTES: PrivateRoutesType[] = [
     component: NotificationPage
   },
   { name: 'send', path: routes.send, component: SendPage },
+  {
+    name: 'scheduled_notifications',
+    path: routes.scheduledNotifications,
+    component: ScheduledNotification
+  },
   { name: 'statistics', path: routes.statistics, component: StatisticsPage },
   { name: 'settings', path: routes.settings, component: SettingsPage },
   { name: 'support', path: routes.support, component: SupportPage },
