@@ -11,10 +11,13 @@ import { BiEditAlt, BiLink, BiTrashAlt } from 'react-icons/bi';
 import { renderLogoFromBase64 } from '../../utils';
 import { ScheduledNotificationDto } from '../../services/services.types';
 import { BsClock } from 'react-icons/bs';
+import EditScheduledDrawer from './EditScheduleDrawer';
 
 export default function ScheduledNotification() {
   const { user } = useContext(UserContext);
   const [deleteSchedule, setDeleteSchedule] =
+    useState<ScheduledNotificationDto | null>(null);
+  const [editSchedule, setEditSchedule] =
     useState<ScheduledNotificationDto | null>(null);
   const {
     data,
@@ -24,6 +27,11 @@ export default function ScheduledNotification() {
     fallbackData: [],
     revalidateOnMount: true
   });
+
+  const handleOnEditSuccess = () => {
+    setEditSchedule(null);
+    refreshNotification();
+  };
 
   return (
     <Box>
@@ -91,7 +99,7 @@ export default function ScheduledNotification() {
                     </Box>
                   </Box>
                   <Box display={'flex'} gap={2}>
-                    <Button size={'sm'}>
+                    <Button onClick={() => setEditSchedule(sn)} size={'sm'}>
                       <BiEditAlt />
                     </Button>
                     <Button
@@ -113,6 +121,12 @@ export default function ScheduledNotification() {
         onClose={() => setDeleteSchedule(null)}
         onDeleteSuccess={refreshNotification}
         schedule={deleteSchedule}
+      />
+      <EditScheduledDrawer
+        isOpen={!!editSchedule}
+        onSuccessUpdated={handleOnEditSuccess}
+        onClose={() => setEditSchedule(null)}
+        scheduled={editSchedule}
       />
     </Box>
   );

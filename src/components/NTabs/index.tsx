@@ -18,14 +18,22 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface NTabsProps<T> {
   activeTab: T;
-  tabs: { name: T; title: string }[];
+  tabs: { name: T; title: string; index: number }[];
   onTabSelected: (tab: T) => void;
   isResponsive?: boolean;
+  isDisabled?: boolean;
 }
 
 export default function NTabs<T>(props: NTabsProps<T>) {
-  const { tabs, onTabSelected, activeTab, isResponsive = true } = props;
+  const {
+    tabs,
+    onTabSelected,
+    activeTab,
+    isResponsive = true,
+    isDisabled = false
+  } = props;
   const [activeTabTitle, setActiveTabTitle] = useState('');
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const handleChangeTab = useCallback(
     (index: number) => {
@@ -39,11 +47,14 @@ export default function NTabs<T>(props: NTabsProps<T>) {
 
   useEffect(() => {
     setActiveTabTitle(tabs.find((tab) => tab.name === activeTab)?.title || '');
+    const idx = tabs.findIndex((tab) => tab.name === activeTab);
+    setActiveIndex(idx);
   }, [activeTab, tabs]);
 
   const buttonTabs = useMemo(
     () => (
       <Tabs
+        index={activeIndex}
         variant="soft-rounded"
         colorScheme="gray"
         onChange={handleChangeTab}
@@ -51,6 +62,7 @@ export default function NTabs<T>(props: NTabsProps<T>) {
         <TabList>
           {tabs.map((tab) => (
             <Tab
+              isDisabled={isDisabled}
               key={tab.title}
               _selected={{ backgroundColor: 'gray.600', color: '#fff' }}
               p={'10px 35px'}
@@ -61,13 +73,12 @@ export default function NTabs<T>(props: NTabsProps<T>) {
         </TabList>
       </Tabs>
     ),
-    [tabs, handleChangeTab]
+    [tabs, handleChangeTab, isDisabled, activeIndex]
   );
 
   return (
     <Box
       backgroundColor={'gray.800'}
-      // width={'100%'}
       borderRadius={'full'}
       p={!isResponsive ? 1 : { base: 0, md: 0, xl: 1 }}
     >
@@ -78,6 +89,7 @@ export default function NTabs<T>(props: NTabsProps<T>) {
           <Show below="xl">
             <Menu>
               <MenuButton
+                disabled
                 bgColor={'gray.800'}
                 as={Button}
                 rightIcon={<Icon as={FaCaretDown} fill="blue.400" />}
@@ -91,6 +103,7 @@ export default function NTabs<T>(props: NTabsProps<T>) {
               <MenuList borderRadius={'3xl'} p={3}>
                 {tabs.map((tab) => (
                   <MenuItem
+                    isDisabled={isDisabled}
                     key={tab.title}
                     minH="48px"
                     onClick={() => {

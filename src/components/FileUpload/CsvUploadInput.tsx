@@ -10,11 +10,11 @@ import {
 import { FaFileCsv } from 'react-icons/fa';
 
 interface CsvUploadInputProps {
-  onDataRecieved: (data: string[]) => void;
+  onDataReceived: (data: string[]) => void;
 }
 
 export default function CsvUploadInput(props: CsvUploadInputProps) {
-  const { onDataRecieved } = props;
+  const { onDataReceived } = props;
 
   const csvFileRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState('');
@@ -30,8 +30,9 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
       reader.onloadend = (event) => {
         const csvData = event?.target?.result || ('' as string);
         if (typeof csvData === 'string') {
-          const rowData = csvData?.split('\n');
-          onDataRecieved(rowData || []);
+          const rowData = csvData?.split('\n').filter((row) => row);
+          console.log({ rowData });
+          onDataReceived(rowData || []);
         }
       };
     }
@@ -40,7 +41,7 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
   const resetFileControl = () => {
     // TODO: Reset file control
     setFileName('');
-    onDataRecieved([]);
+    onDataReceived([]);
     setShowControl(false);
     setTimeout(() => {
       setShowControl(true);

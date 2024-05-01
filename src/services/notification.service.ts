@@ -3,6 +3,7 @@ import { Fetcher } from 'swr';
 import {
   NotificationFetcher,
   ScheduledNotificationDto,
+  scheduledNotificationArgs,
   sendNotificationArgs
 } from './services.types';
 
@@ -32,6 +33,17 @@ export const fetchScheduledNotification: Fetcher<
     apiURL.fetchScheduledNotificationUrl(chain, params)
   );
   return resp?.data?.data || [];
+};
+
+export const updateScheduledNotification = async (
+  args: scheduledNotificationArgs
+) => {
+  const { chain, payload, scheduledTime, uuid } = args;
+  const resp = await api.put(
+    apiURL.updateScheduledUrl(chain, uuid, scheduledTime),
+    payload
+  );
+  return resp?.data;
 };
 
 export const deleteScheduled = async (
