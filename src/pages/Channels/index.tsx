@@ -113,11 +113,11 @@ export default function ChannelsPage() {
   );
 
   const getMutationByFilter = () => {
-    if (filter === 'owned') return updateOwnedChannels
-    if(filter === 'optin') return updateOptinChannels
+    if (filter === 'owned') return updateOwnedChannels;
+    if (filter === 'optin') return updateOptinChannels;
 
-    return mutate
-  }
+    return mutate;
+  };
 
   const handleEditChannel = (channel: ChannelsDto) => {
     setEditChannel(channel);
@@ -248,8 +248,9 @@ export default function ChannelsPage() {
         <Flex gap={4} alignItems={'center'}>
           {filter === 'all' && (
             <Flex
-              border={'1px solid gray'}
+              // border={'1px solid gray'}
               py={2}
+              backgroundColor={'gray.800'}
               px={4}
               borderRadius={'full'}
               alignItems={'center'}

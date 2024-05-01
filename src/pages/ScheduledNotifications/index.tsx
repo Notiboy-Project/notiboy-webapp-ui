@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import PageLoading from '../../components/Layout/PageLoading';
 import moment from 'moment';
 import DeleteScheduleModal from './DeleteScheduleModal';
-import { Avatar, Box, Button, Text } from '@chakra-ui/react';
+import { Avatar, Box, Button, Icon, Text } from '@chakra-ui/react';
 import { fetchScheduledNotification } from '../../services/notification.service';
 import { useContext, useState } from 'react';
 import { UserContext } from '../../Context/userContext';
@@ -12,6 +12,7 @@ import { renderLogoFromBase64 } from '../../utils';
 import { ScheduledNotificationDto } from '../../services/services.types';
 import { BsClock } from 'react-icons/bs';
 import EditScheduledDrawer from './EditScheduleDrawer';
+import { NoNotificationIcon } from '../../assets/svgs';
 
 export default function ScheduledNotification() {
   const { user } = useContext(UserContext);
@@ -38,8 +39,16 @@ export default function ScheduledNotification() {
       <Box>
         {isLoading && <PageLoading />}
         {!isLoading && !data.length && (
-          <Box textAlign={'center'} marginTop={5}>
-            No Scheduled notification found.
+          <Box
+            display={'grid'}
+            alignItems={'center'}
+            justifyContent={'center'}
+            mt={100}
+          >
+            <Icon h={300} w={300} as={NoNotificationIcon} />
+            <Text mt={5} fontSize={28} fontWeight={600}>
+              No Scheduled Notification Found!
+            </Text>
           </Box>
         )}
         {!isLoading && data.length > 0 && (
