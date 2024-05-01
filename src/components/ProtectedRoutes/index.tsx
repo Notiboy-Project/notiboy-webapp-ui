@@ -17,9 +17,7 @@ const PrivateRoute: React.FC<any> = (): React.ReactElement => {
   // console.log('status==>>', status);
 
   if (status === 'initializing') {
-    return (
-      <PageLoading />
-    );
+    return <PageLoading />;
   }
 
   if (accessToken?.trim()) {

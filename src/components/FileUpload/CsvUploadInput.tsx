@@ -31,7 +31,6 @@ export default function CsvUploadInput(props: CsvUploadInputProps) {
         const csvData = event?.target?.result || ('' as string);
         if (typeof csvData === 'string') {
           const rowData = csvData?.split('\n').filter((row) => row);
-          console.log({ rowData });
           onDataReceived(rowData || []);
         }
       };
