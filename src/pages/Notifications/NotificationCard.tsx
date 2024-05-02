@@ -21,7 +21,7 @@ function NotificationCard(props: NotificationCardProps) {
     window.open(notification.link, '_blank');
   };
 
-  const isChennelVerified = (appId: string) => {
+  const isChannelVerified = (appId: string) => {
     return channels.find((c) => c.app_id === appId)?.verified || false;
   };
 
@@ -43,17 +43,17 @@ function NotificationCard(props: NotificationCardProps) {
         <Text
           fontWeight={notification.seen ? 500 : 600}
           fontSize={'lg'}
-          color={notification.seen ? 'gray.500' : 'white'}
+          color={notification.seen ? 'gray.200' : 'white'}
           textAlign={'left'}
           ml={3}
         >
           {notification.channel_name}
         </Text>
-        {isChennelVerified(notification.app_id) && (
+        {isChannelVerified(notification.app_id) && (
           <Icon ml={3} as={VerifyIcon} h={6} w={6} />
         )}
-        <Text ml={5} fontWeight={600} as="small" color="gray.600">
-          {notification.kind === 'public' ? 'Annoucement' : 'Notifications'}
+        <Text ml={5} fontWeight={600} as="small" color="gray.500">
+          {notification.kind === 'public' ? 'Announcement' : 'Notifications'}
         </Text>
         {notification.link && (
           <Icon ml={3} as={LinkIcon} height={5} width={5} />
@@ -70,7 +70,7 @@ function NotificationCard(props: NotificationCardProps) {
         )}
       </Box>
       <Text
-        color={notification.seen ? 'gray.500' : 'white'}
+        color={notification.seen ? 'gray.200' : 'white'}
         as="p"
         textAlign={'left'}
         lineHeight={1.3}

@@ -417,6 +417,8 @@ export default function SendForm(props: SendFormProps) {
             alignItems={'center'}
             role="button"
             background="gray.800"
+            border={'1px solid'}
+            borderColor={'inherit'}
             _hover={{ transform: 'scale(1.02)' }}
           >
             <Icon role="button" as={BsFillClockFill} h={5} w={5} />

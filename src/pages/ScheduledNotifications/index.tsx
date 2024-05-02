@@ -8,7 +8,7 @@ import { useContext, useState } from 'react';
 import { UserContext } from '../../Context/userContext';
 import { CardLayout } from '../../components/Layout/CardLayout';
 import { BiEditAlt, BiLink, BiTrashAlt } from 'react-icons/bi';
-import { renderLogoFromBase64 } from '../../utils';
+import { capitalizeLetter, renderLogoFromBase64 } from '../../utils';
 import { ScheduledNotificationDto } from '../../services/services.types';
 import { BsClock } from 'react-icons/bs';
 import EditScheduledDrawer from './EditScheduleDrawer';
@@ -70,18 +70,19 @@ export default function ScheduledNotification() {
                       <Text>
                         {sn.channelName}
                         <Text
-                          as={'small'}
-                          fontSize={11}
+                          fontSize={12}
                           display={'flex'}
                           alignItems={'center'}
                           gap={1}
                         >
                           <BsClock />
-                          <Text textTransform={'capitalize'}>
+                          <Text>
                             {`${moment(sn.schedule).format(
                               'LLL'
                             )}                
-                          (${moment(sn.schedule).fromNow(true)})`}
+                          (${capitalizeLetter(
+                            moment(sn.schedule).fromNow(true)
+                          )} to go)`}
                           </Text>
                         </Text>
                       </Text>
@@ -91,12 +92,15 @@ export default function ScheduledNotification() {
                       flexDirection={'column'}
                       marginTop={2}
                     >
-                      <Text as="i" fontSize={12}>
-                        {sn.message}
-                      </Text>
+                      <Text fontSize={'md'}>{sn.message}</Text>
                       {sn?.link && (
                         <Text
-                          as="small"
+                          as="a"
+                          href={sn.link}
+                          fontSize={12}
+                          target="_blank"
+                          color={'blue.200'}
+                          _hover={{ textDecoration: 'underline' }}
                           display={'flex'}
                           gap={1}
                           alignItems={'center'}
