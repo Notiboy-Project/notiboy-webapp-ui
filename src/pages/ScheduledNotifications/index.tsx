@@ -26,7 +26,8 @@ export default function ScheduledNotification() {
     mutate: refreshNotification
   } = useSWR({ chain: user?.chain, params: '' }, fetchScheduledNotification, {
     fallbackData: [],
-    revalidateOnMount: true
+    revalidateIfStale: true,
+    revalidateOnFocus: false
   });
 
   const handleOnEditSuccess = () => {

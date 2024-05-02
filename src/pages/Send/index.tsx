@@ -25,7 +25,8 @@ import {
 } from '../../services/notification.service';
 import {
   KindType,
-  ScheduledNotificationDto
+  ScheduledNotificationDto,
+  sendNotificationArgs
 } from '../../services/services.types';
 import { Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import ScheduleSendModel from './ScheduleSendModel';
@@ -97,17 +98,7 @@ export default function SendForm(props: SendFormProps) {
       ...payload,
       user: []
     });
-    setInputAddress('');
     setTab(_tab);
-  };
-
-  const handleAddressChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setInputAddress(value);
-    setPayload({
-      ...payload,
-      user: [value?.trim()]
-    });
   };
 
   const checkValidation = () => {
@@ -123,12 +114,14 @@ export default function SendForm(props: SendFormProps) {
       showErrorMsg('Please enter a message to send!');
     }
 
-    if (
-      (tab === MessageType.PERSONAL || tab === MessageType.BULK_PERSONAL) &&
-      payload.user.length === 0
-    ) {
+    if (tab === MessageType.PERSONAL && !inputAddress?.trim()) {
       isValid = false;
-      showErrorMsg('Please enter an address to send notification!');
+      showErrorMsg('Please enter an address.');
+    }
+
+    if (tab === MessageType.BULK_PERSONAL && payload.user.length === 0) {
+      isValid = false;
+      showErrorMsg('Please upload csv file of addresses to send notification.');
     }
     return isValid;
   };
@@ -169,16 +162,18 @@ export default function SendForm(props: SendFormProps) {
     if (!isDataValid) {
       return;
     }
-
+    setIsProcessing(true);
+    let receivers = [];
     let kind: KindType = 'public';
-
     if (tab === MessageType.PERSONAL || tab === MessageType.BULK_PERSONAL) {
       kind = 'private';
     }
+    if (tab === MessageType.PERSONAL) receivers.push(inputAddress);
 
-    setIsProcessing(true);
+    if (tab === MessageType.BULK_PERSONAL) receivers = payload.user;
+
     try {
-      const response = await sendNotification({
+      const notificationPayload: sendNotificationArgs = {
         appId: appId,
         chain: user?.chain || '',
         kind,
@@ -186,12 +181,14 @@ export default function SendForm(props: SendFormProps) {
         payload: {
           link: payload?.link || '',
           message: payload?.message || '',
-          receivers: payload?.user?.length > 0 ? payload.user : undefined,
+          receivers: receivers,
           schedule: payload?.schedule
             ? moment(payload?.schedule).format()
             : undefined
         }
-      });
+      };
+
+      const response = await sendNotification(notificationPayload);
       if (response?.status_code === 200) {
         const toastMessage =
           MessageType.PUBLIC === kind
@@ -240,11 +237,15 @@ export default function SendForm(props: SendFormProps) {
       const isValid = checkValidation();
       if (!isValid) return;
 
+      let receivers = [];
+      if (tab === MessageType.PERSONAL) receivers.push(inputAddress);
+      if (tab === MessageType.BULK_PERSONAL) receivers = payload.user;
+
       const scheduledPayload = {
         type: tab === MessageType.PUBLIC ? 'public' : 'private',
         message: payload.message,
         link: payload.link,
-        receivers: payload.user?.length > 0 ? payload?.user : null
+        receivers: receivers
       };
       // TODO: call API to update scheduled
       const data = await updateScheduledNotification({
@@ -361,7 +362,9 @@ export default function SendForm(props: SendFormProps) {
             p={'25px'}
             fontWeight={500}
             mt={4}
-            onChange={handleAddressChange}
+            onChange={({ currentTarget }) =>
+              setInputAddress(currentTarget.value)
+            }
           />
         )}
         {tab === MessageType.BULK_PERSONAL && showCSVUpload && (
