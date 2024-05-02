@@ -133,7 +133,7 @@ export default function SendForm(props: SendFormProps) {
     return isValid;
   };
 
-  const handleScheduleDate = (date: Date) => {
+  const handleScheduleDate = (date: Date | null) => {
     setPayload({
       ...payload,
       schedule: date
@@ -412,7 +412,7 @@ export default function SendForm(props: SendFormProps) {
           <Box
             display={'flex'}
             p={2}
-            onClick={onOpen}
+            onClick={props.isEdit ? () => {} : onOpen}
             borderRadius={'lg'}
             alignItems={'center'}
             role="button"
@@ -497,6 +497,7 @@ export default function SendForm(props: SendFormProps) {
       </Box>
       <ScheduleSendModel
         isOpen={isOpen}
+        date={payload?.schedule || null}
         onClose={onClose}
         onDateSelect={handleScheduleDate}
       />

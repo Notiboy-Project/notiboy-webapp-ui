@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -13,13 +13,14 @@ import BasicDateTimePicker from '../../components/DateTimePicker';
 import { UserContext } from '../../Context/userContext';
 import moment from 'moment';
 
-interface ScheuduleSendPropsI {
+interface ScheduleSendPropsI {
   isOpen: boolean;
   onClose: () => void;
-  onDateSelect: (date: Date) => void;
+  onDateSelect: (date: Date | null) => void;
+  date?: Date | null;
 }
 
-export default function ScheduleSendModel(props: ScheuduleSendPropsI) {
+export default function ScheduleSendModel(props: ScheduleSendPropsI) {
   const [date, setDate] = useState<Date | null>(null);
   const { isOpen, onClose } = props;
   const { user } = useContext(UserContext);
@@ -40,11 +41,13 @@ export default function ScheduleSendModel(props: ScheuduleSendPropsI) {
   }, [user?.privileges]);
 
   const onSetDate = () => {
-    if (date) {
-      props.onDateSelect(date);
-      onClose();
-    }
+    props.onDateSelect(date || null);
+    onClose();
   };
+
+  useEffect(() => {
+    if (isOpen) setDate(props?.date || null);
+  }, [props.date, isOpen]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleCloseModel}>

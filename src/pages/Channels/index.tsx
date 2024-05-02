@@ -284,10 +284,9 @@ export default function ChannelsPage() {
       </Box>
       <Box mt={4}>
         {(ownedLoading || optinLoading || isLoading) && <PageLoading />}
-        {filteredData?.length === 0 && (
+        {!isLoading && filteredData?.length === 0 && (
           <Flex
-            mt={20}
-            height={'100%'}
+            height={'calc(100vh - 450px)'}
             justifyContent={'center'}
             alignItems={'center'}
           >
