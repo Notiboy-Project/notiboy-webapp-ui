@@ -57,7 +57,7 @@ export default function ScheduledNotification() {
               Scheduled Notifications
             </Text>
             {data.map((sn) => (
-              <CardLayout padding={5}>
+              <CardLayout padding={5} key={sn.UUID}>
                 <Box display={'flex'} justifyContent={'space-between'}>
                   <Box>
                     <Box display={'flex'} gap={3} alignItems={'center'}>
@@ -67,9 +67,9 @@ export default function ScheduledNotification() {
                         height={45}
                         width={45}
                       />
-                      <Text>
+                      <Box>
                         {sn.channelName}
-                        <Text
+                        <Box
                           fontSize={12}
                           display={'flex'}
                           alignItems={'center'}
@@ -84,8 +84,8 @@ export default function ScheduledNotification() {
                             moment(sn.schedule).fromNow(true)
                           )} to go)`}
                           </Text>
-                        </Text>
-                      </Text>
+                        </Box>
+                      </Box>
                     </Box>
                     <Box
                       display={'flex'}
@@ -112,12 +112,12 @@ export default function ScheduledNotification() {
                     </Box>
                   </Box>
                   <Box display={'flex'} gap={2}>
-                    <Button onClick={() => setEditSchedule(sn)} size={'sm'}>
+                    <Button onClick={() => setEditSchedule(sn)} size={'md'}>
                       <BiEditAlt />
                     </Button>
                     <Button
                       onClick={() => setDeleteSchedule(sn)}
-                      size={'sm'}
+                      size={'md'}
                       color={'red.400'}
                     >
                       <BiTrashAlt />
