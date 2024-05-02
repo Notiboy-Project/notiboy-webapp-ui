@@ -104,6 +104,7 @@ export default function ScheduledNotification() {
                           _hover={{ textDecoration: 'underline' }}
                           display={'flex'}
                           gap={1}
+                          wordBreak={'break-all'}
                           alignItems={'center'}
                         >
                           <BiLink />
