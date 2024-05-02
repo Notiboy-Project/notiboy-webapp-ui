@@ -32,6 +32,10 @@ export default function BasicDateTimePicker(props: DateTimePickerProps) {
 const DateTimePickerCSS = `
 text-align: center;
 
+.react-calendar__navigation button:enabled:hover, .react-calendar__navigation button:enabled:focus {
+  background-color: #2d3748;
+}
+
 .react-datetime-picker__wrapper {
   padding: 0.5rem;
   border-radius: 1rem;

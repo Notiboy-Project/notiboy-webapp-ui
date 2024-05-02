@@ -32,7 +32,6 @@ import ScheduleSendModel from './ScheduleSendModel';
 import moment from 'moment';
 import { BsFillClockFill } from 'react-icons/bs';
 import { CgClose } from 'react-icons/cg';
-import { capitalizeLetter } from '../../utils';
 
 type PayloadParam = {
   message: string;
@@ -196,8 +195,12 @@ export default function SendForm(props: SendFormProps) {
       if (response?.status_code === 200) {
         const toastMessage =
           MessageType.PUBLIC === kind
-            ? `${capitalizeLetter(kind)} notification has been sent out`
-            : `Notification sent out to ${payload?.user?.length} addresses`;
+            ? `A ${kind} notification has been ${
+                payload.schedule ? 'scheduled' : 'sent out'
+              }.`
+            : `A ${kind} notification has been ${
+                payload?.schedule ? 'scheduled' : 'sent out'
+              }.`;
 
         toast({
           description: toastMessage,
@@ -406,8 +409,19 @@ export default function SendForm(props: SendFormProps) {
       </Box>
       {payload?.schedule && (
         <Box marginTop={2} py={2} px={1} display={'flex'} alignItems={'center'}>
-          <Icon as={BsFillClockFill} h={5} w={5} />
-          <Text ml={2}>{moment(payload?.schedule).format('LLL')}</Text>
+          <Box
+            display={'flex'}
+            p={2}
+            onClick={onOpen}
+            borderRadius={'lg'}
+            alignItems={'center'}
+            role="button"
+            background="gray.800"
+            _hover={{ transform: 'scale(1.02)' }}
+          >
+            <Icon role="button" as={BsFillClockFill} h={5} w={5} />
+            <Text ml={2}>{moment(payload?.schedule).format('LLL')}</Text>
+          </Box>
           {!props.isEdit && (
             <Button
               onClick={clearScheduleDate}
@@ -469,9 +483,10 @@ export default function SendForm(props: SendFormProps) {
                   }
                 />
               </MenuButton>
-              <MenuList borderRadius={'2xl'}>
+              <MenuList borderRadius={'2xl'} px={2}>
                 <MenuItem px={3} borderRadius={'xl'} onClick={onOpen}>
-                  Schedule Send
+                  <Icon role="button" as={BsFillClockFill} h={4} w={4} mr={2} />
+                  Schedule send
                 </MenuItem>
               </MenuList>
             </Menu>

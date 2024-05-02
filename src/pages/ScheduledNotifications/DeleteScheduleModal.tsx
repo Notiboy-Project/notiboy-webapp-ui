@@ -70,7 +70,7 @@ export default function DeleteScheduleModal({
         <ModalHeader>Delete Scheduled Notification</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text>Are you sure to delete this Scheduled notification?</Text>
+          <Text>Are you sure to delete this scheduled notification?</Text>
         </ModalBody>
         <ModalFooter>
           <Button

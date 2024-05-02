@@ -23,7 +23,7 @@ export default function EditScheduledDrawer(props: EditScheduledDrawerProps) {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton onClick={onClose} />
-        <DrawerHeader>Edit Scheduled</DrawerHeader>
+        <DrawerHeader>Edit scheduled notification</DrawerHeader>
         <DrawerBody>
           {scheduled && (
             <SendForm
