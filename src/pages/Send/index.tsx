@@ -1,44 +1,70 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import {
   Box,
   Button,
+  ButtonGroup,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
   Text,
   Textarea,
+  useDisclosure,
   useToast
 } from '@chakra-ui/react';
 import NTabs from '../../components/NTabs';
 import { MessageType } from './send.types';
-import { LinkIcon } from '../../assets/svgs';
+import { ArrowDownIcon, LinkIcon } from '../../assets/svgs';
 import SelectChannel from '../../components/SelectChannel';
 import CsvUploadInput from '../../components/FileUpload/CsvUploadInput';
 import { UserContext } from '../../Context/userContext';
-import { sendNotificaiton } from '../../services/notification.service';
-import { KindType } from '../../services/services.types';
+import {
+  sendNotification,
+  updateScheduledNotification
+} from '../../services/notification.service';
+import {
+  KindType,
+  ScheduledNotificationDto,
+  sendNotificationArgs
+} from '../../services/services.types';
+import { Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import ScheduleSendModel from './ScheduleSendModel';
+import moment from 'moment';
+import { BsFillClockFill } from 'react-icons/bs';
+import { CgClose } from 'react-icons/cg';
 
 type PayloadParam = {
   message: string;
   link: string;
+  schedule: Date | null;
   user: string[];
 };
 
-export default function SendPage() {
+interface SendFormProps {
+  isEdit?: boolean;
+  editPayload?: ScheduledNotificationDto;
+  onSuccessUpdated?: () => void;
+}
+
+export default function SendForm(props: SendFormProps) {
   const [tab, setTab] = useState<MessageType>(MessageType.PUBLIC);
+  const [inputAddress, setInputAddress] = useState('');
   const [payload, setPayload] = useState<PayloadParam>({
     message: '',
     link: '',
+    schedule: null,
     user: []
   });
   // its been used to reset csv upload after sending notification
   const [showCSVUpload, setShowCSVUpload] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [appId, setAppId] = useState('');
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   const { user } = useContext(UserContext);
 
-  const allowedCharsCount = user?.privileges?.notification_char_count || 120
+  const allowedCharsCount = user?.privileges?.notification_char_count || 120;
 
   const toast = useToast();
 
@@ -75,14 +101,6 @@ export default function SendPage() {
     setTab(_tab);
   };
 
-  const handleAddressChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setPayload({
-      ...payload,
-      user: [value?.trim()]
-    });
-  };
-
   const checkValidation = () => {
     let isValid = true;
 
@@ -96,17 +114,33 @@ export default function SendPage() {
       showErrorMsg('Please enter a message to send!');
     }
 
-    if (
-      (tab === MessageType.PERSONAL || tab === MessageType.BULK_PERSONAL) &&
-      payload.user.length === 0
-    ) {
+    if (tab === MessageType.PERSONAL && !inputAddress?.trim()) {
       isValid = false;
-      showErrorMsg('Please enter an address to send notification!');
+      showErrorMsg('Please enter an address.');
+    }
+
+    if (tab === MessageType.BULK_PERSONAL && payload.user.length === 0) {
+      isValid = false;
+      showErrorMsg('Please upload csv file of addresses to send notification.');
     }
     return isValid;
   };
 
-  const hadleCsvData = (data: string[]) => {
+  const handleScheduleDate = (date: Date | null) => {
+    setPayload({
+      ...payload,
+      schedule: date
+    });
+  };
+
+  const clearScheduleDate = () => {
+    setPayload({
+      ...payload,
+      schedule: null
+    });
+  };
+
+  const handleCSVData = (data: string[]) => {
     const [, ...address] = data;
     setPayload({
       ...payload,
@@ -128,63 +162,18 @@ export default function SendPage() {
     if (!isDataValid) {
       return;
     }
-
+    setIsProcessing(true);
+    let receivers = [];
     let kind: KindType = 'public';
-
     if (tab === MessageType.PERSONAL || tab === MessageType.BULK_PERSONAL) {
       kind = 'private';
     }
+    if (tab === MessageType.PERSONAL) receivers.push(inputAddress);
 
-    if (kind === MessageType.PUBLIC) {
-      setIsProcessing(true);
-      try {
-        const response = await sendNotificaiton({
-          appId: appId,
-          chain: user?.chain || '',
-          kind,
-          address: user?.address || '',
-          payload: {
-            link: payload?.link || '',
-            message: payload?.message || ''
-          }
-        });
-        if (response?.status_code === 200) {
-          toast({
-            description: `Public notification has been sent out`,
-            duration: 3000,
-            isClosable: true,
-            position: 'top',
-            status: 'success'
-          });
-          setPayload({
-            link: '',
-            user: [],
-            message: ''
-          });
-        }
-        return;
-      } catch (e: any) {
-        toast({
-          description:
-            e?.response?.data?.message ||
-            `Failed to send public notification ! please try again later`,
-          duration: 3000,
-          isClosable: true,
-          position: 'top',
-          status: 'error'
-        });
-        console.log('Failed to send public notification', e);
-        return;
-      } finally {
-        setIsProcessing(false);
-      }
-    }
+    if (tab === MessageType.BULK_PERSONAL) receivers = payload.user;
 
-    ///******** For private notification sending  ******/
-
-    setIsProcessing(true);
     try {
-      const response = await sendNotificaiton({
+      const notificationPayload: sendNotificationArgs = {
         appId: appId,
         chain: user?.chain || '',
         kind,
@@ -192,13 +181,26 @@ export default function SendPage() {
         payload: {
           link: payload?.link || '',
           message: payload?.message || '',
-          receivers: payload?.user
+          receivers: receivers,
+          schedule: payload?.schedule
+            ? moment(payload?.schedule).format()
+            : undefined
         }
-      });
-      console.log('Response message', response);
+      };
+
+      const response = await sendNotification(notificationPayload);
       if (response?.status_code === 200) {
+        const toastMessage =
+          MessageType.PUBLIC === kind
+            ? `A ${kind} notification has been ${
+                payload.schedule ? 'scheduled' : 'sent out'
+              }.`
+            : `A ${kind} notification has been ${
+                payload?.schedule ? 'scheduled' : 'sent out'
+              }.`;
+
         toast({
-          description: `Notification sent out to ${payload?.user.length} addresses`,
+          description: toastMessage,
           duration: 3000,
           isClosable: true,
           position: 'top',
@@ -207,32 +209,108 @@ export default function SendPage() {
         setPayload({
           link: '',
           user: [],
+          schedule: null,
           message: ''
         });
+        setInputAddress('');
         resetCsvUpload();
-      } else {
       }
-    } catch (err: any) {
+    } catch (e: any) {
       toast({
         description:
-          err?.response?.data?.message ||
-          'Failed to send notifications! Please try again later',
+          e?.response?.data?.message ||
+          `Failed to send public notification ! please try again later`,
         duration: 3000,
         isClosable: true,
         position: 'top',
         status: 'error'
       });
+      console.log('Failed to send public notification', e);
     } finally {
       setIsProcessing(false);
     }
   };
 
+  const handleUpdateScheduledNotification = async () => {
+    try {
+      setIsProcessing(true);
+      const isValid = checkValidation();
+      if (!isValid) return;
+
+      let receivers = [];
+      if (tab === MessageType.PERSONAL) receivers.push(inputAddress);
+      if (tab === MessageType.BULK_PERSONAL) receivers = payload.user;
+
+      const scheduledPayload = {
+        type: tab === MessageType.PUBLIC ? 'public' : 'private',
+        message: payload.message,
+        link: payload.link,
+        receivers: receivers
+      };
+      // TODO: call API to update scheduled
+      const data = await updateScheduledNotification({
+        chain: user?.chain || 'NA',
+        payload: scheduledPayload,
+        uuid: props.editPayload?.UUID || '',
+        scheduledTime: props.editPayload?.schedule || ''
+      });
+      if (data?.status_code === 200) {
+        toast({
+          description: 'Scheduled notification has been updated.',
+          isClosable: true,
+          position: 'top',
+          status: 'success',
+          duration: 3000
+        });
+        props.onSuccessUpdated && props.onSuccessUpdated();
+      }
+    } catch (err) {
+      toast({
+        description: 'Failed to update the scheduled Notification',
+        isClosable: true,
+        duration: 4000,
+        status: 'error',
+        position: 'top'
+      });
+      console.log('ERROR handleUpdateScheduledNotification::', err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  useEffect(() => {
+    // Set or fill form data for edit the scheduled notifications
+    if (props.isEdit && props.editPayload) {
+      const { link, message, receivers = [], schedule } = props.editPayload;
+      setPayload({
+        link: link,
+        message: message,
+        schedule: new Date(schedule),
+        user: receivers
+      });
+      if (receivers?.length === 1) {
+        setInputAddress(receivers[0]);
+      }
+      let type =
+        props.editPayload.type === 'private'
+          ? MessageType.PERSONAL
+          : MessageType.PUBLIC;
+
+      if (receivers?.length > 1) {
+        type = MessageType.BULK_PERSONAL;
+      }
+      setAppId(props.editPayload?.channel);
+      setTab(type);
+    }
+  }, [props.editPayload, props.isEdit]);
+
   return (
-    <Box>
+    <>
       <Box
         display={{ base: 'grid', sm: 'flex', md: 'flex' }}
         alignItems={'center'}
         gap={5}
+        marginTop={5}
         placeItems={'center'}
       >
         <Box width={{ base: '100%', md: 'fit-content' }}>
@@ -240,21 +318,39 @@ export default function SendPage() {
             isResponsive={true}
             activeTab={tab}
             tabs={[
-              { name: MessageType.PUBLIC, title: 'Public Message' },
-              { name: MessageType.PERSONAL, title: 'Personal Message' },
+              { name: MessageType.PUBLIC, title: 'Public Message', index: 0 },
+              {
+                name: MessageType.PERSONAL,
+                title: 'Personal Message',
+                index: 1
+              },
               {
                 name: MessageType.BULK_PERSONAL,
-                title: 'Bulk Personal Message'
+                title: 'Bulk Personal Message',
+                index: 2
               }
             ]}
             onTabSelected={handleTabChange}
           />
         </Box>
         <Box width={{ base: '100%', md: 'fit-content' }}>
-          <SelectChannel onChannelSelect={setAppId} />
+          {props.isEdit ? (
+            <Text
+              fontWeight={'bold'}
+              borderRadius={'full'}
+              paddingX={4}
+              textAlign={'center'}
+              bgColor={'gray.800'}
+              paddingY={3}
+            >
+              {props.editPayload?.channelName}
+            </Text>
+          ) : (
+            <SelectChannel onChannelSelect={setAppId} />
+          )}
         </Box>
       </Box>
-      <Box mt={5}>
+      <Box>
         {tab === MessageType.PERSONAL && (
           <Input
             placeholder="Input address"
@@ -262,16 +358,23 @@ export default function SendPage() {
             name="inputAddress"
             size={'lg'}
             borderRadius={'xl'}
+            value={inputAddress}
             p={'25px'}
             fontWeight={500}
             mt={4}
-            onChange={handleAddressChange}
+            onChange={({ currentTarget }) =>
+              setInputAddress(currentTarget.value)
+            }
           />
         )}
-
-        {tab === MessageType.BULK_PERSONAL && (
+        {tab === MessageType.BULK_PERSONAL && showCSVUpload && (
           <>
-            {showCSVUpload && <CsvUploadInput onDataRecieved={hadleCsvData} />}
+            <CsvUploadInput onDataReceived={handleCSVData} />
+            {props.isEdit && payload?.user?.length > 1 && (
+              <Text as="small" textAlign={'right'} width={'full'}>
+                Uploaded addresses ({payload?.user?.length})
+              </Text>
+            )}
           </>
         )}
         <Textarea
@@ -307,17 +410,100 @@ export default function SendPage() {
           </InputRightElement>
         </InputGroup>
       </Box>
+      {payload?.schedule && (
+        <Box marginTop={2} py={2} px={1} display={'flex'} alignItems={'center'}>
+          <Box
+            display={'flex'}
+            p={2}
+            onClick={props.isEdit ? () => {} : onOpen}
+            borderRadius={'lg'}
+            alignItems={'center'}
+            role="button"
+            background="gray.800"
+            border={'1px solid'}
+            borderColor={'inherit'}
+            _hover={{ transform: 'scale(1.02)' }}
+          >
+            <Icon role="button" as={BsFillClockFill} h={5} w={5} />
+            <Text ml={2}>{moment(payload?.schedule).format('LLL')}</Text>
+          </Box>
+          {!props.isEdit && (
+            <Button
+              onClick={clearScheduleDate}
+              size={'sm'}
+              variant={'ghost'}
+              marginLeft={2}
+            >
+              <Icon as={CgClose} />
+            </Button>
+          )}
+        </Box>
+      )}
       <Box mt={10} display={'flex'} justifyContent={'center'}>
-        <Button
-          p={'20px 60px'}
-          borderRadius={'full'}
-          backgroundColor={'blue.600'}
-          isLoading={isProcessing}
-          onClick={handleSendNotification}
-        >
-          Send
-        </Button>
+        {props.isEdit ? (
+          <Button
+            onClick={handleUpdateScheduledNotification}
+            p={'20px'}
+            borderRadius={'full'}
+            backgroundColor={'blue.600'}
+            isLoading={isProcessing}
+          >
+            Update Scheduled Notification
+          </Button>
+        ) : (
+          <ButtonGroup size="sm" isAttached>
+            <Button
+              p={'20px'}
+              borderRadius={'full'}
+              backgroundColor={'blue.600'}
+              isLoading={isProcessing}
+              onClick={handleSendNotification}
+            >
+              Send
+            </Button>
+            <Menu>
+              <MenuButton
+                transition="all 0.2s"
+                disabled={
+                  (user?.privileges?.notification_max_schedule || 0) < 1
+                }
+                _disabled={{ cursor: 'not-allowed', opacity: 0.5 }}
+              >
+                <IconButton
+                  borderRadius={'0 1rem 1rem 0'}
+                  borderLeft={'1px'}
+                  borderColor={'black'}
+                  p={'20px 10px'}
+                  aria-label="Send Schedule"
+                  backgroundColor={'blue.600'}
+                  icon={
+                    <Icon
+                      as={ArrowDownIcon}
+                      css={`
+                        path {
+                          fill: white;
+                        }
+                      `}
+                    />
+                  }
+                />
+              </MenuButton>
+              <MenuList borderRadius={'2xl'} px={2}>
+                <MenuItem px={3} borderRadius={'xl'} onClick={onOpen}>
+                  <Icon role="button" as={BsFillClockFill} h={4} w={4} mr={2} />
+                  Schedule send
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </ButtonGroup>
+        )}
       </Box>
-    </Box>
+      <ScheduleSendModel
+        isOpen={isOpen}
+        date={payload?.schedule || null}
+        onClose={onClose}
+        onDateSelect={handleScheduleDate}
+      />
+    </>
   );
 }

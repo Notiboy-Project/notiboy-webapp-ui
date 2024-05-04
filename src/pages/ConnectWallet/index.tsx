@@ -1,25 +1,15 @@
-import React from "react";
-import { AlgorandIcon, XRPLIcon } from "../../assets/svgs";
-import NetworkLists from "./NetworkList";
-import { NetworkType } from "./wallet.types";
+import React from 'react';
+import { AlgorandIcon, XRPLIcon } from '../../assets/svgs';
+import NetworkLists from './NetworkList';
+import { NetworkType } from './wallet.types';
 import LogoNameImage from '../../assets/images/notiboy.png';
-import {
-  Box,
-  Button,
-  Hide,
-  Icon,
-  Image,
-  Show,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Button, Hide, Icon, Image, Show, Text } from '@chakra-ui/react';
 import ImageLogo from '../../assets/images/notiboy_nam.png';
-import AlgorandWallets from "./AlgorandWallets";
-import XRPLWallets from "./XRPLWallets";
-import { FaArrowLeft } from "react-icons/fa";
-
+import AlgorandWallets from './AlgorandWallets';
+import XRPLWallets from './XRPLWallets';
+import { FaArrowLeft } from 'react-icons/fa';
 
 export default function ConnectWalletPage() {
-
   const [selectedNetwork, setSelectedNetwork] =
     React.useState<NetworkType | null>(null);
 
@@ -28,18 +18,19 @@ export default function ConnectWalletPage() {
   };
 
   const onBackClick = () => {
-    setSelectedNetwork(null)
-  }
+    setSelectedNetwork(null);
+  };
 
   const renderWallets = (network: NetworkType) => {
     switch (network) {
       case NetworkType.ALGORAND:
-        return <AlgorandWallets />
+        return <AlgorandWallets />;
       case NetworkType.XRPL:
-        return <XRPLWallets />
-      default: return <b>Unknown network</b>
+        return <XRPLWallets />;
+      default:
+        return <b>Unknown network</b>;
     }
-  }
+  };
 
   return (
     <Box
@@ -77,8 +68,11 @@ export default function ConnectWalletPage() {
           width={'100%'}
           alignContent={'center'}
           placeItems={'center'}
+          position={'relative'}
         >
-          {selectedNetwork ? (renderWallets(selectedNetwork)) : (
+          {selectedNetwork ? (
+            renderWallets(selectedNetwork)
+          ) : (
             <NetworkLists
               networks={[
                 {
@@ -98,8 +92,8 @@ export default function ConnectWalletPage() {
           {selectedNetwork && (
             <Box display={'grid'} placeItems={'center'} textAlign={'center'}>
               <Text as="small" p={5}>
-                By connecting the wallet, you agree to terms & conditions and privacy
-                policy.
+                By connecting the wallet, you agree to terms & conditions and
+                privacy policy.
               </Text>
               <Button onClick={onBackClick}>
                 <Icon as={FaArrowLeft}></Icon>
@@ -109,5 +103,5 @@ export default function ConnectWalletPage() {
         </Box>
       </Box>
     </Box>
-  )
+  );
 }

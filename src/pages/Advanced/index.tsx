@@ -18,8 +18,8 @@ export default function AdvancePage() {
         <NTabs
           isResponsive={false}
           tabs={[
-            { title: 'Billing', name: PageType.BILLING },
-            { title: 'API Access', name: PageType.API_ACCESS }
+            { title: 'Billing', name: PageType.BILLING, index: 0 },
+            { title: 'API Access', name: PageType.API_ACCESS, index: 1 }
           ]}
           activeTab={activeTab}
           onTabSelected={(tab) => setActiveTab(tab)}

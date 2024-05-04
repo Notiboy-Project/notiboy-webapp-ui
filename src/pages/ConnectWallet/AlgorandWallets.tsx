@@ -168,7 +168,7 @@ export default function AlgorandWallets() {
   }, [activeAccount]);
 
   return (
-    <Box>
+    <>
       {isRequestProcessing && <SectionLoading />}
       <Box
         backgroundColor={'gray.700'}
@@ -220,6 +220,6 @@ export default function AlgorandWallets() {
           onSignedTransaction={signTransactionAndLogin}
         />
       </Box>
-    </Box>
+    </>
   );
 }

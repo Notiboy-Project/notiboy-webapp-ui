@@ -42,7 +42,7 @@ const algodClient = new algosdk.Algodv2(
 );
 
 export default function AddBalanceModal(props: AddBalanceModalProps) {
-  const { isOpen, onClose, onAddBalanceSucceeded = () => { } } = props;
+  const { isOpen, onClose, onAddBalanceSucceeded = () => {} } = props;
   const { signTransactions } = useWallet();
   const { user } = useContext(UserContext);
   const [amount, setAmount] = useState('');
@@ -67,29 +67,28 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
         suggestedParams: suggestedParams,
         to: envs.destinationAddress || ''
       });
-    const encodedTransaction =
-      algosdk.encodeUnsignedTransaction(addBalanceTxn);
+    const encodedTransaction = algosdk.encodeUnsignedTransaction(addBalanceTxn);
     // END:
     const [signedTransactions] = await signTransactions([encodedTransaction]);
     const base64Str = convertJSTOBase64(signedTransactions);
     return base64Str;
-  }
+  };
 
   const signXRPLTransaction = async () => {
-    const __amount = (Number(amount) * 1000000).toString();  // XRP
+    const __amount = (Number(amount) * 1000000).toString(); // XRP
     await xumm.payload?.createAndSubscribe(
       {
-        TransactionType: "Payment",
+        TransactionType: 'Payment',
         Destination: envs.xrplDestinationAddress,
-        Amount: __amount,
+        Amount: __amount
       },
       (event: any) => {
         // Return if signed or not signed (rejected)
-        console.log("event 27ln:", JSON.stringify(event, null, 2));
+        console.log('event 27ln:', JSON.stringify(event, null, 2));
         if (event.data.signed === true) {
           // Call the login function to get token
           // console.log("event.data", event.data);
-          const txnid = event?.data?.txid
+          const txnid = event?.data?.txid;
           sendAddBalanceRequest(txnid);
         }
 
@@ -102,13 +101,13 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
               isClosable: true,
               position: 'top',
               status: 'error'
-            })
+            });
           }
           handleClose();
         }
       }
     );
-  }
+  };
 
   const sendAddBalanceRequest = async (txn: string) => {
     const resp = await addBalance(
@@ -128,7 +127,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
     });
     onAddBalanceSucceeded();
     handleClose();
-  }
+  };
 
   const handleAddBalance = async () => {
     if (!amount || Number(amount || 0) <= 0) {
@@ -156,7 +155,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
     try {
       // TODO: Signed transaction for transfering funds.
       setLoading(true);
-      let base64Transaction = ''
+      let base64Transaction = '';
 
       toast({
         description: 'Please open your wallet to accept the request!',
@@ -174,7 +173,6 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
       if (user?.chain === NetworkType.ALGORAND) {
         base64Transaction = await signAlgorandTransaction();
         sendAddBalanceRequest(base64Transaction);
-
       } else {
         toast({
           description: `${user?.chain} Network has not configured yet. Please contect the support!`,
@@ -182,7 +180,7 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
           isClosable: true,
           position: 'top',
           status: 'error'
-        })
+        });
       }
     } catch (err: any) {
       const { data } = err?.response || {};
@@ -210,13 +208,13 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
   const getCurrencyName = () => {
     switch (user?.chain) {
       case 'algorand':
-        return 'USDC'
+        return 'USDC';
       case 'xrpl':
-        return 'XRP'
+        return 'XRP';
       default:
-        return 'USDC'
+        return 'USDC';
     }
-  }
+  };
 
   return (
     <Modal
@@ -240,7 +238,9 @@ export default function AddBalanceModal(props: AddBalanceModalProps) {
             />
             <InputRightAddon children={getCurrencyName()} />
           </InputGroup>
-          <Text as='small'><i>Min: 1 USD</i> </Text>
+          <Text as="small">
+            <i>Min: 1 USD</i>{' '}
+          </Text>
 
           <Flex justifyContent={'flex-end'} gap={3} mt={5}>
             <Button

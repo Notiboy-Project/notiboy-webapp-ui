@@ -16,9 +16,13 @@ import { BiLockAlt } from 'react-icons/bi';
 
 interface SelectChannelProps {
   onChannelSelect: (appId: string) => void;
+  isDisabled?: boolean;
 }
 
-export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
+export default function SelectChannel({
+  onChannelSelect,
+  isDisabled
+}: SelectChannelProps) {
   const [selectedChannel, setSelectedChannel] = useState('Select Channel');
   const { user } = useContext(UserContext);
 
@@ -52,6 +56,7 @@ export default function SelectChannel({ onChannelSelect }: SelectChannelProps) {
         p={5}
         isLoading={isLoading}
         width="100%"
+        isDisabled={isDisabled}
       >
         {selectedChannel}
       </MenuButton>

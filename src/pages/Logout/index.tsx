@@ -22,7 +22,9 @@ export default function Logout() {
     removeUserAddressFromStorage();
 
     if (status === 'active') {
-      providers?.forEach((wallet) => { wallet?.disconnect() });
+      providers?.forEach((wallet) => {
+        wallet?.disconnect();
+      });
       removeCurrentUser();
     }
 
@@ -43,8 +45,12 @@ export default function Logout() {
   }, [providers, status]);
 
   useEffect(() => {
-    if (status !== 'initializing') {
+    if (status === 'active') {
       handleLogout();
+    }
+
+    if (status === 'disconnected') {
+      navigate(routes.connectWallet, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, providers]);

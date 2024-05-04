@@ -9,6 +9,7 @@ export const storageKey = {
 export const routes = Object.freeze({
   connectWallet: '/connect-wallet',
   notifications: '/notifications',
+  scheduledNotifications: '/scheduled-notifications',
   settings: '/settings',
   channels: '/channels',
   statistics: '/statistics',

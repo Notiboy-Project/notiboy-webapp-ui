@@ -1,7 +1,15 @@
-import { useContext } from 'react'
-import { Box, Button, Hide, Icon, Image, Show } from '@chakra-ui/react';
+import { useContext } from 'react';
+import {
+  Box,
+  Button,
+  Hide,
+  Icon,
+  Image,
+  Show,
+  Tooltip
+} from '@chakra-ui/react';
 // import { ColorModeSwitcher } from '../../ColorModeSwitcher';
-import { FiSettings } from 'react-icons/all';
+import { FiSettings, GiAlarmClock } from 'react-icons/all';
 import WalletDropdown from '../Wallets/WalletDropdown';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../config';
@@ -30,20 +38,38 @@ export default function PrivateHeader() {
         </Box>
         <Box display={'flex'} justifyItems={'center'}>
           {/* <ColorModeSwitcher /> */}
-          <Button
-            w={45}
-            onClick={() => navigate(routes.settings)}
-            h={45}
-            backgroundColor={'blue.400'}
-            p={2}
-            ml={4}
-            display={'flex'}
-            alignItems={'center'}
-            justifyContent={'center'}
-            borderRadius={'full'}
-          >
-            <Icon h={25} width={25} as={FiSettings} />
-          </Button>
+          <Tooltip label="Scheduled Notifications" hasArrow>
+            <Button
+              w={45}
+              onClick={() => navigate(routes.scheduledNotifications)}
+              h={45}
+              backgroundColor={'blue.400'}
+              p={2}
+              ml={4}
+              display={'flex'}
+              alignItems={'center'}
+              justifyContent={'center'}
+              borderRadius={'full'}
+            >
+              <Icon h={25} width={25} as={GiAlarmClock} />
+            </Button>
+          </Tooltip>
+          <Tooltip hasArrow label="Settings">
+            <Button
+              w={45}
+              onClick={() => navigate(routes.settings)}
+              h={45}
+              backgroundColor={'blue.400'}
+              p={2}
+              ml={4}
+              display={'flex'}
+              alignItems={'center'}
+              justifyContent={'center'}
+              borderRadius={'full'}
+            >
+              <Icon h={25} width={25} as={FiSettings} />
+            </Button>
+          </Tooltip>
           <Box ml={4}>
             <WalletDropdown />
           </Box>

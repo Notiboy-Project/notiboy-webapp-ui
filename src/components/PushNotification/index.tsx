@@ -10,15 +10,6 @@ let broadcast: BroadcastChannel | null = null;
 export default function PushNotificationService() {
   const { user } = useContext(UserContext);
 
-  // const check = () => {
-  //   if (!('serviceWorker' in navigator)) {
-  //     console.error('No Service Worker support!');
-  //   }
-  //   if (!('PushManager' in window)) {
-  //     console.error('No Push API Support!');
-  //   }
-  // };
-
   const requestNotificationPermission = async () => {
     if (Notification.permission === 'granted') {
       return;
@@ -39,28 +30,6 @@ export default function PushNotificationService() {
     broadcast = new BroadcastChannel('refresh-notifications');
   };
 
-  // const registerNotificationServiceWorker = async () => {
-  //   check();
-  //   await requestNotificationPermission();
-  //   const config = {
-  //     chain: user?.chain,
-  //     address: user?.address,
-  //     accessToken: getTokenFromStorage(),
-  //     socketUrl: envs.websocketUrl
-  //   };
-
-  //   navigator.serviceWorker
-  //     .register(`service-nf.js?data=${JSON.stringify(config)}`)
-  //     .then((serviceWorker) => {
-  //       serviceWorker.addEventListener('error', function (event) {
-  //         console.log('Error from service worker: ', event);
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.log('Service worker failed to register', error);
-  //     });
-  // };
-
   const handleWebsocketConnection = () => {
     const token = getTokenFromStorage();
 
@@ -69,7 +38,9 @@ export default function PushNotificationService() {
     }
 
     if (retry >= 35) {
-      console.log('Websocket connection reached to the maximun connection number::');
+      console.log(
+        'Websocket connection reached to the maximum connection number::'
+      );
       return;
     }
 
@@ -97,19 +68,19 @@ export default function PushNotificationService() {
 
   const onMessage = (event: any) => {
     const data = JSON.parse(event.data);
-    // publish(REFRESH_NOTIFICATIONS, {});  
+    // publish(REFRESH_NOTIFICATIONS, {});
     console.log('Received message: ' + data);
     const nf = new Notification('Notiboy', {
       body: data?.message || '',
       icon: 'notiboy.png'
     });
-    if(broadcast) {
-      broadcast.postMessage(REFRESH_NOTIFICATIONS)
+    if (broadcast) {
+      broadcast.postMessage(REFRESH_NOTIFICATIONS);
     }
     console.log({ nf });
     nf.onclick = (event) => {
-      console.log("Notification clicked")
-    }
+      console.log('Notification clicked');
+    };
   };
 
   const onError = (event: any) => {
@@ -131,8 +102,8 @@ export default function PushNotificationService() {
         console.log('Closing current socket connection::');
         socket.close();
       }
-      if(broadcast?.close) {
-        console.log('Closing Broadcase channel::`refresh-notifications`');
+      if (broadcast?.close) {
+        console.log('Closing Broadcast channel::`refresh-notifications`');
         broadcast.close();
       }
     };

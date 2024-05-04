@@ -1,4 +1,5 @@
 import { NotificationData } from '../pages/Notifications/notification.types';
+import { MessageType } from '../pages/Send/send.types';
 
 ///*********** Channels APIs types ****/
 export interface ChannelListsResponse {
@@ -21,8 +22,8 @@ export interface ChannelsDto {
   owner: string;
   verified: boolean;
   status: string;
-  created_timestamp: string
-  chain: string;  
+  created_timestamp: string;
+  chain: string;
 }
 
 export interface createChannelParams {
@@ -46,22 +47,44 @@ export interface NotificationFetcher {
     size: number;
   };
 }
+export type ScheduledNotificationDto = {
+  message: string;
+  link: string;
+  schedule: string;
+  sender: string;
+  channel: string;
+  type: 'public' | 'private';
+  UUID: string;
+  createdTime: string;
+  channelName: string;
+  logo: string;
+  receivers: any;
+  updatedTime: string;
+};
 
 export type KindType = 'public' | 'private';
 
-export interface sendNotificationPaylod {
-  receivers?: string[];
+export interface sendNotificationPayload {
+  receivers?: string[] | null;
   message: string;
   link: string;
+  schedule?: string;
 }
 
-export interface sendNotificaitonArgs {
+export interface sendNotificationArgs {
   chain: string;
   appId: string;
   kind: 'public' | 'private';
   address: string;
-  payload: sendNotificationPaylod;
+  payload: sendNotificationPayload;
 }
+
+export type scheduledNotificationArgs = {
+  chain: string;
+  uuid: string;
+  scheduledTime: string;
+  payload: sendNotificationPayload & { type: string };
+};
 
 ///*********** END Notifications APIs types ****/
 
